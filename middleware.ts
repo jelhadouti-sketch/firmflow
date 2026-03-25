@@ -24,17 +24,23 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  const publicPaths = ['/login', '/signup', '/api']
-  const isPublic = publicPaths.some(p => request.nextUrl.pathname.startsWith(p))
-  const isHome = request.nextUrl.pathname === '/'
+  const pathname = request.nextUrl.pathname
 
-  // Not logged in and trying to access protected page
-  if (!user && !isPublic && !isHome) {
+  // Protected routes
+  const protectedPaths = ['/dashboard']
+  const isProtected = protectedPaths.some(p => pathname.startsWith(p))
+
+  // Auth routes
+  const authPaths = ['/login', '/signup']
+  const isAuth = authPaths.includes(pathname)
+
+  // Redirect to login if not logged in and trying to access protected page
+  if (!user && isProtected) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Logged in and trying to access login/signup
-  if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/signup')) {
+  // Redirect to dashboard if logged in and trying to access login/signup
+  if (user && isAuth) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
@@ -42,5 +48,12 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.svg$).*)']
+  matcher: ['/dashboard/:path*', '/login', '/signup']
 }
+```
+
+Press **Cmd + S** to save!
+
+Then in Terminal:
+```
+git add . && git commit -m "fix middleware redirect loop" && git push && export PATH=~/.npm-global/bin:$PATH && vercel --prod
