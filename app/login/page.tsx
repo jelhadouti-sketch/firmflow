@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -11,13 +10,20 @@ export default function Login() {
   async function handleLogin() {
     setLoading(true)
     setError('')
-    const supabase = createClient()
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) {
-      setError(error.message)
+    
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    })
+    
+    const data = await res.json()
+    
+    if (data.error) {
+      setError(data.error)
       setLoading(false)
     } else {
-      window.location.href = '/firmflow'
+      window.location.href = '/dashboard'
     }
   }
 
