@@ -48,7 +48,13 @@ export default function Signup() {
     <div style={{display:'flex',alignItems:'center',justifyContent:'center',minHeight:'100vh',fontFamily:'sans-serif',background:'#F8F7F5'}}>
       <div style={{background:'#fff',padding:'40px',borderRadius:'12px',width:'380px',boxShadow:'0 4px 20px rgba(0,0,0,0.08)'}}>
         <h1 style={{fontSize:'24px',fontWeight:'700',color:'#1C64F2',marginBottom:'8px'}}>⬡ FirmFlow</h1>
-        <p style={{color:'#6B7280',marginBottom:'24px'}}>Create your firm workspace</p>
+        <p style={{color:'#6B7280',marginBottom:'8px'}}>Create your firm workspace</p>
+        <div style={{background:'#D1FAE5',padding:'10px 14px',borderRadius:'8px',marginBottom:'12px',fontSize:'13px',color:'#065F46',fontWeight:'500'}}>
+          ✅ Free 14-day trial — no credit card needed
+        </div>
+        <p style={{color:'#6B7280',marginBottom:'16px',fontSize:'13px'}}>
+          Replace ShareFile + DocuSign + time tracking in one tool for <strong>$29/month</strong>
+        </p>
         {error && <p style={{color:'red',marginBottom:'16px',fontSize:'13px'}}>{error}</p>}
         <input
           style={inputStyle}
@@ -81,7 +87,7 @@ export default function Signup() {
           disabled={loading}
           style={{width:'100%',padding:'12px',background:'#1C64F2',color:'#fff',border:'none',borderRadius:'8px',fontSize:'14px',fontWeight:'600',cursor:'pointer'}}
         >
-          {loading ? 'Creating...' : 'Create firm →'}
+          {loading ? 'Creating...' : 'Start free trial →'}
         </button>
         <p style={{textAlign:'center',marginTop:'16px',fontSize:'13px',color:'#6B7280'}}>
           Already have an account? <a href="/login" style={{color:'#1C64F2'}}>Sign in →</a>
