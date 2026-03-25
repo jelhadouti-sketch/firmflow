@@ -1,49 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase/admin'
+import { createClient } from '@/lib/supabase/server'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2026-02-25.clover'
+})
+
+const PRICES = {
+  starter: process.env.STRIPE_STARTER_PRICE_ID!,
+  pro: process.env.STRIPE_PRO_PRICE_ID!
+}
 
 export async function POST(req: NextRequest) {
-  const body = await req.text()
-  const sig = req.headers.get('stripe-signature')!
-
-  let event: Stripe.Event
-  try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    )
-  } catch {
-    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.CheckoutSession
-    const userId = session.metadata?.user_id
+  const { plan } = await req.json()
 
-    if (userId) {
-      const subscription = await stripe.subscriptions.retrieve(
-        session.subscription as string
-      )
-      const priceId = subscription.items.data[0].price.id
-      const plan = priceId === process.env.STRIPE_PRO_PRICE_ID ? 'pro' : 'starter'
+  if (!PRICES[plan as keyof typeof PRICES]) {
+    return NextResponse.json({ error: 'Invalid plan' }, { status: 400 })
+  }
 
-      const { data: profile } = await supabaseAdmin
-        .from('profiles')
-        .select('firm_id')
-        .eq('id', userId)
-        .single()
-
-      if (profile) {
-        await supabaseAdmin
-          .from('firms')
-          .update({ plan })
-          .eq('id', profile.firm_id)
-      }
+  const session = await stripe.checkout.sessions.create({
+    mode: 'subscription',
+    line_items: [{
+      price: PRICES[plan as keyof typeof PRICES],
+      quantity: 1
+    }],
+    customer_email: user.email!,
+    metadata: { user_id: user.id },
+    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/firmflow?upgraded=true`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/firmflow`,
+    subscription_data: {
+      trial_period_days: 14
     }
-  }
+  })
 
-  return NextResponse.json({ received: true })
+  return NextResponse.json({ url: session.url })
 }
