@@ -7,18 +7,16 @@ export default async function Dashboard() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  // Get profile and firm
   const { data: profile } = await supabase
     .from('profiles')
     .select('*, firms(*)')
     .eq('id', user.id)
     .single()
 
-  if (!profile) redirect('/login')
+  if (!profile) redirect('/firmflow')
 
   const firm = profile.firms as any
 
-  // Get stats
   const { count: engCount } = await supabase
     .from('engagements')
     .select('*', { count: 'exact', head: true })
@@ -43,8 +41,6 @@ export default async function Dashboard() {
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
-
-      {/* TOP BAR */}
       <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
         <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
           <span style={{fontSize:'18px',fontWeight:'800',color:'#1C64F2'}}>⬡ FirmFlow</span>
@@ -59,8 +55,6 @@ export default async function Dashboard() {
       </header>
 
       <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
-
-        {/* SIDEBAR */}
         <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
           {[
             { icon:'🏠', label:'Dashboard', href:'/dashboard', active:true },
@@ -81,16 +75,14 @@ export default async function Dashboard() {
           ))}
         </aside>
 
-        {/* MAIN CONTENT */}
         <main style={{flex:1,padding:'32px',overflow:'auto'}}>
           <div style={{marginBottom:'28px'}}>
             <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>
-              Welcome back, {profile.full_name?.split(' ')[0]}! 👋
+              Welcome back, {profile.full_name?.split(' ')[0] || 'there'}! 👋
             </h1>
             <p style={{color:'#64748B',fontSize:'14px'}}>{firm?.name} · {profile.role}</p>
           </div>
 
-          {/* UPGRADE BANNER */}
           {firm?.plan === 'starter' && (
             <div style={{background:'linear-gradient(135deg,#1C64F2,#7C3AED)',borderRadius:'12px',padding:'20px 24px',marginBottom:'24px',display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:'12px'}}>
               <div>
@@ -103,13 +95,12 @@ export default async function Dashboard() {
             </div>
           )}
 
-          {/* STATS */}
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'16px',marginBottom:'28px'}}>
             {[
-              { label:'Engagements', value:engCount||0, icon:'📋', color:'#EFF6FF', textColor:'#1D4ED8' },
-              { label:'Documents', value:docCount||0, icon:'📄', color:'#F0FDF4', textColor:'#15803D' },
-              { label:'Pending signatures', value:sigCount||0, icon:'✍', color:'#FEF3C7', textColor:'#92400E' },
-              { label:'Open tasks', value:taskCount||0, icon:'✅', color:'#FEF2F2', textColor:'#DC2626' },
+              { label:'Engagements', value:engCount||0, icon:'📋', textColor:'#1D4ED8' },
+              { label:'Documents', value:docCount||0, icon:'📄', textColor:'#15803D' },
+              { label:'Pending signatures', value:sigCount||0, icon:'✍', textColor:'#92400E' },
+              { label:'Open tasks', value:taskCount||0, icon:'✅', textColor:'#DC2626' },
             ].map((stat, i) => (
               <div key={i} style={{background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0',boxShadow:'0 1px 3px rgba(0,0,0,0.04)'}}>
                 <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'12px'}}>
@@ -121,7 +112,6 @@ export default async function Dashboard() {
             ))}
           </div>
 
-          {/* QUICK ACTIONS */}
           <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0',marginBottom:'24px'}}>
             <h2 style={{fontSize:'15px',fontWeight:'700',marginBottom:'16px',color:'#0F172A'}}>Quick actions</h2>
             <div style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
@@ -139,7 +129,6 @@ export default async function Dashboard() {
             </div>
           </div>
 
-          {/* GETTING STARTED */}
           <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0'}}>
             <h2 style={{fontSize:'15px',fontWeight:'700',marginBottom:'16px',color:'#0F172A'}}>Getting started</h2>
             {[
@@ -163,7 +152,6 @@ export default async function Dashboard() {
               </div>
             ))}
           </div>
-
         </main>
       </div>
     </div>

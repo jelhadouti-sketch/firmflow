@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -10,17 +11,10 @@ export default function Login() {
   async function handleLogin() {
     setLoading(true)
     setError('')
-    
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    })
-    
-    const data = await res.json()
-    
-    if (data.error) {
-      setError(data.error)
+    const supabase = createClient()
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) {
+      setError(error.message)
       setLoading(false)
     } else {
       window.location.href = '/dashboard'
@@ -46,25 +40,9 @@ export default function Login() {
         <h1 style={{fontSize:'24px',fontWeight:'700',color:'#1C64F2',marginBottom:'8px'}}>⬡ FirmFlow</h1>
         <p style={{color:'#6B7280',marginBottom:'24px'}}>Sign in to your workspace</p>
         {error && <p style={{color:'red',marginBottom:'16px',fontSize:'13px'}}>{error}</p>}
-        <input
-          style={inputStyle}
-          type="email"
-          placeholder="Email address"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-        />
-        <input
-          style={{...inputStyle, marginBottom:'16px'}}
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-        />
-        <button
-          onClick={handleLogin}
-          disabled={loading}
-          style={{width:'100%',padding:'12px',background:'#1C64F2',color:'#fff',border:'none',borderRadius:'8px',fontSize:'14px',fontWeight:'600',cursor:'pointer'}}
-        >
+        <input style={inputStyle} type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)} />
+        <input style={{...inputStyle,marginBottom:'16px'}} type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
+        <button onClick={handleLogin} disabled={loading} style={{width:'100%',padding:'12px',background:'#1C64F2',color:'#fff',border:'none',borderRadius:'8px',fontSize:'14px',fontWeight:'600',cursor:'pointer'}}>
           {loading ? 'Signing in...' : 'Sign in →'}
         </button>
         <p style={{textAlign:'center',marginTop:'16px',fontSize:'13px',color:'#6B7280'}}>
@@ -73,4 +51,5 @@ export default function Login() {
       </div>
     </div>
   )
+}
 }
