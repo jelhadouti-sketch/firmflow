@@ -48,17 +48,6 @@ export default async function Signatures() {
     { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
   ]
 
-  const SigningLink = ({ id, status, sigData }: { id: string, status: string, sigData: string }) => {
-    const url = '/sign/' + id
-    if (status === 'pending') {
-      return <a href={url} style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none',display:'inline-block'}}>🔗 Signing link →</a>
-    }
-    if (status === 'signed' && sigData) {
-      return <div style={{display:'flex',alignItems:'center',gap:'8px'}}><img src={sigData} alt="Signature" style={{height:'32px',objectFit:'contain',border:'1px solid #E2E8F0',borderRadius:'4px',padding:'2px',background:'#fff'}} /><span style={{fontSize:'11px',color:'#15803D',fontWeight:'600'}}>✅ Signed</span></div>
-    }
-    return null
-  }
-
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
       <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
@@ -125,7 +114,7 @@ export default async function Signatures() {
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Status</th>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Due date</th>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Requested</th>
-                    <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Action</th>
+                    <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Signature</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -134,13 +123,19 @@ export default async function Signatures() {
                       <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'600',color:'#0F172A'}}>{(sig.documents as any)?.name || '—'}</td>
                       <td style={{padding:'14px 20px'}}>
                         <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:sig.status==='signed'?'#F0FDF4':sig.status==='pending'?'#FEF3C7':'#F1F5F9',color:sig.status==='signed'?'#15803D':sig.status==='pending'?'#92400E':'#64748B'}}>
-                          {sig.status}
+                          {sig.status === 'pending' ? '⏳ Awaiting client' : '✅ Signed'}
                         </span>
                       </td>
                       <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{sig.due_date ? new Date(sig.due_date).toLocaleDateString('en-GB') : '—'}</td>
                       <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{sig.created_at ? new Date(sig.created_at).toLocaleDateString('en-GB') : '—'}</td>
                       <td style={{padding:'14px 20px'}}>
-                        <SigningLink id={sig.id} status={sig.status} sigData={sig.sig_data} />
+                        {sig.status === 'signed' && sig.sig_data ? (
+                          <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                            <img src={sig.sig_data} alt="Signature" style={{height:'36px',objectFit:'contain',border:'1px solid #E2E8F0',borderRadius:'6px',padding:'4px',background:'#fff',maxWidth:'120px'}} />
+                          </div>
+                        ) : (
+                          <span style={{fontSize:'12px',color:'#94A3B8'}}>Pending...</span>
+                        )}
                       </td>
                     </tr>
                   ))}
