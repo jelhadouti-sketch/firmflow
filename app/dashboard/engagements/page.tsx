@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import NewEngagement from './new-engagement'
+import EngagementSearch from './engagement-search'
 
 export default async function Engagements() {
   const supabase = await createClient()
@@ -85,48 +86,15 @@ export default async function Engagements() {
           </div>
 
           <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>
-            <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0'}}>
-              <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A'}}>All engagements</h2>
-            </div>
-
             {!engagements?.length ? (
               <div style={{padding:'48px',textAlign:'center',color:'#94A3B8'}}>
                 <p style={{fontSize:'32px',marginBottom:'8px'}}>📋</p>
-                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px'}}>No engagements yet</p>
+                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No engagements yet</p>
                 <p style={{fontSize:'13px',marginBottom:'20px'}}>Create your first engagement to get started</p>
                 <NewEngagement />
               </div>
             ) : (
-              <table style={{width:'100%',borderCollapse:'collapse'}}>
-                <thead>
-                  <tr style={{background:'#F8FAFC'}}>
-                    <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Title</th>
-                    <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Type</th>
-                    <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Status</th>
-                    <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Due date</th>
-                    <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Budget</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {engagements.map((eng, i) => (
-                    <tr key={i} style={{borderTop:'1px solid #F1F5F9'}}>
-                      <td style={{padding:'14px 20px'}}>
-                        <p style={{fontSize:'13px',fontWeight:'600',color:'#0F172A',marginBottom:'2px'}}>{eng.title}</p>
-                      </td>
-                      <td style={{padding:'14px 20px'}}>
-                        <span style={{padding:'3px 8px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'5px',fontSize:'11px',fontWeight:'600'}}>{eng.type}</span>
-                      </td>
-                      <td style={{padding:'14px 20px'}}>
-                        <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:eng.status==='active'?'#F0FDF4':eng.status==='review'?'#FEF3C7':'#F1F5F9',color:eng.status==='active'?'#15803D':eng.status==='review'?'#92400E':'#64748B'}}>
-                          {eng.status}
-                        </span>
-                      </td>
-                      <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{eng.due_date ? new Date(eng.due_date).toLocaleDateString('en-GB') : '—'}</td>
-                      <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'600',color:'#0F172A'}}>{eng.budget ? `$${eng.budget.toLocaleString()}` : '—'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <EngagementSearch engagements={engagements} />
             )}
           </div>
         </main>
