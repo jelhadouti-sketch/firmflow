@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import InviteClient from './invite-client'
+import ClientSearch from './client-search'
 
 export default async function Clients() {
   const supabase = await createClient()
@@ -31,11 +32,6 @@ export default async function Clients() {
       return { ...client, email: authUser?.user?.email || '—' }
     })
   )
-
-  const { data: signatures } = await supabaseAdmin
-    .from('signature_requests')
-    .select('signer_id, status')
-    .eq('firm_id', profile.firm_id)
 
   const sidebarItems = [
     { icon:'🏠', label:'Dashboard', href:'/dashboard' },
@@ -91,45 +87,8 @@ export default async function Clients() {
               <InviteClient />
             </div>
           ) : (
-            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:'16px'}}>
-              {clientsWithEmail.map((client, i) => {
-                const clientSigs = signatures?.filter(s => s.signer_id === client.id) || []
-                const signedCount = clientSigs.filter(s => s.status === 'signed').length
-                const pendingCount = clientSigs.filter(s => s.status === 'pending').length
-                const clientUrl = '/dashboard/clients/' + client.id
-
-                return (
-                  <a key={i} href={clientUrl} style={{textDecoration:'none',display:'block'}}>
-                    <div style={{background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0',boxShadow:'0 1px 4px rgba(0,0,0,0.04)',cursor:'pointer',transition:'box-shadow 0.2s'}}>
-                      <div style={{display:'flex',alignItems:'center',gap:'14px',marginBottom:'16px'}}>
-                        <div style={{width:'48px',height:'48px',borderRadius:'50%',background:'linear-gradient(135deg,#1C64F2,#7C3AED)',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'18px',fontWeight:'800',flexShrink:0}}>
-                          {client.full_name?.charAt(0)?.toUpperCase() || '?'}
-                        </div>
-                        <div style={{flex:1,minWidth:0}}>
-                          <p style={{fontSize:'14px',fontWeight:'700',color:'#0F172A',marginBottom:'2px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{client.full_name || '—'}</p>
-                          <p style={{fontSize:'12px',color:'#64748B',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{client.email}</p>
-                        </div>
-                        <span style={{fontSize:'18px',color:'#CBD5E1'}}>→</span>
-                      </div>
-
-                      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px',marginBottom:'12px'}}>
-                        <div style={{background:'#F0FDF4',borderRadius:'6px',padding:'8px',textAlign:'center'}}>
-                          <p style={{fontSize:'16px',fontWeight:'800',color:'#15803D',margin:'0'}}>{signedCount}</p>
-                          <p style={{fontSize:'10px',color:'#15803D',margin:'0',fontWeight:'500'}}>Signed</p>
-                        </div>
-                        <div style={{background:'#FEF3C7',borderRadius:'6px',padding:'8px',textAlign:'center'}}>
-                          <p style={{fontSize:'16px',fontWeight:'800',color:'#92400E',margin:'0'}}>{pendingCount}</p>
-                          <p style={{fontSize:'10px',color:'#92400E',margin:'0',fontWeight:'500'}}>Pending</p>
-                        </div>
-                      </div>
-
-                      <p style={{fontSize:'11px',color:'#94A3B8',margin:'0'}}>
-                        Added {client.created_at ? new Date(client.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—'}
-                      </p>
-                    </div>
-                  </a>
-                )
-              })}
+            <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>
+              <ClientSearch clients={clientsWithEmail} />
             </div>
           )}
         </main>
