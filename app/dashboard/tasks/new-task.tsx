@@ -5,7 +5,7 @@ export default function NewTask() {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState('')
-  const [priority, setPriority] = useState('medium')
+  const [priority, setPriority] = useState('med')
   const [dueDate, setDueDate] = useState('')
 
   async function handleSubmit() {
@@ -55,13 +55,17 @@ export default function NewTask() {
         <div style={{marginBottom:'16px'}}>
           <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>Priority</label>
           <div style={{display:'flex',gap:'8px'}}>
-            {['low', 'medium', 'high'].map(p => (
+            {[
+              { value:'low', label:'Low' },
+              { value:'med', label:'Medium' },
+              { value:'high', label:'High' },
+            ].map(p => (
               <button
-                key={p}
-                onClick={() => setPriority(p)}
-                style={{flex:1,padding:'10px',borderRadius:'8px',border:`2px solid ${priority===p?'#1C64F2':'#E2E8F0'}`,background:priority===p?'#EFF6FF':'#fff',color:priority===p?'#1D4ED8':'#64748B',fontSize:'13px',fontWeight:'600',cursor:'pointer',textTransform:'capitalize'}}
+                key={p.value}
+                onClick={() => setPriority(p.value)}
+                style={{flex:1,padding:'10px',borderRadius:'8px',border:`2px solid ${priority===p.value?'#1C64F2':'#E2E8F0'}`,background:priority===p.value?'#EFF6FF':'#fff',color:priority===p.value?'#1D4ED8':'#64748B',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}
               >
-                {p}
+                {p.label}
               </button>
             ))}
           </div>
