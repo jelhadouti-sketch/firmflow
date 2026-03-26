@@ -18,12 +18,23 @@ export default async function PortalDashboard() {
 
   const firm = profile.firms as any
 
-  const { data: documents } = await supabaseAdmin
-    .from('documents')
-    .select('*')
-    .eq('firm_id', profile.firm_id)
-    .eq('visibility', 'client')
-    .order('created_at', { ascending: false })
+  // Only get documents linked to this client's signature requests
+  const { data: sigDocs } = await supabaseAdmin
+    .from('signature_requests')
+    .select('document_id')
+    .eq('signer_id', user.id)
+
+  const sigDocIds = sigDocs?.map(s => s.document_id) || []
+
+  let documents: any[] = []
+  if (sigDocIds.length > 0) {
+    const { data: docs } = await supabaseAdmin
+      .from('documents')
+      .select('*')
+      .in('id', sigDocIds)
+      .order('created_at', { ascending: false })
+    documents = docs || []
+  }
 
   const { data: signatures } = await supabaseAdmin
     .from('signature_requests')
@@ -42,7 +53,6 @@ export default async function PortalDashboard() {
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
 
-      {/* Header */}
       <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
         <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
           <span style={{fontSize:'18px',fontWeight:'800',color:'#1C64F2'}}>⬡ FirmFlow</span>
@@ -56,8 +66,6 @@ export default async function PortalDashboard() {
       </header>
 
       <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
-
-        {/* Sidebar */}
         <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
           {[
             { icon:'🏠', label:'Dashboard', href:'/portal/dashboard', active:true },
@@ -73,7 +81,6 @@ export default async function PortalDashboard() {
 
         <main style={{flex:1,padding:'32px',overflow:'auto'}}>
 
-          {/* Welcome */}
           <div style={{marginBottom:'28px'}}>
             <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>
               Welcome, {profile.full_name?.split(' ')[0] || 'there'}! 👋
@@ -81,23 +88,19 @@ export default async function PortalDashboard() {
             <p style={{color:'#64748B',fontSize:'14px'}}>{firm?.name} · Client portal</p>
           </div>
 
-          {/* Pending signatures alert */}
           {pendingSigs.length > 0 && (
             <div style={{background:'linear-gradient(135deg,#FEF3C7,#FDE68A)',borderRadius:'12px',padding:'20px 24px',marginBottom:'24px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'12px'}}>
               <div>
                 <p style={{color:'#92400E',fontWeight:'700',fontSize:'15px',margin:'0 0 4px'}}>⚠️ You have {pendingSigs.length} document{pendingSigs.length > 1 ? 's' : ''} awaiting your signature</p>
                 <p style={{color:'#78350F',fontSize:'13px',margin:'0'}}>Please review and sign as soon as possible</p>
               </div>
-              <a href="/portal/signatures" style={{padding:'10px 20px',background:'#92400E',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'700',whiteSpace:'nowrap'}}>
-                Sign now →
-              </a>
+              <a href="/portal/signatures" style={{padding:'10px 20px',background:'#92400E',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'700',whiteSpace:'nowrap'}}>Sign now →</a>
             </div>
           )}
 
-          {/* Stats */}
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
             {[
-              { label:'Documents', value: documents?.length || 0, icon:'📄', color:'#1D4ED8', href:'/portal/documents' },
+              { label:'Documents', value: documents.length, icon:'📄', color:'#1D4ED8', href:'/portal/documents' },
               { label:'Signatures', value: signatures?.length || 0, icon:'✍', color:'#7C3AED', href:'/portal/signatures' },
               { label:'Pending signs', value: pendingSigs.length, icon:'⏳', color:'#92400E', href:'/portal/signatures' },
               { label:'Engagements', value: engagements?.length || 0, icon:'📋', color:'#15803D', href:'/portal/dashboard' },
@@ -114,14 +117,13 @@ export default async function PortalDashboard() {
             ))}
           </div>
 
-          {/* Recent documents */}
           <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden',marginBottom:'20px'}}>
             <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-              <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',margin:'0'}}>📄 Recent documents</h2>
+              <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',margin:'0'}}>📄 My documents</h2>
               <a href="/portal/documents" style={{fontSize:'13px',color:'#1C64F2',textDecoration:'none',fontWeight:'600'}}>View all →</a>
             </div>
-            {!documents?.length ? (
-              <div style={{padding:'24px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>No documents yet</div>
+            {!documents.length ? (
+              <div style={{padding:'24px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>No documents shared with you yet</div>
             ) : (
               documents.slice(0, 5).map((doc, i) => (
                 <div key={i} style={{padding:'12px 20px',borderBottom:'1px solid #F1F5F9',display:'flex',alignItems:'center',gap:'12px'}}>
@@ -136,7 +138,6 @@ export default async function PortalDashboard() {
             )}
           </div>
 
-          {/* Recent signatures */}
           <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>
             <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
               <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',margin:'0'}}>✍ Signature requests</h2>
