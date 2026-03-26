@@ -122,7 +122,7 @@ export default async function Signatures() {
                     <tr key={i} style={{borderTop:'1px solid #F1F5F9'}}>
                       <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'600',color:'#0F172A'}}>{(sig.documents as any)?.name || '—'}</td>
                       <td style={{padding:'14px 20px'}}>
-                        <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:sig.status==='signed'?'#F0FDF4':sig.status==='pending'?'#FEF3C7':'#F1F5F9',color:sig.status==='signed'?'#15803D':sig.status==='pending'?'#92400E':'#64748B'}}>
+                        <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:sig.status==='signed'?'#F0FDF4':'#FEF3C7',color:sig.status==='signed'?'#15803D':'#92400E'}}>
                           {sig.status === 'pending' ? '⏳ Awaiting client' : '✅ Signed'}
                         </span>
                       </td>
@@ -131,7 +131,8 @@ export default async function Signatures() {
                       <td style={{padding:'14px 20px'}}>
                         {sig.status === 'signed' && sig.sig_data ? (
                           <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
-                            <img src={sig.sig_data} alt="Signature" style={{height:'36px',objectFit:'contain',border:'1px solid #E2E8F0',borderRadius:'6px',padding:'4px',background:'#fff',maxWidth:'120px'}} />
+                            <img src={sig.sig_data} alt="Signature" style={{height:'36px',objectFit:'contain',border:'1px solid #E2E8F0',borderRadius:'6px',padding:'4px',background:'#fff',maxWidth:'100px'}} />
+                            <a href={'/api/signatures/download?id=' + sig.id} style={{padding:'6px 12px',background:'#1C64F2',color:'#fff',borderRadius:'6px',fontSize:'11px',fontWeight:'600',textDecoration:'none',whiteSpace:'nowrap'}}>⬇ Download</a>
                           </div>
                         ) : (
                           <span style={{fontSize:'12px',color:'#94A3B8'}}>Pending...</span>
