@@ -134,7 +134,7 @@ export default async function Signatures() {
                       <td style={{padding:'14px 20px'}}>
                         {sig.status === 'pending' && (
                           
-                            href={`/sign/${sig.id}`}
+                            href={'/sign/' + sig.id}
                             target="_blank"
                             style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none',display:'inline-block'}}
                           >
