@@ -1,11 +1,13 @@
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import SignatureCanvas from './signature-canvas'
 
-export default async function SignPage({ params }: { params: { id: string } }) {
+export default async function SignPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+
   const { data: sigRequest } = await supabaseAdmin
     .from('signature_requests')
     .select('*, documents(name, storage_path), profiles!signer_id(full_name)')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (!sigRequest) {
@@ -55,8 +57,6 @@ export default async function SignPage({ params }: { params: { id: string } }) {
 
       <div style={{maxWidth:'600px',margin:'0 auto',padding:'40px 24px'}}>
         <div style={{background:'#fff',borderRadius:'16px',padding:'32px',border:'1px solid #E2E8F0',boxShadow:'0 4px 20px rgba(0,0,0,0.06)'}}>
-
-          {/* Document info */}
           <div style={{background:'#F8FAFC',borderRadius:'8px',padding:'16px',marginBottom:'24px',border:'1px solid #E2E8F0'}}>
             <p style={{fontSize:'12px',color:'#64748B',marginBottom:'4px'}}>Document to sign</p>
             <p style={{fontSize:'16px',fontWeight:'700',color:'#0F172A',marginBottom:'4px'}}>📄 {doc?.name}</p>
@@ -65,10 +65,7 @@ export default async function SignPage({ params }: { params: { id: string } }) {
               {sigRequest.due_date && ` · Due: ${new Date(sigRequest.due_date).toLocaleDateString('en-GB')}`}
             </p>
           </div>
-
-          {/* Signature canvas */}
-          <SignatureCanvas signatureId={params.id} />
-
+          <SignatureCanvas signatureId={id} />
         </div>
       </div>
     </div>
