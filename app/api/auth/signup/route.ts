@@ -36,15 +36,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: userError.message }, { status: 400 })
   }
 
-  // Create the profile manually
+  // Create the profile
   const { error: profileError } = await supabaseAdmin
     .from('profiles')
     .insert({
       id: authData.user.id,
       firm_id: firm.id,
       full_name: fullName,
-      role: 'admin',
-      email: email
+      role: 'admin'
     })
 
   if (profileError) {
