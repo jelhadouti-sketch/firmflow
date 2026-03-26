@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import NewEngagement from './new-engagement'
 
 export default async function Engagements() {
   const supabase = await createClient()
@@ -23,10 +24,21 @@ export default async function Engagements() {
     .eq('firm_id', profile.firm_id)
     .order('created_at', { ascending: false })
 
+  const sidebarItems = [
+    { icon:'🏠', label:'Dashboard', href:'/dashboard' },
+    { icon:'📋', label:'Engagements', href:'/dashboard/engagements', active:true },
+    { icon:'📄', label:'Documents', href:'/dashboard/documents' },
+    { icon:'✍', label:'Signatures', href:'/dashboard/signatures' },
+    { icon:'✅', label:'Tasks', href:'/dashboard/tasks' },
+    { icon:'⏱', label:'Time & billing', href:'/dashboard/time' },
+    { icon:'💳', label:'Invoices', href:'/dashboard/invoices' },
+    { icon:'👥', label:'Clients', href:'/dashboard/clients' },
+    { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
+    { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
+  ]
+
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
-
-      {/* HEADER */}
       <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
         <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
           <span style={{fontSize:'18px',fontWeight:'800',color:'#1C64F2'}}>⬡ FirmFlow</span>
@@ -40,21 +52,8 @@ export default async function Engagements() {
       </header>
 
       <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
-
-        {/* SIDEBAR */}
         <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
-          {[
-            { icon:'🏠', label:'Dashboard', href:'/dashboard' },
-            { icon:'📋', label:'Engagements', href:'/dashboard/engagements', active:true },
-            { icon:'📄', label:'Documents', href:'/dashboard/documents' },
-            { icon:'✍', label:'Signatures', href:'/dashboard/signatures' },
-            { icon:'✅', label:'Tasks', href:'/dashboard/tasks' },
-            { icon:'⏱', label:'Time & billing', href:'/dashboard/time' },
-            { icon:'💳', label:'Invoices', href:'/dashboard/invoices' },
-            { icon:'👥', label:'Clients', href:'/dashboard/clients' },
-            { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
-            { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
-          ].map((item, i) => (
+          {sidebarItems.map((item, i) => (
             <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
               <span>{item.icon}</span>
               <span>{item.label}</span>
@@ -62,16 +61,15 @@ export default async function Engagements() {
           ))}
         </aside>
 
-        {/* MAIN */}
         <main style={{flex:1,padding:'32px',overflow:'auto'}}>
           <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}}>
             <div>
               <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Engagements</h1>
               <p style={{color:'#64748B',fontSize:'14px'}}>{engagements?.length || 0} total engagements</p>
             </div>
+            <NewEngagement />
           </div>
 
-          {/* STATS */}
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
             {[
               { label:'Total', value: engagements?.length || 0, color:'#1D4ED8' },
@@ -86,9 +84,8 @@ export default async function Engagements() {
             ))}
           </div>
 
-          {/* TABLE */}
           <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>
-            <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+            <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0'}}>
               <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A'}}>All engagements</h2>
             </div>
 
@@ -96,7 +93,8 @@ export default async function Engagements() {
               <div style={{padding:'48px',textAlign:'center',color:'#94A3B8'}}>
                 <p style={{fontSize:'32px',marginBottom:'8px'}}>📋</p>
                 <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px'}}>No engagements yet</p>
-                <p style={{fontSize:'13px'}}>Create your first engagement to get started</p>
+                <p style={{fontSize:'13px',marginBottom:'20px'}}>Create your first engagement to get started</p>
+                <NewEngagement />
               </div>
             ) : (
               <table style={{width:'100%',borderCollapse:'collapse'}}>
