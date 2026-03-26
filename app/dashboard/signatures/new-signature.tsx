@@ -17,6 +17,7 @@ export default function NewSignature({ documents, clients }: { documents: Docume
   const [documentId, setDocumentId] = useState(documents[0]?.id || '')
   const [signerId, setSignerId] = useState(clients[0]?.id || '')
   const [dueDate, setDueDate] = useState('')
+  const [message, setMessage] = useState('')
 
   async function handleSubmit() {
     if (!documentId || !signerId) return
@@ -24,10 +25,11 @@ export default function NewSignature({ documents, clients }: { documents: Docume
     const res = await fetch('/api/signatures/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ document_id: documentId, signer_id: signerId, due_date: dueDate })
+      body: JSON.stringify({ document_id: documentId, signer_id: signerId, due_date: dueDate, message })
     })
     const data = await res.json()
     if (res.ok) {
+      setOpen(false)
       window.location.reload()
     } else {
       alert(data.error || 'Something went wrong')
@@ -36,17 +38,14 @@ export default function NewSignature({ documents, clients }: { documents: Docume
   }
 
   if (!open) return (
-    <button
-      onClick={() => setOpen(true)}
-      style={{padding:'9px 18px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}
-    >
+    <button onClick={() => setOpen(true)} style={{padding:'9px 18px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>
       + Request signature
     </button>
   )
 
   return (
     <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000}}>
-      <div style={{background:'#fff',borderRadius:'16px',padding:'32px',width:'480px',maxWidth:'calc(100vw - 32px)',boxShadow:'0 20px 60px rgba(0,0,0,0.2)'}}>
+      <div style={{background:'#fff',borderRadius:'16px',padding:'32px',width:'520px',maxWidth:'calc(100vw - 32px)',boxShadow:'0 20px 60px rgba(0,0,0,0.2)',maxHeight:'90vh',overflowY:'auto'}}>
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}}>
           <h2 style={{fontSize:'18px',fontWeight:'800',color:'#0F172A'}}>Request signature</h2>
           <button onClick={() => setOpen(false)} style={{background:'none',border:'none',fontSize:'20px',cursor:'pointer',color:'#64748B'}}>×</button>
@@ -54,21 +53,17 @@ export default function NewSignature({ documents, clients }: { documents: Docume
 
         {!documents.length ? (
           <div style={{padding:'20px',background:'#FEF3C7',borderRadius:'8px',marginBottom:'20px'}}>
-            <p style={{fontSize:'13px',color:'#92400E',margin:'0'}}>⚠️ You need to upload a document first before requesting a signature.</p>
+            <p style={{fontSize:'13px',color:'#92400E',margin:'0'}}>⚠️ Upload a document first before requesting a signature.</p>
           </div>
         ) : !clients.length ? (
           <div style={{padding:'20px',background:'#FEF3C7',borderRadius:'8px',marginBottom:'20px'}}>
-            <p style={{fontSize:'13px',color:'#92400E',margin:'0'}}>⚠️ You need to invite a client first before requesting a signature.</p>
+            <p style={{fontSize:'13px',color:'#92400E',margin:'0'}}>⚠️ Invite a client first before requesting a signature.</p>
           </div>
         ) : (
           <>
             <div style={{marginBottom:'16px'}}>
               <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>Document *</label>
-              <select
-                value={documentId}
-                onChange={e => setDocumentId(e.target.value)}
-                style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',color:'#0F172A'}}
-              >
+              <select value={documentId} onChange={e => setDocumentId(e.target.value)} style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',color:'#0F172A'}}>
                 {documents.map(doc => (
                   <option key={doc.id} value={doc.id}>{doc.name}</option>
                 ))}
@@ -76,25 +71,27 @@ export default function NewSignature({ documents, clients }: { documents: Docume
             </div>
 
             <div style={{marginBottom:'16px'}}>
-              <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>Signer (client) *</label>
-              <select
-                value={signerId}
-                onChange={e => setSignerId(e.target.value)}
-                style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',color:'#0F172A'}}
-              >
+              <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>Client to sign *</label>
+              <select value={signerId} onChange={e => setSignerId(e.target.value)} style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',color:'#0F172A'}}>
                 {clients.map(client => (
                   <option key={client.id} value={client.id}>{client.full_name}</option>
                 ))}
               </select>
             </div>
 
-            <div style={{marginBottom:'24px'}}>
+            <div style={{marginBottom:'16px'}}>
               <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>Due date</label>
-              <input
-                value={dueDate}
-                onChange={e => setDueDate(e.target.value)}
-                type="date"
-                style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',boxSizing:'border-box' as const,color:'#0F172A',outline:'none'}}
+              <input value={dueDate} onChange={e => setDueDate(e.target.value)} type="date" style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',boxSizing:'border-box' as const,color:'#0F172A',outline:'none'}} />
+            </div>
+
+            <div style={{marginBottom:'24px'}}>
+              <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>Personal message to client</label>
+              <textarea
+                value={message}
+                onChange={e => setMessage(e.target.value)}
+                placeholder="Dear John, please review and sign the attached document. Let me know if you have any questions."
+                rows={4}
+                style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',boxSizing:'border-box' as const,color:'#0F172A',outline:'none',resize:'vertical',fontFamily:'system-ui,sans-serif'}}
               />
             </div>
           </>
@@ -106,7 +103,7 @@ export default function NewSignature({ documents, clients }: { documents: Docume
           </button>
           {documents.length > 0 && clients.length > 0 && (
             <button onClick={handleSubmit} disabled={loading} style={{padding:'10px 20px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>
-              {loading ? 'Sending...' : 'Request signature →'}
+              {loading ? 'Sending...' : 'Send for signature →'}
             </button>
           )}
         </div>

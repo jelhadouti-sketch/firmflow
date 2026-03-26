@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 
   if (!profile) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-  const { document_id, signer_id, due_date } = await req.json()
+  const { document_id, signer_id, due_date, message } = await req.json()
 
   const { data: sigRequest, error } = await supabaseAdmin
     .from('signature_requests')
@@ -35,24 +35,26 @@ export async function POST(req: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
 
-  // Get document name
   const { data: doc } = await supabaseAdmin
     .from('documents')
     .select('name')
     .eq('id', document_id)
     .single()
 
-  // Get signer email from auth
   const { data: signerAuth } = await supabaseAdmin.auth.admin.getUserById(signer_id)
 
-  // Get firm name
+  const { data: signer } = await supabaseAdmin
+    .from('profiles')
+    .select('full_name')
+    .eq('id', signer_id)
+    .single()
+
   const { data: firm } = await supabaseAdmin
     .from('firms')
     .select('name')
     .eq('id', profile.firm_id)
     .single()
 
-  // Send email to client
   const signerEmail = signerAuth?.user?.email
   if (signerEmail) {
     const signUrl = process.env.NEXT_PUBLIC_APP_URL + '/sign/' + sigRequest.id
@@ -60,25 +62,61 @@ export async function POST(req: NextRequest) {
       await resend.emails.send({
         from: process.env.RESEND_FROM || 'hello@firmflow.uk',
         to: signerEmail,
-        subject: 'Action required: Please sign "' + (doc?.name || 'document') + '"',
+        subject: 'Please sign: "' + (doc?.name || 'document') + '" from ' + (firm?.name || 'your firm'),
         html: `
-          <div style="font-family:sans-serif;max-width:560px;margin:0 auto">
-            <div style="background:#1C64F2;padding:24px;border-radius:8px 8px 0 0">
-              <h1 style="color:#fff;margin:0;font-size:20px">⬡ FirmFlow — Signature required</h1>
+          <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:600px;margin:0 auto;background:#ffffff">
+
+            <!-- Header -->
+            <div style="background:#1C64F2;padding:32px 40px;border-radius:12px 12px 0 0">
+              <div style="font-size:22px;font-weight:800;color:#ffffff;letter-spacing:-0.04em">⬡ FirmFlow</div>
+              <div style="color:rgba(255,255,255,0.8);font-size:14px;margin-top:4px">Secure document signing</div>
             </div>
-            <div style="background:#f9fafb;padding:24px;border:1px solid #e5e7eb;border-top:none">
-              <p style="margin:0 0 12px">Hello,</p>
-              <p style="margin:0 0 12px"><strong>${profile.full_name || 'Your accountant'}</strong> at <strong>${firm?.name || 'your firm'}</strong> has requested your signature on:</p>
-              <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:16px 0">
-                <p style="margin:0;font-weight:700;font-size:16px">📄 ${doc?.name || 'Document'}</p>
-                ${due_date ? '<p style="margin:8px 0 0;color:#6b7280;font-size:14px">Due by: ' + new Date(due_date).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'}) + '</p>' : ''}
+
+            <!-- Body -->
+            <div style="padding:40px;border:1px solid #E2E8F0;border-top:none;border-radius:0 0 12px 12px">
+
+              <p style="font-size:16px;color:#0F172A;margin:0 0 8px">Hello <strong>${signer?.full_name || 'there'}</strong>,</p>
+
+              ${message ? `
+              <div style="background:#F8FAFC;border-left:4px solid #1C64F2;padding:16px 20px;border-radius:0 8px 8px 0;margin:20px 0">
+                <p style="font-size:14px;color:#374151;margin:0;line-height:1.6;font-style:italic">${message}</p>
+                <p style="font-size:12px;color:#94A3B8;margin:12px 0 0">— ${profile.full_name || 'Your accountant'}, ${firm?.name || ''}</p>
               </div>
-              <a href="${signUrl}" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:16px;margin-top:8px">
-                ✍ Sign document →
-              </a>
-              <p style="color:#6b7280;font-size:12px;margin-top:24px">This link is secure and unique to you. Do not share it with others.</p>
+              ` : `
+              <p style="font-size:14px;color:#475569;margin:16px 0"><strong>${profile.full_name || 'Your accountant'}</strong> at <strong>${firm?.name || 'your firm'}</strong> has requested your signature on a document.</p>
+              `}
+
+              <!-- Document card -->
+              <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:20px;margin:24px 0">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="width:44px;height:44px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📄</div>
+                  <div>
+                    <div style="font-size:15px;font-weight:700;color:#0F172A">${doc?.name || 'Document'}</div>
+                    ${due_date ? '<div style="font-size:13px;color:#64748B;margin-top:3px">Due by: ' + new Date(due_date).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'}) + '</div>' : ''}
+                  </div>
+                </div>
+              </div>
+
+              <!-- CTA Button -->
+              <div style="text-align:center;margin:32px 0">
+                <a href="${signUrl}" style="display:inline-block;background:#1C64F2;color:#ffffff;padding:16px 40px;border-radius:10px;text-decoration:none;font-weight:700;font-size:16px;letter-spacing:-0.01em">
+                  ✍ Review &amp; Sign Document →
+                </a>
+              </div>
+
+              <!-- Security note -->
+              <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:14px 16px;margin-top:24px">
+                <p style="font-size:12px;color:#15803D;margin:0">🔒 This link is secure, unique to you, and expires after signing. Do not share it with others.</p>
+              </div>
+
             </div>
-            <p style="color:#9ca3af;font-size:12px;text-align:center;margin-top:16px">Powered by FirmFlow · firmflow.uk</p>
+
+            <!-- Footer -->
+            <p style="text-align:center;color:#94A3B8;font-size:12px;margin-top:20px">
+              Powered by <strong>FirmFlow</strong> · firmflow.uk<br>
+              Secure electronic signatures for professional firms
+            </p>
+
           </div>
         `
       })
