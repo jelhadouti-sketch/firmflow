@@ -117,6 +117,7 @@ export default async function Signatures() {
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Status</th>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Due date</th>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Requested</th>
+                    <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -130,6 +131,23 @@ export default async function Signatures() {
                       </td>
                       <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{sig.due_date ? new Date(sig.due_date).toLocaleDateString('en-GB') : '—'}</td>
                       <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{sig.created_at ? new Date(sig.created_at).toLocaleDateString('en-GB') : '—'}</td>
+                      <td style={{padding:'14px 20px'}}>
+                        {sig.status === 'pending' && (
+                          
+                            href={`/sign/${sig.id}`}
+                            target="_blank"
+                            style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none',display:'inline-block'}}
+                          >
+                            🔗 Signing link →
+                          </a>
+                        )}
+                        {sig.status === 'signed' && sig.sig_data && (
+                          <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                            <img src={sig.sig_data} alt="Signature" style={{height:'32px',objectFit:'contain',border:'1px solid #E2E8F0',borderRadius:'4px',padding:'2px',background:'#fff'}} />
+                            <span style={{fontSize:'11px',color:'#15803D',fontWeight:'600'}}>✅ Signed</span>
+                          </div>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
