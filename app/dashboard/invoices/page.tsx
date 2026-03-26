@@ -104,7 +104,6 @@ export default async function Invoices() {
                 <thead>
                   <tr style={{background:'#F8FAFC'}}>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Invoice #</th>
-                    <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Description</th>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Amount</th>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Status</th>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Due date</th>
@@ -114,14 +113,13 @@ export default async function Invoices() {
                   {invoices.map((inv, i) => (
                     <tr key={i} style={{borderTop:'1px solid #F1F5F9'}}>
                       <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'700',color:'#0F172A'}}>{inv.invoice_number || `INV-${i+1}`}</td>
-                      <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{inv.description || '—'}</td>
                       <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'700',color:'#1D4ED8'}}>${(inv.amount || 0).toLocaleString()}</td>
                       <td style={{padding:'14px 20px'}}>
                         <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:inv.status==='paid'?'#F0FDF4':inv.status==='overdue'?'#FEF2F2':'#FEF3C7',color:inv.status==='paid'?'#15803D':inv.status==='overdue'?'#DC2626':'#92400E'}}>
                           {inv.status}
                         </span>
                       </td>
-                      <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{inv.due_date ? new Date(inv.due_date).toLocaleDateString('en-GB') : '—'}</td>
+                      <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{inv.due_at ? new Date(inv.due_at).toLocaleDateString('en-GB') : '—'}</td>
                     </tr>
                   ))}
                 </tbody>

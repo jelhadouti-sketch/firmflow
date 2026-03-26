@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       user_id: user.id,
       description,
       hours,
-      date,
+      entry_date: date,
       billed: false
     })
 

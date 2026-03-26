@@ -24,7 +24,8 @@ export async function POST(req: NextRequest) {
       title,
       priority,
       due_date: due_date || null,
-      done: false
+      done: false,
+      assignee_id: user.id
     })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })

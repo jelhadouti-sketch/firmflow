@@ -23,8 +23,8 @@ export async function POST(req: NextRequest) {
       firm_id: profile.firm_id,
       invoice_number,
       amount,
-      due_date,
-      description,
+      due_at: due_date || null,
+      issued_at: new Date().toISOString(),
       status: 'pending'
     })
 

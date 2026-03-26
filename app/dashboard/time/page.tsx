@@ -118,7 +118,7 @@ export default async function Time() {
                           {entry.billed ? 'billed' : 'unbilled'}
                         </span>
                       </td>
-                      <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{entry.date ? new Date(entry.date).toLocaleDateString('en-GB') : '—'}</td>
+                      <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{entry.entry_date ? new Date(entry.entry_date).toLocaleDateString('en-GB') : '—'}</td>
                     </tr>
                   ))}
                 </tbody>
