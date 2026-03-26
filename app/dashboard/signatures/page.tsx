@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import NewSignature from './new-signature'
 
 export default async function Signatures() {
   const supabase = await createClient()
@@ -22,6 +23,17 @@ export default async function Signatures() {
     .select('*, documents(name)')
     .eq('firm_id', profile.firm_id)
     .order('created_at', { ascending: false })
+
+  const { data: documents } = await supabaseAdmin
+    .from('documents')
+    .select('id, name')
+    .eq('firm_id', profile.firm_id)
+
+  const { data: clients } = await supabaseAdmin
+    .from('profiles')
+    .select('id, full_name')
+    .eq('firm_id', profile.firm_id)
+    .eq('role', 'client')
 
   const sidebarItems = [
     { icon:'🏠', label:'Dashboard', href:'/dashboard' },
@@ -61,9 +73,15 @@ export default async function Signatures() {
         </aside>
 
         <main style={{flex:1,padding:'32px',overflow:'auto'}}>
-          <div style={{marginBottom:'24px'}}>
-            <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Signatures</h1>
-            <p style={{color:'#64748B',fontSize:'14px'}}>{signatures?.length || 0} total signature requests</p>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}}>
+            <div>
+              <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Signatures</h1>
+              <p style={{color:'#64748B',fontSize:'14px'}}>{signatures?.length || 0} total signature requests</p>
+            </div>
+            <NewSignature
+              documents={documents || []}
+              clients={clients || []}
+            />
           </div>
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
@@ -87,8 +105,9 @@ export default async function Signatures() {
             {!signatures?.length ? (
               <div style={{padding:'48px',textAlign:'center',color:'#94A3B8'}}>
                 <p style={{fontSize:'32px',marginBottom:'8px'}}>✍</p>
-                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px'}}>No signature requests yet</p>
-                <p style={{fontSize:'13px'}}>Upload a document and request a signature</p>
+                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No signature requests yet</p>
+                <p style={{fontSize:'13px',marginBottom:'20px'}}>Upload a document and request a signature from a client</p>
+                <NewSignature documents={documents || []} clients={clients || []} />
               </div>
             ) : (
               <table style={{width:'100%',borderCollapse:'collapse'}}>
