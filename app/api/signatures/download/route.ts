@@ -23,7 +23,6 @@ export async function GET(req: NextRequest) {
   const doc = sigRequest.documents as any
   const signer = sigRequest.profiles as any
 
-  // Download original PDF from storage
   const { data: fileData, error: fileError } = await supabaseAdmin.storage
     .from('Documents')
     .download(doc.storage_path)
@@ -32,7 +31,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Could not download document' }, { status: 400 })
   }
 
-  // Load PDF with pdf-lib
   const pdfBytes = await fileData.arrayBuffer()
   const pdfDoc = await PDFDocument.load(pdfBytes)
 
@@ -40,11 +38,9 @@ export async function GET(req: NextRequest) {
   const lastPage = pages[pages.length - 1]
   const { width } = lastPage.getSize()
 
-  // Embed fonts
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
   const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
-  // Embed signature image
   if (sigRequest.sig_data) {
     const base64Data = sigRequest.sig_data.replace('data:image/png;base64,', '')
     const sigImageBytes = Buffer.from(base64Data, 'base64')
@@ -53,7 +49,6 @@ export async function GET(req: NextRequest) {
     const sigWidth = 180
     const sigHeight = 60
 
-    // Draw signature box border
     lastPage.drawRectangle({
       x: 40,
       y: 60,
@@ -63,7 +58,6 @@ export async function GET(req: NextRequest) {
       borderWidth: 1,
     })
 
-    // Draw signature image
     lastPage.drawImage(sigImage, {
       x: 50,
       y: 80,
@@ -71,7 +65,6 @@ export async function GET(req: NextRequest) {
       height: sigHeight,
     })
 
-    // Labels
     lastPage.drawText('Electronically signed by:', {
       x: 40,
       y: 148,
@@ -108,7 +101,6 @@ export async function GET(req: NextRequest) {
       color: rgb(0.6, 0.64, 0.70),
     })
 
-    // Blue verification bar at bottom
     lastPage.drawRectangle({
       x: 0,
       y: 0,
@@ -126,7 +118,7 @@ export async function GET(req: NextRequest) {
     })
   }
 
-  const signedPdfBytes = await pdfDoc.save()
+  const signedPdfBytes = Buffer.from(await pdfDoc.save())
   const fileName = (doc.name || 'document').replace('.pdf', '') + '-signed.pdf'
 
   return new NextResponse(signedPdfBytes, {
