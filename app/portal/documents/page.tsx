@@ -18,12 +18,50 @@ export default async function PortalDocuments() {
 
   const firm = profile.firms as any
 
-  const { data: documents } = await supabaseAdmin
-    .from('documents')
-    .select('*')
+  // Get signature requests for this client to find their document IDs
+  const { data: sigRequests } = await supabaseAdmin
+    .from('signature_requests')
+    .select('document_id')
+    .eq('signer_id', user.id)
+
+  const sigDocIds = sigRequests?.map(s => s.document_id) || []
+
+  // Get engagements for this client
+  const { data: engagements } = await supabaseAdmin
+    .from('engagements')
+    .select('id')
+    .eq('client_id', user.id)
     .eq('firm_id', profile.firm_id)
-    .eq('visibility', 'client')
-    .order('created_at', { ascending: false })
+
+  const engagementIds = engagements?.map(e => e.id) || []
+
+  // Get documents that are either:
+  // 1. Client visible AND linked to client's engagements
+  // 2. Linked to client's signature requests
+  let documents: any[] = []
+
+  if (engagementIds.length > 0) {
+    const { data: engDocs } = await supabaseAdmin
+      .from('documents')
+      .select('*')
+      .eq('firm_id', profile.firm_id)
+      .eq('visibility', 'client')
+      .in('engagement_id', engagementIds)
+      .order('created_at', { ascending: false })
+    documents = [...(engDocs || [])]
+  }
+
+  if (sigDocIds.length > 0) {
+    const { data: sigDocs } = await supabaseAdmin
+      .from('documents')
+      .select('*')
+      .in('id', sigDocIds)
+      .order('created_at', { ascending: false })
+    // Add signature docs that aren't already in list
+    const existingIds = documents.map(d => d.id)
+    const newDocs = (sigDocs || []).filter(d => !existingIds.includes(d.id))
+    documents = [...documents, ...newDocs]
+  }
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
@@ -55,12 +93,12 @@ export default async function PortalDocuments() {
 
         <main style={{flex:1,padding:'32px',overflow:'auto'}}>
           <div style={{marginBottom:'24px'}}>
-            <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Documents</h1>
-            <p style={{color:'#64748B',fontSize:'14px'}}>{documents?.length || 0} documents shared with you</p>
+            <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>My documents</h1>
+            <p style={{color:'#64748B',fontSize:'14px'}}>{documents.length} documents shared with you</p>
           </div>
 
           <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>
-            {!documents?.length ? (
+            {!documents.length ? (
               <div style={{padding:'48px',textAlign:'center',color:'#94A3B8'}}>
                 <p style={{fontSize:'32px',marginBottom:'8px'}}>📄</p>
                 <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No documents yet</p>
