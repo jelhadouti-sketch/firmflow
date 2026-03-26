@@ -17,9 +17,11 @@ export default function NewEngagement() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, type, budget: Number(budget), due_date: dueDate })
     })
+    const data = await res.json()
     if (res.ok) {
       window.location.reload()
     } else {
+      alert(data.error || 'Something went wrong')
       setLoading(false)
     }
   }
@@ -47,7 +49,7 @@ export default function NewEngagement() {
             value={title}
             onChange={e => setTitle(e.target.value)}
             placeholder="e.g. Annual Tax Return 2025"
-            style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',boxSizing:'border-box' as const,color:'#0F172A'}}
+            style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',boxSizing:'border-box' as const,color:'#0F172A',outline:'none'}}
           />
         </div>
 
@@ -74,7 +76,7 @@ export default function NewEngagement() {
               onChange={e => setBudget(e.target.value)}
               type="number"
               placeholder="5000"
-              style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',boxSizing:'border-box' as const,color:'#0F172A'}}
+              style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',boxSizing:'border-box' as const,color:'#0F172A',outline:'none'}}
             />
           </div>
           <div>
@@ -83,7 +85,7 @@ export default function NewEngagement() {
               value={dueDate}
               onChange={e => setDueDate(e.target.value)}
               type="date"
-              style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',boxSizing:'border-box' as const,color:'#0F172A'}}
+              style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',boxSizing:'border-box' as const,color:'#0F172A',outline:'none'}}
             />
           </div>
         </div>

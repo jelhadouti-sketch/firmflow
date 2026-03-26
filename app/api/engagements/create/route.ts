@@ -23,10 +23,9 @@ export async function POST(req: NextRequest) {
       firm_id: profile.firm_id,
       title,
       type,
-      budget,
-      due_date,
-      status: 'active',
-      created_by: user.id
+      budget: budget || null,
+      due_date: due_date || null,
+      status: 'active'
     })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
