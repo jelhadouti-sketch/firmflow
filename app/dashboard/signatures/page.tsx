@@ -78,10 +78,7 @@ export default async function Signatures() {
               <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Signatures</h1>
               <p style={{color:'#64748B',fontSize:'14px'}}>{signatures?.length || 0} total signature requests</p>
             </div>
-            <NewSignature
-              documents={documents || []}
-              clients={clients || []}
-            />
+            <NewSignature documents={documents || []} clients={clients || []} />
           </div>
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
@@ -121,35 +118,38 @@ export default async function Signatures() {
                   </tr>
                 </thead>
                 <tbody>
-                  {signatures.map((sig, i) => (
-                    <tr key={i} style={{borderTop:'1px solid #F1F5F9'}}>
-                      <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'600',color:'#0F172A'}}>{(sig.documents as any)?.name || '—'}</td>
-                      <td style={{padding:'14px 20px'}}>
-                        <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:sig.status==='signed'?'#F0FDF4':sig.status==='pending'?'#FEF3C7':'#F1F5F9',color:sig.status==='signed'?'#15803D':sig.status==='pending'?'#92400E':'#64748B'}}>
-                          {sig.status}
-                        </span>
-                      </td>
-                      <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{sig.due_date ? new Date(sig.due_date).toLocaleDateString('en-GB') : '—'}</td>
-                      <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{sig.created_at ? new Date(sig.created_at).toLocaleDateString('en-GB') : '—'}</td>
-                      <td style={{padding:'14px 20px'}}>
-                        {sig.status === 'pending' && (
-                          
-                            href={'/sign/' + sig.id}
-                            target="_blank"
-                            style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none',display:'inline-block'}}
-                          >
-                            🔗 Signing link →
-                          </a>
-                        )}
-                        {sig.status === 'signed' && sig.sig_data && (
-                          <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
-                            <img src={sig.sig_data} alt="Signature" style={{height:'32px',objectFit:'contain',border:'1px solid #E2E8F0',borderRadius:'4px',padding:'2px',background:'#fff'}} />
-                            <span style={{fontSize:'11px',color:'#15803D',fontWeight:'600'}}>✅ Signed</span>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
+                  {signatures.map((sig, i) => {
+                    const signUrl = '/sign/' + sig.id
+                    return (
+                      <tr key={i} style={{borderTop:'1px solid #F1F5F9'}}>
+                        <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'600',color:'#0F172A'}}>{(sig.documents as any)?.name || '—'}</td>
+                        <td style={{padding:'14px 20px'}}>
+                          <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:sig.status==='signed'?'#F0FDF4':sig.status==='pending'?'#FEF3C7':'#F1F5F9',color:sig.status==='signed'?'#15803D':sig.status==='pending'?'#92400E':'#64748B'}}>
+                            {sig.status}
+                          </span>
+                        </td>
+                        <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{sig.due_date ? new Date(sig.due_date).toLocaleDateString('en-GB') : '—'}</td>
+                        <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{sig.created_at ? new Date(sig.created_at).toLocaleDateString('en-GB') : '—'}</td>
+                        <td style={{padding:'14px 20px'}}>
+                          {sig.status === 'pending' && (
+                            
+                              href={signUrl}
+                              target="_blank"
+                              style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none',display:'inline-block'}}
+                            >
+                              🔗 Signing link →
+                            </a>
+                          )}
+                          {sig.status === 'signed' && sig.sig_data && (
+                            <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                              <img src={sig.sig_data} alt="Signature" style={{height:'32px',objectFit:'contain',border:'1px solid #E2E8F0',borderRadius:'4px',padding:'2px',background:'#fff'}} />
+                              <span style={{fontSize:'11px',color:'#15803D',fontWeight:'600'}}>✅ Signed</span>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             )}
