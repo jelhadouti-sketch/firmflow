@@ -19,8 +19,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: firmError.message }, { status: 400 })
   }
 
-  // Create the user
-  const { error: userError } = await supabaseAdmin.auth.admin.createUser({
+  // Create the user in Supabase Auth
+  const { data: authData, error: userError } = await supabaseAdmin.auth.admin.createUser({
     email,
     password,
     email_confirm: true,
@@ -34,6 +34,22 @@ export async function POST(req: NextRequest) {
   if (userError) {
     await supabaseAdmin.from('firms').delete().eq('id', firm.id)
     return NextResponse.json({ error: userError.message }, { status: 400 })
+  }
+
+  // Create the profile manually
+  const { error: profileError } = await supabaseAdmin
+    .from('profiles')
+    .insert({
+      id: authData.user.id,
+      firm_id: firm.id,
+      full_name: fullName,
+      role: 'admin',
+      email: email
+    })
+
+  if (profileError) {
+    await supabaseAdmin.from('firms').delete().eq('id', firm.id)
+    return NextResponse.json({ error: profileError.message }, { status: 400 })
   }
 
   return NextResponse.json({ success: true })
