@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 
 export default async function Dashboard() {
@@ -7,7 +8,7 @@ export default async function Dashboard() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabase
+  const { data: profile } = await supabaseAdmin
     .from('profiles')
     .select('*, firms(*)')
     .eq('id', user.id)
@@ -17,23 +18,23 @@ export default async function Dashboard() {
 
   const firm = profile.firms as any
 
-  const { count: engCount } = await supabase
+  const { count: engCount } = await supabaseAdmin
     .from('engagements')
     .select('*', { count: 'exact', head: true })
     .eq('firm_id', profile.firm_id)
 
-  const { count: docCount } = await supabase
+  const { count: docCount } = await supabaseAdmin
     .from('documents')
     .select('*', { count: 'exact', head: true })
     .eq('firm_id', profile.firm_id)
 
-  const { count: sigCount } = await supabase
+  const { count: sigCount } = await supabaseAdmin
     .from('signature_requests')
     .select('*', { count: 'exact', head: true })
     .eq('firm_id', profile.firm_id)
     .eq('status', 'pending')
 
-  const { count: taskCount } = await supabase
+  const { count: taskCount } = await supabaseAdmin
     .from('tasks')
     .select('*', { count: 'exact', head: true })
     .eq('firm_id', profile.firm_id)
