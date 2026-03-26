@@ -24,6 +24,8 @@ export default async function PortalSignatures() {
     .eq('signer_id', user.id)
     .order('created_at', { ascending: false })
 
+  const pendingCount = signatures?.filter(s => s.status === 'pending').length || 0
+
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
       <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
@@ -55,15 +57,14 @@ export default async function PortalSignatures() {
         <main style={{flex:1,padding:'32px',overflow:'auto'}}>
           <div style={{marginBottom:'24px'}}>
             <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Signature requests</h1>
-            <p style={{color:'#64748B',fontSize:'14px'}}>{signatures?.length || 0} total · {signatures?.filter(s=>s.status==='pending').length || 0} pending</p>
+            <p style={{color:'#64748B',fontSize:'14px'}}>{signatures?.length || 0} total · {pendingCount} pending</p>
           </div>
 
-          {/* Pending alert */}
-          {signatures?.filter(s=>s.status==='pending').length > 0 && (
+          {pendingCount > 0 && (
             <div style={{background:'#FEF3C7',border:'1px solid #FDE68A',borderRadius:'12px',padding:'16px 20px',marginBottom:'24px',display:'flex',alignItems:'center',gap:'12px'}}>
               <span style={{fontSize:'20px'}}>⚠️</span>
               <p style={{fontSize:'13px',color:'#92400E',fontWeight:'600',margin:'0'}}>
-                You have {signatures?.filter(s=>s.status==='pending').length} document{signatures?.filter(s=>s.status==='pending').length > 1 ? 's' : ''} waiting for your signature. Please review and sign them.
+                You have {pendingCount} document{pendingCount > 1 ? 's' : ''} waiting for your signature. Please review and sign them.
               </p>
             </div>
           )}
