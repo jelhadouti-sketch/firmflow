@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import LogTime from './log-time'
 
 export default async function Time() {
   const supabase = await createClient()
@@ -65,9 +66,12 @@ export default async function Time() {
         </aside>
 
         <main style={{flex:1,padding:'32px',overflow:'auto'}}>
-          <div style={{marginBottom:'24px'}}>
-            <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Time & billing</h1>
-            <p style={{color:'#64748B',fontSize:'14px'}}>{entries?.length || 0} time entries</p>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}}>
+            <div>
+              <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Time & billing</h1>
+              <p style={{color:'#64748B',fontSize:'14px'}}>{entries?.length || 0} time entries</p>
+            </div>
+            <LogTime />
           </div>
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
@@ -87,12 +91,12 @@ export default async function Time() {
             <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0'}}>
               <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A'}}>Time entries</h2>
             </div>
-
             {!entries?.length ? (
               <div style={{padding:'48px',textAlign:'center',color:'#94A3B8'}}>
                 <p style={{fontSize:'32px',marginBottom:'8px'}}>⏱</p>
-                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px'}}>No time entries yet</p>
-                <p style={{fontSize:'13px'}}>Start tracking your billable hours</p>
+                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No time entries yet</p>
+                <p style={{fontSize:'13px',marginBottom:'20px'}}>Start tracking your billable hours</p>
+                <LogTime />
               </div>
             ) : (
               <table style={{width:'100%',borderCollapse:'collapse'}}>

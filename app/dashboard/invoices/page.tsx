@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import NewInvoice from './new-invoice'
 
 export default async function Invoices() {
   const supabase = await createClient()
@@ -65,9 +66,12 @@ export default async function Invoices() {
         </aside>
 
         <main style={{flex:1,padding:'32px',overflow:'auto'}}>
-          <div style={{marginBottom:'24px'}}>
-            <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Invoices</h1>
-            <p style={{color:'#64748B',fontSize:'14px'}}>{invoices?.length || 0} total invoices</p>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}}>
+            <div>
+              <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Invoices</h1>
+              <p style={{color:'#64748B',fontSize:'14px'}}>{invoices?.length || 0} total invoices</p>
+            </div>
+            <NewInvoice />
           </div>
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
@@ -88,18 +92,19 @@ export default async function Invoices() {
             <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0'}}>
               <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A'}}>All invoices</h2>
             </div>
-
             {!invoices?.length ? (
               <div style={{padding:'48px',textAlign:'center',color:'#94A3B8'}}>
                 <p style={{fontSize:'32px',marginBottom:'8px'}}>💳</p>
-                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px'}}>No invoices yet</p>
-                <p style={{fontSize:'13px'}}>Create your first invoice to get started</p>
+                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No invoices yet</p>
+                <p style={{fontSize:'13px',marginBottom:'20px'}}>Create your first invoice to get started</p>
+                <NewInvoice />
               </div>
             ) : (
               <table style={{width:'100%',borderCollapse:'collapse'}}>
                 <thead>
                   <tr style={{background:'#F8FAFC'}}>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Invoice #</th>
+                    <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Description</th>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Amount</th>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Status</th>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Due date</th>
@@ -109,6 +114,7 @@ export default async function Invoices() {
                   {invoices.map((inv, i) => (
                     <tr key={i} style={{borderTop:'1px solid #F1F5F9'}}>
                       <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'700',color:'#0F172A'}}>{inv.invoice_number || `INV-${i+1}`}</td>
+                      <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{inv.description || '—'}</td>
                       <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'700',color:'#1D4ED8'}}>${(inv.amount || 0).toLocaleString()}</td>
                       <td style={{padding:'14px 20px'}}>
                         <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:inv.status==='paid'?'#F0FDF4':inv.status==='overdue'?'#FEF2F2':'#FEF3C7',color:inv.status==='paid'?'#15803D':inv.status==='overdue'?'#DC2626':'#92400E'}}>

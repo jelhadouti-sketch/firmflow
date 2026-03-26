@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import NewTask from './new-task'
 
 export default async function Tasks() {
   const supabase = await createClient()
@@ -61,9 +62,12 @@ export default async function Tasks() {
         </aside>
 
         <main style={{flex:1,padding:'32px',overflow:'auto'}}>
-          <div style={{marginBottom:'24px'}}>
-            <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Tasks</h1>
-            <p style={{color:'#64748B',fontSize:'14px'}}>{tasks?.length || 0} total tasks</p>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}}>
+            <div>
+              <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Tasks</h1>
+              <p style={{color:'#64748B',fontSize:'14px'}}>{tasks?.length || 0} total tasks</p>
+            </div>
+            <NewTask />
           </div>
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
@@ -83,12 +87,12 @@ export default async function Tasks() {
             <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0'}}>
               <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A'}}>All tasks</h2>
             </div>
-
             {!tasks?.length ? (
               <div style={{padding:'48px',textAlign:'center',color:'#94A3B8'}}>
                 <p style={{fontSize:'32px',marginBottom:'8px'}}>✅</p>
-                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px'}}>No tasks yet</p>
-                <p style={{fontSize:'13px'}}>Create your first task to get started</p>
+                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No tasks yet</p>
+                <p style={{fontSize:'13px',marginBottom:'20px'}}>Create your first task to get started</p>
+                <NewTask />
               </div>
             ) : (
               <table style={{width:'100%',borderCollapse:'collapse'}}>

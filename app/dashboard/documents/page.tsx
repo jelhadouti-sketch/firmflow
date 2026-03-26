@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import UploadDocument from './upload-document'
 
 export default async function Documents() {
   const supabase = await createClient()
@@ -66,6 +67,7 @@ export default async function Documents() {
               <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Documents</h1>
               <p style={{color:'#64748B',fontSize:'14px'}}>{documents?.length || 0} total documents</p>
             </div>
+            <UploadDocument />
           </div>
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
@@ -85,12 +87,12 @@ export default async function Documents() {
             <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0'}}>
               <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A'}}>All documents</h2>
             </div>
-
             {!documents?.length ? (
               <div style={{padding:'48px',textAlign:'center',color:'#94A3B8'}}>
                 <p style={{fontSize:'32px',marginBottom:'8px'}}>📄</p>
-                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px'}}>No documents yet</p>
-                <p style={{fontSize:'13px'}}>Upload your first document to get started</p>
+                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No documents yet</p>
+                <p style={{fontSize:'13px',marginBottom:'20px'}}>Upload your first document to get started</p>
+                <UploadDocument />
               </div>
             ) : (
               <table style={{width:'100%',borderCollapse:'collapse'}}>
@@ -105,9 +107,7 @@ export default async function Documents() {
                 <tbody>
                   {documents.map((doc, i) => (
                     <tr key={i} style={{borderTop:'1px solid #F1F5F9'}}>
-                      <td style={{padding:'14px 20px'}}>
-                        <p style={{fontSize:'13px',fontWeight:'600',color:'#0F172A'}}>{doc.name}</p>
-                      </td>
+                      <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'600',color:'#0F172A'}}>{doc.name}</td>
                       <td style={{padding:'14px 20px'}}>
                         <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:doc.visibility==='client'?'#EFF6FF':'#F1F5F9',color:doc.visibility==='client'?'#1D4ED8':'#64748B'}}>
                           {doc.visibility || 'internal'}
