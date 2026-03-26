@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import InviteClient from './invite-client'
 
 export default async function Clients() {
   const supabase = await createClient()
@@ -67,16 +68,15 @@ export default async function Clients() {
               <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Clients</h1>
               <p style={{color:'#64748B',fontSize:'14px'}}>{clients?.length || 0} total clients</p>
             </div>
+            <InviteClient />
           </div>
 
           {!clients?.length ? (
             <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',padding:'48px',textAlign:'center',color:'#94A3B8'}}>
               <p style={{fontSize:'32px',marginBottom:'8px'}}>👥</p>
-              <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px'}}>No clients yet</p>
+              <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No clients yet</p>
               <p style={{fontSize:'13px',marginBottom:'20px'}}>Invite your first client to get started</p>
-              <a href="mailto:?subject=Invitation to FirmFlow" style={{padding:'10px 20px',background:'#1C64F2',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>
-                + Invite client
-              </a>
+              <InviteClient />
             </div>
           ) : (
             <div style={{display:'flex',flexDirection:'column',gap:'12px'}}>
