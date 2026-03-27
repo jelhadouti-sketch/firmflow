@@ -83,6 +83,7 @@ export default async function PortalDocuments() {
             { icon:'🏠', label:'Dashboard', href:'/portal/dashboard' },
             { icon:'📄', label:'Documents', href:'/portal/documents', active:true },
             { icon:'✍', label:'Signatures', href:'/portal/signatures' },
+            { icon:'💳', label:'Invoices', href:'/portal/invoices' },
           ].map((item, i) => (
             <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
               <span>{item.icon}</span>
