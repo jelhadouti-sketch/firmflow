@@ -37,6 +37,7 @@ export default async function Invoices() {
     { icon:'⏱', label:'Time & billing', href:'/dashboard/time' },
     { icon:'💳', label:'Invoices', href:'/dashboard/invoices', active:true },
     { icon:'👥', label:'Clients', href:'/dashboard/clients' },
+    { icon:'📅', label:'Calendar', href:'/dashboard/calendar' },
     { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
     { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
   ]

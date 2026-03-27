@@ -66,7 +66,8 @@ export default async function Dashboard() {
             { icon:'⏱', label:'Time & billing', href:'/dashboard/time' },
             { icon:'💳', label:'Invoices', href:'/dashboard/invoices' },
             { icon:'👥', label:'Clients', href:'/dashboard/clients' },
-            { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
+            { icon:'📅', label:'Calendar', href:'/dashboard/calendar' },
+    { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
             { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
           ].map((item, i) => (
             <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
