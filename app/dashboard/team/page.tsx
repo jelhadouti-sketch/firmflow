@@ -46,6 +46,7 @@ export default async function Team() {
     { icon:'👨‍💼', label:'Team', href:'/dashboard/team', active:true },
     { icon:'🔔', label:'Notifications', href:'/dashboard/notifications' },
     { icon:'📊', label:'Analytics', href:'/dashboard/analytics' },
+    { icon:'🔁', label:'Recurring', href:'/dashboard/recurring' },
     { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
     { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
   ]

@@ -30,6 +30,7 @@ export default async function Settings() {
     { icon:'👨‍💼', label:'Team', href:'/dashboard/team' },
     { icon:'🔔', label:'Notifications', href:'/dashboard/notifications' },
     { icon:'📊', label:'Analytics', href:'/dashboard/analytics' },
+    { icon:'🔁', label:'Recurring', href:'/dashboard/recurring' },
     { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
     { icon:'⚙️', label:'Settings', href:'/dashboard/settings', active:true },
   ]
