@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.CheckoutSession
+    const session = event.data.object as Stripe.Checkout.Session
 
     // Handle subscription payment (firm upgrade)
     if (session.mode === 'subscription' && session.metadata?.firm_id) {
