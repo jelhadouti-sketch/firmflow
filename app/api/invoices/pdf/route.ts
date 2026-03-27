@@ -191,7 +191,6 @@ export async function GET(req: NextRequest) {
     width: 180,
     height: 50,
     color: rgb(0.11, 0.39, 0.95),
-    borderRadius: 4,
   })
 
   page.drawText('TOTAL DUE', {
@@ -220,7 +219,6 @@ export async function GET(req: NextRequest) {
     width: 120,
     height: 30,
     color: statusBg,
-    borderRadius: 4,
   })
 
   page.drawText(invoice.status === 'paid' ? '✓ PAID' : '⏳ PENDING', {
