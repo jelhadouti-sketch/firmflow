@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation'
 
 export default async function Dashboard() {
   const supabase = await createClient()
-
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
@@ -14,31 +13,64 @@ export default async function Dashboard() {
     .eq('id', user.id)
     .single()
 
-  if (!profile) redirect('/firmflow')
+  if (!profile) redirect('/login')
 
   const firm = profile.firms as any
+  const isAdmin = profile.role === 'admin'
+  const pages = profile.permissions?.pages || []
+  const dataVisibility = profile.permissions?.data_visibility || 'own'
+
+  const hasPage = (page: string) => isAdmin || pages.includes('all') || pages.includes(page)
+
+  // Build query filter based on data visibility
+  const getFilter = () => {
+    if (isAdmin || dataVisibility === 'admin') return null // no filter = all data
+    if (dataVisibility === 'all') return null // all staff data
+    return user.id // own data only
+  }
+
+  const ownerId = getFilter()
 
   const { count: engCount } = await supabaseAdmin
     .from('engagements')
     .select('*', { count: 'exact', head: true })
     .eq('firm_id', profile.firm_id)
+    .match(ownerId ? { owner_id: ownerId } : {})
 
   const { count: docCount } = await supabaseAdmin
     .from('documents')
     .select('*', { count: 'exact', head: true })
     .eq('firm_id', profile.firm_id)
+    .match(ownerId ? { uploaded_by: ownerId } : {})
 
   const { count: sigCount } = await supabaseAdmin
     .from('signature_requests')
     .select('*', { count: 'exact', head: true })
     .eq('firm_id', profile.firm_id)
     .eq('status', 'pending')
+    .match(ownerId ? { sender_id: ownerId } : {})
 
   const { count: taskCount } = await supabaseAdmin
     .from('tasks')
     .select('*', { count: 'exact', head: true })
     .eq('firm_id', profile.firm_id)
     .eq('done', false)
+    .match(ownerId ? { assignee_id: ownerId } : {})
+
+  const sidebarItems = [
+    { icon:'🏠', label:'Dashboard', href:'/dashboard', active:true, show: true },
+    { icon:'📋', label:'Engagements', href:'/dashboard/engagements', show: hasPage('engagements') },
+    { icon:'📄', label:'Documents', href:'/dashboard/documents', show: hasPage('documents') },
+    { icon:'✍', label:'Signatures', href:'/dashboard/signatures', show: hasPage('signatures') },
+    { icon:'✅', label:'Tasks', href:'/dashboard/tasks', show: hasPage('tasks') },
+    { icon:'⏱', label:'Time & billing', href:'/dashboard/time', show: hasPage('time') },
+    { icon:'💳', label:'Invoices', href:'/dashboard/invoices', show: hasPage('invoices') },
+    { icon:'👥', label:'Clients', href:'/dashboard/clients', show: hasPage('clients') },
+    { icon:'📅', label:'Calendar', href:'/dashboard/calendar', show: hasPage('calendar') },
+    { icon:'👨‍💼', label:'Team', href:'/dashboard/team', show: isAdmin },
+    { icon:'💰', label:'Subscription', href:'/dashboard/subscription', show: isAdmin },
+    { icon:'⚙️', label:'Settings', href:'/dashboard/settings', show: isAdmin },
+  ].filter(item => item.show)
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
@@ -57,20 +89,7 @@ export default async function Dashboard() {
 
       <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
         <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
-          {[
-            { icon:'🏠', label:'Dashboard', href:'/dashboard', active:true },
-            { icon:'📋', label:'Engagements', href:'/dashboard/engagements' },
-            { icon:'📄', label:'Documents', href:'/dashboard/documents' },
-            { icon:'✍', label:'Signatures', href:'/dashboard/signatures' },
-            { icon:'✅', label:'Tasks', href:'/dashboard/tasks' },
-            { icon:'⏱', label:'Time & billing', href:'/dashboard/time' },
-            { icon:'💳', label:'Invoices', href:'/dashboard/invoices' },
-            { icon:'👥', label:'Clients', href:'/dashboard/clients' },
-            { icon:'📅', label:'Calendar', href:'/dashboard/calendar' },
-    { icon:'👨‍💼', label:'Team', href:'/dashboard/team' },
-    { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
-            { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
-          ].map((item, i) => (
+          {sidebarItems.map((item, i) => (
             <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
               <span>{item.icon}</span>
               <span>{item.label}</span>
@@ -86,7 +105,7 @@ export default async function Dashboard() {
             <p style={{color:'#64748B',fontSize:'14px'}}>{firm?.name} · {profile.role}</p>
           </div>
 
-          {firm?.plan === 'starter' && (
+          {isAdmin && firm?.plan === 'starter' && (
             <div style={{background:'linear-gradient(135deg,#1C64F2,#7C3AED)',borderRadius:'12px',padding:'20px 24px',marginBottom:'24px',display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:'12px'}}>
               <div>
                 <p style={{color:'#fff',fontWeight:'700',fontSize:'15px',margin:'0 0 4px'}}>🚀 Upgrade to Pro</p>
@@ -100,11 +119,11 @@ export default async function Dashboard() {
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'16px',marginBottom:'28px'}}>
             {[
-              { label:'Engagements', value:engCount||0, icon:'📋', textColor:'#1D4ED8' },
-              { label:'Documents', value:docCount||0, icon:'📄', textColor:'#15803D' },
-              { label:'Pending signatures', value:sigCount||0, icon:'✍', textColor:'#92400E' },
-              { label:'Open tasks', value:taskCount||0, icon:'✅', textColor:'#DC2626' },
-            ].map((stat, i) => (
+              { label:'Engagements', value:engCount||0, icon:'📋', textColor:'#1D4ED8', show: hasPage('engagements') },
+              { label:'Documents', value:docCount||0, icon:'📄', textColor:'#15803D', show: hasPage('documents') },
+              { label:'Pending signatures', value:sigCount||0, icon:'✍', textColor:'#92400E', show: hasPage('signatures') },
+              { label:'Open tasks', value:taskCount||0, icon:'✅', textColor:'#DC2626', show: hasPage('tasks') },
+            ].filter(s => s.show).map((stat, i) => (
               <div key={i} style={{background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0',boxShadow:'0 1px 3px rgba(0,0,0,0.04)'}}>
                 <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'12px'}}>
                   <span style={{fontSize:'13px',color:'#64748B',fontWeight:'500'}}>{stat.label}</span>
@@ -118,43 +137,39 @@ export default async function Dashboard() {
           <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0',marginBottom:'24px'}}>
             <h2 style={{fontSize:'15px',fontWeight:'700',marginBottom:'16px',color:'#0F172A'}}>Quick actions</h2>
             <div style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
-              {[
-                { label:'+ New engagement', href:'/dashboard/engagements', color:'#1C64F2' },
-                { label:'+ Upload document', href:'/dashboard/documents', color:'#057A55' },
-                { label:'+ Invite client', href:'/dashboard/clients', color:'#7C3AED' },
-                { label:'+ Log time', href:'/dashboard/time', color:'#92400E' },
-                { label:'+ New invoice', href:'/dashboard/invoices', color:'#DC2626' },
-              ].map((action, i) => (
-                <a key={i} href={action.href} style={{padding:'9px 16px',background:action.color,color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>
-                  {action.label}
-                </a>
-              ))}
+              {hasPage('engagements') && <a href="/dashboard/engagements" style={{padding:'9px 16px',background:'#1C64F2',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ New engagement</a>}
+              {hasPage('documents') && <a href="/dashboard/documents" style={{padding:'9px 16px',background:'#057A55',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ Upload document</a>}
+              {hasPage('clients') && <a href="/dashboard/clients" style={{padding:'9px 16px',background:'#7C3AED',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ Invite client</a>}
+              {hasPage('time') && <a href="/dashboard/time" style={{padding:'9px 16px',background:'#92400E',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ Log time</a>}
+              {hasPage('invoices') && <a href="/dashboard/invoices" style={{padding:'9px 16px',background:'#DC2626',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ New invoice</a>}
             </div>
           </div>
 
-          <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0'}}>
-            <h2 style={{fontSize:'15px',fontWeight:'700',marginBottom:'16px',color:'#0F172A'}}>Getting started</h2>
-            {[
-              { done:true, label:'Create your firm account', desc:'Your workspace is ready!' },
-              { done:false, label:'Invite your first client', desc:'Go to Clients → Invite client', href:'/dashboard/clients' },
-              { done:false, label:'Upload your first document', desc:'Go to Documents → Upload', href:'/dashboard/documents' },
-              { done:false, label:'Create your first engagement', desc:'Go to Engagements → New engagement', href:'/dashboard/engagements' },
-              { done:false, label:'Send your first invoice', desc:'Go to Invoices → New invoice', href:'/dashboard/invoices' },
-            ].map((item, i) => (
-              <div key={i} style={{display:'flex',alignItems:'flex-start',gap:'12px',padding:'12px 0',borderBottom:'1px solid #F1F5F9'}}>
-                <div style={{width:'22px',height:'22px',borderRadius:'50%',background:item.done?'#16A34A':'#E2E8F0',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginTop:'2px'}}>
-                  {item.done && <span style={{color:'#fff',fontSize:'12px',fontWeight:'700'}}>✓</span>}
+          {isAdmin && (
+            <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0'}}>
+              <h2 style={{fontSize:'15px',fontWeight:'700',marginBottom:'16px',color:'#0F172A'}}>Getting started</h2>
+              {[
+                { done:true, label:'Create your firm account', desc:'Your workspace is ready!' },
+                { done:false, label:'Invite your first client', desc:'Go to Clients → Invite client', href:'/dashboard/clients' },
+                { done:false, label:'Upload your first document', desc:'Go to Documents → Upload', href:'/dashboard/documents' },
+                { done:false, label:'Create your first engagement', desc:'Go to Engagements → New engagement', href:'/dashboard/engagements' },
+                { done:false, label:'Send your first invoice', desc:'Go to Invoices → New invoice', href:'/dashboard/invoices' },
+              ].map((item, i) => (
+                <div key={i} style={{display:'flex',alignItems:'flex-start',gap:'12px',padding:'12px 0',borderBottom:'1px solid #F1F5F9'}}>
+                  <div style={{width:'22px',height:'22px',borderRadius:'50%',background:item.done?'#16A34A':'#E2E8F0',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginTop:'2px'}}>
+                    {item.done && <span style={{color:'#fff',fontSize:'12px',fontWeight:'700'}}>✓</span>}
+                  </div>
+                  <div style={{flex:1}}>
+                    <p style={{fontSize:'13px',fontWeight:'600',color:item.done?'#64748B':'#0F172A',margin:'0 0 2px',textDecoration:item.done?'line-through':'none'}}>{item.label}</p>
+                    <p style={{fontSize:'12px',color:'#94A3B8',margin:'0'}}>{item.desc}</p>
+                  </div>
+                  {!item.done && item.href && (
+                    <a href={item.href} style={{fontSize:'12px',color:'#1C64F2',textDecoration:'none',fontWeight:'600',whiteSpace:'nowrap'}}>Go →</a>
+                  )}
                 </div>
-                <div style={{flex:1}}>
-                  <p style={{fontSize:'13px',fontWeight:'600',color:item.done?'#64748B':'#0F172A',margin:'0 0 2px',textDecoration:item.done?'line-through':'none'}}>{item.label}</p>
-                  <p style={{fontSize:'12px',color:'#94A3B8',margin:'0'}}>{item.desc}</p>
-                </div>
-                {!item.done && item.href && (
-                  <a href={item.href} style={{fontSize:'12px',color:'#1C64F2',textDecoration:'none',fontWeight:'600',whiteSpace:'nowrap'}}>Go →</a>
-                )}
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </main>
       </div>
     </div>
