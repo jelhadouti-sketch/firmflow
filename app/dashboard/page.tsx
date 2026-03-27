@@ -1,35 +1,21 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 
 export default async function Dashboard() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('*, firms(*)')
-    .eq('id', user.id)
-    .single()
-
+  const profile = await getProfileWithPermissions(user.id)
   if (!profile) redirect('/login')
 
   const firm = profile.firms as any
-  const isAdmin = profile.role === 'admin'
-  const pages = profile.permissions?.pages || []
-  const dataVisibility = profile.permissions?.data_visibility || 'own'
+  const isAdmin = profile.isAdmin
+  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, '')
 
-  const hasPage = (page: string) => isAdmin || pages.includes('all') || pages.includes(page)
-
-  // Build query filter based on data visibility
-  const getFilter = () => {
-    if (isAdmin || dataVisibility === 'admin') return null // no filter = all data
-    if (dataVisibility === 'all') return null // all staff data
-    return user.id // own data only
-  }
-
-  const ownerId = getFilter()
+  const ownerId = profile.getOwnerId()
 
   const { count: engCount } = await supabaseAdmin
     .from('engagements')
@@ -57,20 +43,11 @@ export default async function Dashboard() {
     .eq('done', false)
     .match(ownerId ? { assignee_id: ownerId } : {})
 
-  const sidebarItems = [
-    { icon:'🏠', label:'Dashboard', href:'/dashboard', active:true, show: true },
-    { icon:'📋', label:'Engagements', href:'/dashboard/engagements', show: hasPage('engagements') },
-    { icon:'📄', label:'Documents', href:'/dashboard/documents', show: hasPage('documents') },
-    { icon:'✍', label:'Signatures', href:'/dashboard/signatures', show: hasPage('signatures') },
-    { icon:'✅', label:'Tasks', href:'/dashboard/tasks', show: hasPage('tasks') },
-    { icon:'⏱', label:'Time & billing', href:'/dashboard/time', show: hasPage('time') },
-    { icon:'💳', label:'Invoices', href:'/dashboard/invoices', show: hasPage('invoices') },
-    { icon:'👥', label:'Clients', href:'/dashboard/clients', show: hasPage('clients') },
-    { icon:'📅', label:'Calendar', href:'/dashboard/calendar', show: hasPage('calendar') },
-    { icon:'👨‍💼', label:'Team', href:'/dashboard/team', show: isAdmin },
-    { icon:'💰', label:'Subscription', href:'/dashboard/subscription', show: isAdmin },
-    { icon:'⚙️', label:'Settings', href:'/dashboard/settings', show: isAdmin },
-  ].filter(item => item.show)
+  const { count: unreadCount } = await supabaseAdmin
+    .from('notifications')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+    .eq('read', false)
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
@@ -82,6 +59,12 @@ export default async function Dashboard() {
           <span style={{padding:'2px 8px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'20px',fontSize:'11px',fontWeight:'700'}}>{firm?.plan?.toUpperCase()}</span>
         </div>
         <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
+          <a href="/dashboard/notifications" style={{position:'relative',textDecoration:'none',fontSize:'20px'}}>
+            🔔
+            {(unreadCount || 0) > 0 && (
+              <span style={{position:'absolute',top:'-4px',right:'-4px',background:'#DC2626',color:'#fff',borderRadius:'50%',width:'16px',height:'16px',fontSize:'9px',fontWeight:'800',display:'flex',alignItems:'center',justifyContent:'center'}}>{unreadCount}</span>
+            )}
+          </a>
           <span style={{fontSize:'13px',color:'#64748B'}}>{user.email}</span>
           <a href="/api/auth/logout" style={{padding:'6px 14px',background:'#F1F5F9',color:'#475569',borderRadius:'6px',textDecoration:'none',fontSize:'13px',fontWeight:'500'}}>Sign out</a>
         </div>
@@ -117,12 +100,26 @@ export default async function Dashboard() {
             </div>
           )}
 
+          {(unreadCount || 0) > 0 && (
+            <div style={{background:'#FEF3C7',border:'1px solid #FDE68A',borderRadius:'12px',padding:'16px 20px',marginBottom:'24px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'12px'}}>
+              <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+                <span style={{fontSize:'20px'}}>🔔</span>
+                <p style={{fontSize:'14px',fontWeight:'600',color:'#92400E',margin:'0'}}>
+                  You have <strong>{unreadCount}</strong> unread notification{(unreadCount || 0) > 1 ? 's' : ''} requiring your attention
+                </p>
+              </div>
+              <a href="/dashboard/notifications" style={{padding:'8px 16px',background:'#92400E',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600',whiteSpace:'nowrap'}}>
+                View →
+              </a>
+            </div>
+          )}
+
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'16px',marginBottom:'28px'}}>
             {[
-              { label:'Engagements', value:engCount||0, icon:'📋', textColor:'#1D4ED8', show: hasPage('engagements') },
-              { label:'Documents', value:docCount||0, icon:'📄', textColor:'#15803D', show: hasPage('documents') },
-              { label:'Pending signatures', value:sigCount||0, icon:'✍', textColor:'#92400E', show: hasPage('signatures') },
-              { label:'Open tasks', value:taskCount||0, icon:'✅', textColor:'#DC2626', show: hasPage('tasks') },
+              { label:'Engagements', value:engCount||0, icon:'📋', textColor:'#1D4ED8', show: profile.hasPage('engagements') },
+              { label:'Documents', value:docCount||0, icon:'📄', textColor:'#15803D', show: profile.hasPage('documents') },
+              { label:'Pending signatures', value:sigCount||0, icon:'✍', textColor:'#92400E', show: profile.hasPage('signatures') },
+              { label:'Open tasks', value:taskCount||0, icon:'✅', textColor:'#DC2626', show: profile.hasPage('tasks') },
             ].filter(s => s.show).map((stat, i) => (
               <div key={i} style={{background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0',boxShadow:'0 1px 3px rgba(0,0,0,0.04)'}}>
                 <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'12px'}}>
@@ -137,11 +134,11 @@ export default async function Dashboard() {
           <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0',marginBottom:'24px'}}>
             <h2 style={{fontSize:'15px',fontWeight:'700',marginBottom:'16px',color:'#0F172A'}}>Quick actions</h2>
             <div style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
-              {hasPage('engagements') && <a href="/dashboard/engagements" style={{padding:'9px 16px',background:'#1C64F2',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ New engagement</a>}
-              {hasPage('documents') && <a href="/dashboard/documents" style={{padding:'9px 16px',background:'#057A55',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ Upload document</a>}
-              {hasPage('clients') && <a href="/dashboard/clients" style={{padding:'9px 16px',background:'#7C3AED',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ Invite client</a>}
-              {hasPage('time') && <a href="/dashboard/time" style={{padding:'9px 16px',background:'#92400E',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ Log time</a>}
-              {hasPage('invoices') && <a href="/dashboard/invoices" style={{padding:'9px 16px',background:'#DC2626',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ New invoice</a>}
+              {profile.hasPage('engagements') && <a href="/dashboard/engagements" style={{padding:'9px 16px',background:'#1C64F2',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ New engagement</a>}
+              {profile.hasPage('documents') && <a href="/dashboard/documents" style={{padding:'9px 16px',background:'#057A55',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ Upload document</a>}
+              {profile.hasPage('clients') && <a href="/dashboard/clients" style={{padding:'9px 16px',background:'#7C3AED',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ Invite client</a>}
+              {profile.hasPage('time') && <a href="/dashboard/time" style={{padding:'9px 16px',background:'#92400E',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ Log time</a>}
+              {profile.hasPage('invoices') && <a href="/dashboard/invoices" style={{padding:'9px 16px',background:'#DC2626',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ New invoice</a>}
             </div>
           </div>
 
