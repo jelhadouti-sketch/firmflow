@@ -13,8 +13,13 @@ export default async function Settings() {
   if (!profile) redirect('/login')
   if (!profile.isAdmin) redirect('/dashboard')
 
-  const firm = profile.firms as any
   const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'settings')
+
+  const { data: firm } = await supabaseAdmin
+    .from('firms')
+    .select('*')
+    .eq('id', profile.firm_id)
+    .single()
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
