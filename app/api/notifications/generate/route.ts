@@ -15,6 +15,13 @@ export async function POST(req: NextRequest) {
 
   if (!profile) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
+  // Delete old notifications first to avoid duplicates
+  await supabaseAdmin
+    .from('notifications')
+    .delete()
+    .eq('user_id', user.id)
+    .eq('read', false)
+
   const today = new Date()
   const notifications: any[] = []
 
@@ -27,28 +34,16 @@ export async function POST(req: NextRequest) {
     .lt('due_at', today.toISOString())
 
   for (const inv of overdueInvoices || []) {
-    const exists = await supabaseAdmin
-      .from('notifications')
-      .select('id')
-      .eq('firm_id', profile.firm_id)
-      .eq('type', 'overdue_invoice')
-      .eq('action_url', '/dashboard/invoices')
-      .eq('user_id', user.id)
-      .contains('message', inv.invoice_number || '')
-      .single()
-
-    if (!exists.data) {
-      notifications.push({
-        firm_id: profile.firm_id,
-        user_id: user.id,
-        type: 'overdue_invoice',
-        title: '🚨 Overdue invoice',
-        message: 'Invoice ' + (inv.invoice_number || 'INV') + ' of $' + (inv.amount || 0).toLocaleString() + ' is overdue!',
-        action_url: '/dashboard/invoices',
-        action_label: 'View invoice',
-        read: false
-      })
-    }
+    notifications.push({
+      firm_id: profile.firm_id,
+      user_id: user.id,
+      type: 'overdue_invoice',
+      title: '🚨 Overdue invoice',
+      message: 'Invoice ' + (inv.invoice_number || 'INV') + ' of $' + (inv.amount || 0).toLocaleString() + ' is overdue!',
+      action_url: '/dashboard/invoices',
+      action_label: 'View invoice',
+      read: false
+    })
   }
 
   // 2. Overdue signatures
@@ -61,27 +56,16 @@ export async function POST(req: NextRequest) {
 
   for (const sig of overdueSignatures || []) {
     const docName = (sig.documents as any)?.name || 'Document'
-    const exists = await supabaseAdmin
-      .from('notifications')
-      .select('id')
-      .eq('firm_id', profile.firm_id)
-      .eq('type', 'overdue_signature')
-      .eq('user_id', user.id)
-      .contains('message', docName)
-      .single()
-
-    if (!exists.data) {
-      notifications.push({
-        firm_id: profile.firm_id,
-        user_id: user.id,
-        type: 'overdue_signature',
-        title: '⏳ Signature overdue',
-        message: docName + ' has not been signed and is past due date',
-        action_url: '/dashboard/signatures',
-        action_label: 'View signatures',
-        read: false
-      })
-    }
+    notifications.push({
+      firm_id: profile.firm_id,
+      user_id: user.id,
+      type: 'overdue_signature',
+      title: '⏳ Signature overdue',
+      message: docName + ' has not been signed and is past due date',
+      action_url: '/dashboard/signatures',
+      action_label: 'View signatures',
+      read: false
+    })
   }
 
   // 3. Overdue tasks
@@ -93,27 +77,16 @@ export async function POST(req: NextRequest) {
     .lt('due_date', today.toISOString())
 
   for (const task of overdueTasks || []) {
-    const exists = await supabaseAdmin
-      .from('notifications')
-      .select('id')
-      .eq('firm_id', profile.firm_id)
-      .eq('type', 'overdue_task')
-      .eq('user_id', user.id)
-      .contains('message', task.title || '')
-      .single()
-
-    if (!exists.data) {
-      notifications.push({
-        firm_id: profile.firm_id,
-        user_id: user.id,
-        type: 'overdue_task',
-        title: '✅ Task overdue',
-        message: 'Task "' + task.title + '" is past its due date',
-        action_url: '/dashboard/tasks',
-        action_label: 'View tasks',
-        read: false
-      })
-    }
+    notifications.push({
+      firm_id: profile.firm_id,
+      user_id: user.id,
+      type: 'overdue_task',
+      title: '✅ Task overdue',
+      message: 'Task "' + task.title + '" is past its due date',
+      action_url: '/dashboard/tasks',
+      action_label: 'View tasks',
+      read: false
+    })
   }
 
   // 4. Overdue engagements
@@ -125,30 +98,19 @@ export async function POST(req: NextRequest) {
     .lt('due_id', today.toISOString())
 
   for (const eng of overdueEngagements || []) {
-    const exists = await supabaseAdmin
-      .from('notifications')
-      .select('id')
-      .eq('firm_id', profile.firm_id)
-      .eq('type', 'overdue_engagement')
-      .eq('user_id', user.id)
-      .contains('message', eng.title || '')
-      .single()
-
-    if (!exists.data) {
-      notifications.push({
-        firm_id: profile.firm_id,
-        user_id: user.id,
-        type: 'overdue_engagement',
-        title: '📋 Engagement overdue',
-        message: 'Engagement "' + eng.title + '" is past its due date',
-        action_url: '/dashboard/engagements',
-        action_label: 'View engagement',
-        read: false
-      })
-    }
+    notifications.push({
+      firm_id: profile.firm_id,
+      user_id: user.id,
+      type: 'overdue_engagement',
+      title: '📋 Engagement overdue',
+      message: 'Engagement "' + eng.title + '" is past its due date',
+      action_url: '/dashboard/engagements',
+      action_label: 'View engagement',
+      read: false
+    })
   }
 
-  // 5. Recently signed documents
+  // 5. Recently signed documents (last 24 hours)
   const { data: recentlySigned } = await supabaseAdmin
     .from('signature_requests')
     .select('*, documents(name)')
@@ -156,18 +118,11 @@ export async function POST(req: NextRequest) {
     .eq('status', 'signed')
     .gte('signed_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
 
+  const addedDocs = new Set<string>()
   for (const sig of recentlySigned || []) {
     const docName = (sig.documents as any)?.name || 'Document'
-    const exists = await supabaseAdmin
-      .from('notifications')
-      .select('id')
-      .eq('firm_id', profile.firm_id)
-      .eq('type', 'document_signed')
-      .eq('user_id', user.id)
-      .eq('action_url', '/dashboard/signatures')
-      .single()
-
-    if (!exists.data) {
+    if (!addedDocs.has(sig.id)) {
+      addedDocs.add(sig.id)
       notifications.push({
         firm_id: profile.firm_id,
         user_id: user.id,
@@ -181,16 +136,14 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Insert all new notifications
+  // Insert all notifications
   if (notifications.length > 0) {
     await supabaseAdmin.from('notifications').insert(notifications)
   }
 
-  // Get total unread count
   const { count } = await supabaseAdmin
     .from('notifications')
     .select('*', { count: 'exact', head: true })
-    .eq('firm_id', profile.firm_id)
     .eq('user_id', user.id)
     .eq('read', false)
 
