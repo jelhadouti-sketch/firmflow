@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   if (!profile) return NextResponse.json({ error: 'Not found' }, { status: 404 })
   if (profile.role !== 'admin') return NextResponse.json({ error: 'Only admins can invite team members' }, { status: 403 })
 
-  const { fullName, email, role } = await req.json()
+  const { fullName, email, role, permissions, dataVisibility } = await req.json()
 
   if (!fullName || !email) {
     return NextResponse.json({ error: 'Name and email are required' }, { status: 400 })
@@ -31,10 +31,8 @@ export async function POST(req: NextRequest) {
     .eq('id', profile.firm_id)
     .single()
 
-  // Generate temp password
   const tempPassword = Math.random().toString(36).slice(2, 8).toUpperCase() + Math.random().toString(36).slice(2, 6) + '!'
 
-  // Create auth user
   const { data: authData, error: userError } = await supabaseAdmin.auth.admin.createUser({
     email,
     password: tempPassword,
@@ -50,22 +48,30 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: userError.message }, { status: 400 })
   }
 
-  // Create profile
   const { error: profileError } = await supabaseAdmin
     .from('profiles')
     .insert({
       id: authData.user.id,
       firm_id: profile.firm_id,
       full_name: fullName,
-      role
+      role,
+      permissions: {
+        pages: role === 'admin' ? ['all'] : (permissions || []),
+        data_visibility: role === 'admin' ? 'admin' : (dataVisibility || 'own')
+      }
     })
 
   if (profileError) {
     return NextResponse.json({ error: profileError.message }, { status: 400 })
   }
 
-  // Send welcome email
   const dashboardUrl = process.env.NEXT_PUBLIC_APP_URL + '/login'
+
+  // Build permissions summary for email
+  const permissionsList = role === 'admin'
+    ? 'Full access to all features'
+    : (permissions || []).join(', ') + ` · Data: ${dataVisibility === 'own' ? 'Own data only' : dataVisibility === 'all' ? 'All staff data' : 'Same as admin'}`
+
   try {
     await resend.emails.send({
       from: process.env.RESEND_FROM || 'hello@firmflow.uk',
@@ -83,7 +89,7 @@ export async function POST(req: NextRequest) {
               <strong>${profile.full_name || 'Your manager'}</strong> has invited you to join <strong>${firm?.name || 'their firm'}</strong> on FirmFlow as a <strong>${role}</strong>.
             </p>
 
-            <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:24px;margin:0 0 24px">
+            <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:24px;margin:0 0 20px">
               <p style="font-size:13px;font-weight:700;color:#374151;margin:0 0 16px;text-transform:uppercase;letter-spacing:0.05em">Your login credentials</p>
               <div style="margin-bottom:12px">
                 <p style="font-size:12px;color:#64748B;margin:0 0 4px">Login URL</p>
@@ -97,6 +103,11 @@ export async function POST(req: NextRequest) {
                 <p style="font-size:12px;color:#64748B;margin:0 0 4px">Temporary password</p>
                 <p style="font-size:20px;font-weight:800;color:#1C64F2;margin:0;letter-spacing:0.1em;font-family:monospace">${tempPassword}</p>
               </div>
+            </div>
+
+            <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:14px 16px;margin-bottom:24px">
+              <p style="font-size:12px;color:#1D4ED8;margin:0 0 4px;font-weight:700">Your access level:</p>
+              <p style="font-size:12px;color:#1D4ED8;margin:0">${permissionsList}</p>
             </div>
 
             <div style="text-align:center;margin:28px 0">
