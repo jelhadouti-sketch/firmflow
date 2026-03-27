@@ -34,6 +34,7 @@ export async function getProfileWithPermissions(userId: string) {
 export function buildSidebar(hasPage: (page: string) => boolean, isAdmin: boolean, activePage: string) {
   return [
     { icon:'🏠', label:'Dashboard', href:'/dashboard', show: true },
+    { icon:'🔔', label:'Notifications', href:'/dashboard/notifications', show: true },
     { icon:'📋', label:'Engagements', href:'/dashboard/engagements', show: hasPage('engagements') },
     { icon:'📄', label:'Documents', href:'/dashboard/documents', show: hasPage('documents') },
     { icon:'✍', label:'Signatures', href:'/dashboard/signatures', show: hasPage('signatures') },

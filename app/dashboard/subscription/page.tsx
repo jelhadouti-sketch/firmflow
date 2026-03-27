@@ -29,6 +29,7 @@ export default async function Subscription() {
     { icon:'👥', label:'Clients', href:'/dashboard/clients' },
     { icon:'📅', label:'Calendar', href:'/dashboard/calendar' },
     { icon:'👨‍💼', label:'Team', href:'/dashboard/team' },
+    { icon:'🔔', label:'Notifications', href:'/dashboard/notifications' },
     { icon:'📊', label:'Analytics', href:'/dashboard/analytics' },
     { icon:'💰', label:'Subscription', href:'/dashboard/subscription', active:true },
     { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
