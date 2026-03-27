@@ -35,6 +35,7 @@ export default async function Engagements() {
     { icon:'💳', label:'Invoices', href:'/dashboard/invoices' },
     { icon:'👥', label:'Clients', href:'/dashboard/clients' },
     { icon:'📅', label:'Calendar', href:'/dashboard/calendar' },
+    { icon:'👨‍💼', label:'Team', href:'/dashboard/team' },
     { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
     { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
   ]

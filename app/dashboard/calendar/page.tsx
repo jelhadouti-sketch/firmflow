@@ -99,6 +99,7 @@ export default async function Calendar() {
     { icon:'💳', label:'Invoices', href:'/dashboard/invoices' },
     { icon:'👥', label:'Clients', href:'/dashboard/clients' },
     { icon:'📅', label:'Calendar', href:'/dashboard/calendar', active:true },
+    { icon:'👨‍💼', label:'Team', href:'/dashboard/team' },
     { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
     { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
   ]
