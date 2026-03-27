@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import InviteMember from './invite-member'
+import EditMember from './edit-member'
 
 export default async function Team() {
   const supabase = await createClient()
@@ -80,7 +81,6 @@ export default async function Team() {
             {profile.role === 'admin' && <InviteMember />}
           </div>
 
-          {/* Stats */}
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
             {[
               { label:'Total members', value: membersWithEmail.length, color:'#1D4ED8' },
@@ -94,7 +94,6 @@ export default async function Team() {
             ))}
           </div>
 
-          {/* Team list */}
           <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>
             <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0'}}>
               <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',margin:'0'}}>All team members</h2>
@@ -110,26 +109,44 @@ export default async function Team() {
             ) : (
               <div>
                 {membersWithEmail.map((member, i) => (
-                  <div key={i} style={{display:'flex',alignItems:'center',gap:'16px',padding:'16px 20px',borderBottom:'1px solid #F1F5F9'}}>
+                  <div key={i} style={{display:'flex',alignItems:'center',gap:'16px',padding:'16px 20px',borderBottom:'1px solid #F1F5F9',flexWrap:'wrap'}}>
                     <div style={{width:'44px',height:'44px',borderRadius:'50%',background:member.role==='admin'?'linear-gradient(135deg,#7C3AED,#1C64F2)':'linear-gradient(135deg,#1C64F2,#0EA5E9)',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'16px',fontWeight:'800',flexShrink:0}}>
                       {member.full_name?.charAt(0)?.toUpperCase() || '?'}
                     </div>
-                    <div style={{flex:1}}>
+                    <div style={{flex:1,minWidth:'180px'}}>
                       <div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'2px'}}>
                         <p style={{fontSize:'14px',fontWeight:'700',color:'#0F172A',margin:'0'}}>{member.full_name}</p>
                         {member.id === user.id && (
                           <span style={{padding:'2px 8px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'10px',fontSize:'10px',fontWeight:'700'}}>YOU</span>
                         )}
                       </div>
-                      <p style={{fontSize:'13px',color:'#64748B',margin:'0'}}>{member.email}</p>
+                      <p style={{fontSize:'13px',color:'#64748B',margin:'0 0 4px'}}>{member.email}</p>
+                      {member.role === 'staff' && member.permissions?.pages && (
+                        <div style={{display:'flex',flexWrap:'wrap',gap:'4px',marginTop:'4px'}}>
+                          {member.permissions.pages.slice(0,4).map((page: string, j: number) => (
+                            <span key={j} style={{padding:'2px 6px',background:'#F1F5F9',color:'#64748B',borderRadius:'4px',fontSize:'10px',fontWeight:'500'}}>{page}</span>
+                          ))}
+                          {member.permissions.pages.length > 4 && (
+                            <span style={{padding:'2px 6px',background:'#F1F5F9',color:'#64748B',borderRadius:'4px',fontSize:'10px'}}>+{member.permissions.pages.length - 4} more</span>
+                          )}
+                        </div>
+                      )}
                     </div>
-                    <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+                    <div style={{display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap'}}>
                       <span style={{padding:'4px 12px',borderRadius:'20px',fontSize:'12px',fontWeight:'700',background:member.role==='admin'?'#F5F3FF':'#F0FDF4',color:member.role==='admin'?'#7C3AED':'#15803D'}}>
                         {member.role === 'admin' ? '👑 Admin' : '👤 Staff'}
                       </span>
+                      {member.role === 'staff' && member.permissions?.data_visibility && (
+                        <span style={{padding:'4px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:'600',background:'#EFF6FF',color:'#1D4ED8'}}>
+                          {member.permissions.data_visibility === 'own' ? '👤 Own data' : member.permissions.data_visibility === 'all' ? '👥 All data' : '👑 Admin view'}
+                        </span>
+                      )}
                       <span style={{fontSize:'12px',color:'#94A3B8'}}>
                         Joined {member.created_at ? new Date(member.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—'}
                       </span>
+                      {profile.role === 'admin' && (
+                        <EditMember member={member} currentUserId={user.id} />
+                      )}
                     </div>
                   </div>
                 ))}
