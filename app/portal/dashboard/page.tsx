@@ -18,7 +18,6 @@ export default async function PortalDashboard() {
 
   const firm = profile.firms as any
 
-  // Only get documents linked to this client's signature requests
   const { data: sigDocs } = await supabaseAdmin
     .from('signature_requests')
     .select('document_id')
@@ -42,17 +41,24 @@ export default async function PortalDashboard() {
     .eq('signer_id', user.id)
     .order('created_at', { ascending: false })
 
-  const { data: engagements } = await supabaseAdmin
-    .from('engagements')
+  const { data: invoices } = await supabaseAdmin
+    .from('invoices')
     .select('*')
     .eq('client_id', user.id)
     .order('created_at', { ascending: false })
 
   const pendingSigs = signatures?.filter(s => s.status === 'pending') || []
+  const pendingInvoices = invoices?.filter(i => i.status === 'pending') || []
+
+  const sidebarItems = [
+    { icon:'🏠', label:'Dashboard', href:'/portal/dashboard', active:true },
+    { icon:'📄', label:'Documents', href:'/portal/documents' },
+    { icon:'✍', label:'Signatures', href:'/portal/signatures' },
+    { icon:'💳', label:'Invoices', href:'/portal/invoices' },
+  ]
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
-
       <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
         <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
           <span style={{fontSize:'18px',fontWeight:'800',color:'#1C64F2'}}>⬡ FirmFlow</span>
@@ -67,13 +73,7 @@ export default async function PortalDashboard() {
 
       <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
         <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
-          {[
-            { icon:'🏠', label:'Dashboard', href:'/portal/dashboard', active:true },
-            { icon:'📄', label:'Documents', href:'/portal/documents' },
-            { icon:'✍', label:'Signatures', href:'/portal/signatures' },
-            { icon:'💳', label:'Invoices', href:'/portal/invoices' },
-            { icon:'💳', label:'Invoices', href:'/portal/invoices' },
-          ].map((item, i) => (
+          {sidebarItems.map((item, i) => (
             <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
               <span>{item.icon}</span>
               <span>{item.label}</span>
@@ -82,7 +82,6 @@ export default async function PortalDashboard() {
         </aside>
 
         <main style={{flex:1,padding:'32px',overflow:'auto'}}>
-
           <div style={{marginBottom:'28px'}}>
             <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>
               Welcome, {profile.full_name?.split(' ')[0] || 'there'}! 👋
@@ -91,12 +90,22 @@ export default async function PortalDashboard() {
           </div>
 
           {pendingSigs.length > 0 && (
-            <div style={{background:'linear-gradient(135deg,#FEF3C7,#FDE68A)',borderRadius:'12px',padding:'20px 24px',marginBottom:'24px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'12px'}}>
+            <div style={{background:'linear-gradient(135deg,#FEF3C7,#FDE68A)',borderRadius:'12px',padding:'20px 24px',marginBottom:'16px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'12px'}}>
               <div>
-                <p style={{color:'#92400E',fontWeight:'700',fontSize:'15px',margin:'0 0 4px'}}>⚠️ You have {pendingSigs.length} document{pendingSigs.length > 1 ? 's' : ''} awaiting your signature</p>
+                <p style={{color:'#92400E',fontWeight:'700',fontSize:'15px',margin:'0 0 4px'}}>⚠️ {pendingSigs.length} document{pendingSigs.length > 1 ? 's' : ''} awaiting your signature</p>
                 <p style={{color:'#78350F',fontSize:'13px',margin:'0'}}>Please review and sign as soon as possible</p>
               </div>
               <a href="/portal/signatures" style={{padding:'10px 20px',background:'#92400E',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'700',whiteSpace:'nowrap'}}>Sign now →</a>
+            </div>
+          )}
+
+          {pendingInvoices.length > 0 && (
+            <div style={{background:'linear-gradient(135deg,#EFF6FF,#DBEAFE)',borderRadius:'12px',padding:'20px 24px',marginBottom:'16px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'12px'}}>
+              <div>
+                <p style={{color:'#1D4ED8',fontWeight:'700',fontSize:'15px',margin:'0 0 4px'}}>💳 {pendingInvoices.length} invoice{pendingInvoices.length > 1 ? 's' : ''} pending payment</p>
+                <p style={{color:'#1E40AF',fontSize:'13px',margin:'0'}}>Total due: <strong>${pendingInvoices.reduce((a, i) => a + (i.amount || 0), 0).toLocaleString()}</strong></p>
+              </div>
+              <a href="/portal/invoices" style={{padding:'10px 20px',background:'#1C64F2',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'700',whiteSpace:'nowrap'}}>View invoices →</a>
             </div>
           )}
 
@@ -105,7 +114,7 @@ export default async function PortalDashboard() {
               { label:'Documents', value: documents.length, icon:'📄', color:'#1D4ED8', href:'/portal/documents' },
               { label:'Signatures', value: signatures?.length || 0, icon:'✍', color:'#7C3AED', href:'/portal/signatures' },
               { label:'Pending signs', value: pendingSigs.length, icon:'⏳', color:'#92400E', href:'/portal/signatures' },
-              { label:'Engagements', value: engagements?.length || 0, icon:'📋', color:'#15803D', href:'/portal/dashboard' },
+              { label:'Invoices', value: invoices?.length || 0, icon:'💳', color:'#15803D', href:'/portal/invoices' },
             ].map((stat, i) => (
               <a key={i} href={stat.href} style={{textDecoration:'none'}}>
                 <div style={{background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0',cursor:'pointer'}}>
@@ -134,13 +143,13 @@ export default async function PortalDashboard() {
                     <p style={{fontSize:'13px',fontWeight:'600',color:'#0F172A',margin:'0 0 2px'}}>{doc.name}</p>
                     <p style={{fontSize:'11px',color:'#94A3B8',margin:'0'}}>{doc.created_at ? new Date(doc.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : '—'}</p>
                   </div>
-                  <span style={{fontSize:'12px',color:'#64748B'}}>{doc.file_size ? Math.round(doc.file_size/1024) + ' KB' : '—'}</span>
+                  <a href={'/api/documents/download?id=' + doc.id} style={{padding:'5px 10px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none'}}>⬇ Download</a>
                 </div>
               ))
             )}
           </div>
 
-          <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>
+          <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden',marginBottom:'20px'}}>
             <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
               <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',margin:'0'}}>✍ Signature requests</h2>
               <a href="/portal/signatures" style={{fontSize:'13px',color:'#1C64F2',textDecoration:'none',fontWeight:'600'}}>View all →</a>
@@ -168,6 +177,31 @@ export default async function PortalDashboard() {
             )}
           </div>
 
+          <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>
+            <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+              <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',margin:'0'}}>💳 Recent invoices</h2>
+              <a href="/portal/invoices" style={{fontSize:'13px',color:'#1C64F2',textDecoration:'none',fontWeight:'600'}}>View all →</a>
+            </div>
+            {!invoices?.length ? (
+              <div style={{padding:'24px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>No invoices yet</div>
+            ) : (
+              invoices.slice(0, 3).map((inv, i) => (
+                <div key={i} style={{padding:'12px 20px',borderBottom:'1px solid #F1F5F9',display:'flex',alignItems:'center',gap:'12px'}}>
+                  <span style={{fontSize:'20px'}}>💳</span>
+                  <div style={{flex:1}}>
+                    <p style={{fontSize:'13px',fontWeight:'600',color:'#0F172A',margin:'0 0 2px'}}>{inv.invoice_number || 'Invoice'}</p>
+                    <p style={{fontSize:'11px',color:'#94A3B8',margin:'0'}}>{inv.issued_at ? new Date(inv.issued_at).toLocaleDateString('en-GB') : '—'}</p>
+                  </div>
+                  <div style={{textAlign:'right'}}>
+                    <p style={{fontSize:'14px',fontWeight:'800',color:'#1D4ED8',margin:'0 0 2px'}}>${(inv.amount || 0).toLocaleString()}</p>
+                    <span style={{padding:'2px 8px',borderRadius:'20px',fontSize:'10px',fontWeight:'600',background:inv.status==='paid'?'#F0FDF4':'#FEF3C7',color:inv.status==='paid'?'#15803D':'#92400E'}}>
+                      {inv.status === 'paid' ? '✅ Paid' : '⏳ Pending'}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </main>
       </div>
     </div>

@@ -18,50 +18,29 @@ export default async function PortalDocuments() {
 
   const firm = profile.firms as any
 
-  // Get signature requests for this client to find their document IDs
-  const { data: sigRequests } = await supabaseAdmin
+  const { data: sigDocs } = await supabaseAdmin
     .from('signature_requests')
     .select('document_id')
     .eq('signer_id', user.id)
 
-  const sigDocIds = sigRequests?.map(s => s.document_id) || []
+  const sigDocIds = sigDocs?.map(s => s.document_id) || []
 
-  // Get engagements for this client
-  const { data: engagements } = await supabaseAdmin
-    .from('engagements')
-    .select('id')
-    .eq('client_id', user.id)
-    .eq('firm_id', profile.firm_id)
-
-  const engagementIds = engagements?.map(e => e.id) || []
-
-  // Get documents that are either:
-  // 1. Client visible AND linked to client's engagements
-  // 2. Linked to client's signature requests
   let documents: any[] = []
-
-  if (engagementIds.length > 0) {
-    const { data: engDocs } = await supabaseAdmin
-      .from('documents')
-      .select('*')
-      .eq('firm_id', profile.firm_id)
-      .eq('visibility', 'client')
-      .in('engagement_id', engagementIds)
-      .order('created_at', { ascending: false })
-    documents = [...(engDocs || [])]
-  }
-
   if (sigDocIds.length > 0) {
-    const { data: sigDocs } = await supabaseAdmin
+    const { data: docs } = await supabaseAdmin
       .from('documents')
       .select('*')
       .in('id', sigDocIds)
       .order('created_at', { ascending: false })
-    // Add signature docs that aren't already in list
-    const existingIds = documents.map(d => d.id)
-    const newDocs = (sigDocs || []).filter(d => !existingIds.includes(d.id))
-    documents = [...documents, ...newDocs]
+    documents = docs || []
   }
+
+  const sidebarItems = [
+    { icon:'🏠', label:'Dashboard', href:'/portal/dashboard' },
+    { icon:'📄', label:'Documents', href:'/portal/documents', active:true },
+    { icon:'✍', label:'Signatures', href:'/portal/signatures' },
+    { icon:'💳', label:'Invoices', href:'/portal/invoices' },
+  ]
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
@@ -79,12 +58,7 @@ export default async function PortalDocuments() {
 
       <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
         <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
-          {[
-            { icon:'🏠', label:'Dashboard', href:'/portal/dashboard' },
-            { icon:'📄', label:'Documents', href:'/portal/documents', active:true },
-            { icon:'✍', label:'Signatures', href:'/portal/signatures' },
-            { icon:'💳', label:'Invoices', href:'/portal/invoices' },
-          ].map((item, i) => (
+          {sidebarItems.map((item, i) => (
             <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
               <span>{item.icon}</span>
               <span>{item.label}</span>

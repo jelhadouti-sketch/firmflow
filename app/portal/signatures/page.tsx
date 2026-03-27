@@ -26,6 +26,13 @@ export default async function PortalSignatures() {
 
   const pendingCount = signatures?.filter(s => s.status === 'pending').length || 0
 
+  const sidebarItems = [
+    { icon:'🏠', label:'Dashboard', href:'/portal/dashboard' },
+    { icon:'📄', label:'Documents', href:'/portal/documents' },
+    { icon:'✍', label:'Signatures', href:'/portal/signatures', active:true },
+    { icon:'💳', label:'Invoices', href:'/portal/invoices' },
+  ]
+
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
       <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
@@ -42,11 +49,7 @@ export default async function PortalSignatures() {
 
       <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
         <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
-          {[
-            { icon:'🏠', label:'Dashboard', href:'/portal/dashboard' },
-            { icon:'📄', label:'Documents', href:'/portal/documents' },
-            { icon:'✍', label:'Signatures', href:'/portal/signatures', active:true },
-          ].map((item, i) => (
+          {sidebarItems.map((item, i) => (
             <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
               <span>{item.icon}</span>
               <span>{item.label}</span>
@@ -64,7 +67,7 @@ export default async function PortalSignatures() {
             <div style={{background:'#FEF3C7',border:'1px solid #FDE68A',borderRadius:'12px',padding:'16px 20px',marginBottom:'24px',display:'flex',alignItems:'center',gap:'12px'}}>
               <span style={{fontSize:'20px'}}>⚠️</span>
               <p style={{fontSize:'13px',color:'#92400E',fontWeight:'600',margin:'0'}}>
-                You have {pendingCount} document{pendingCount > 1 ? 's' : ''} waiting for your signature. Please review and sign them.
+                You have {pendingCount} document{pendingCount > 1 ? 's' : ''} waiting for your signature.
               </p>
             </div>
           )}
