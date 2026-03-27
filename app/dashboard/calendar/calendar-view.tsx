@@ -35,10 +35,9 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
   const isToday = (day: number) =>
     day === today.getDate() && month === today.getMonth() && year === today.getFullYear()
 
-  const upcomingEvents = events
-    .filter(e => e.date && new Date(e.date) >= new Date())
+  const allEvents = events
+    .filter(e => e.date)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    .slice(0, 20)
 
   const typeColors: Record<string, string> = {
     engagement: '#1C64F2',
@@ -71,7 +70,7 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
       </div>
 
       {view === 'month' ? (
-        <div style={{padding:'0'}}>
+        <div>
           {/* Day headers */}
           <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',borderBottom:'1px solid #E2E8F0'}}>
             {dayNames.map(day => (
@@ -112,19 +111,20 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
         </div>
       ) : (
         <div style={{padding:'20px'}}>
-          {!upcomingEvents.length ? (
+          {!allEvents.length ? (
             <div style={{textAlign:'center',padding:'40px',color:'#94A3B8'}}>
               <p style={{fontSize:'32px',marginBottom:'8px'}}>📅</p>
-              <p style={{fontSize:'14px',fontWeight:'600',color:'#0F172A',marginBottom:'4px'}}>No upcoming deadlines</p>
-              <p style={{fontSize:'13px'}}>All your deadlines will appear here</p>
+              <p style={{fontSize:'14px',fontWeight:'600',color:'#0F172A',marginBottom:'4px'}}>No deadlines found</p>
+              <p style={{fontSize:'13px'}}>Add due dates to your engagements, tasks and invoices</p>
             </div>
           ) : (
             <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
-              {upcomingEvents.map((event, i) => {
+              {allEvents.map((event, i) => {
                 const eventDate = new Date(event.date)
                 const daysUntil = Math.ceil((eventDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+                const isOverdue = daysUntil < 0
                 return (
-                  <div key={i} style={{display:'flex',alignItems:'center',gap:'16px',padding:'14px 16px',background:'#fff',borderRadius:'10px',border:'1px solid #E2E8F0',boxShadow:'0 1px 3px rgba(0,0,0,0.04)'}}>
+                  <div key={i} style={{display:'flex',alignItems:'center',gap:'16px',padding:'14px 16px',background:'#fff',borderRadius:'10px',border:'1px solid',borderColor:isOverdue?'#FECACA':'#E2E8F0',boxShadow:'0 1px 3px rgba(0,0,0,0.04)'}}>
                     <div style={{width:'44px',height:'44px',borderRadius:'10px',background:typeColors[event.type] + '15',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'20px',flexShrink:0}}>
                       {typeIcons[event.type]}
                     </div>
@@ -135,8 +135,8 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
                       </p>
                     </div>
                     <div style={{textAlign:'right',flexShrink:0}}>
-                      <span style={{padding:'4px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:'700',background:daysUntil<=3?'#FEF2F2':daysUntil<=7?'#FEF3C7':'#F0FDF4',color:daysUntil<=3?'#DC2626':daysUntil<=7?'#92400E':'#15803D'}}>
-                        {daysUntil === 0 ? 'Today!' : daysUntil === 1 ? 'Tomorrow' : daysUntil + ' days'}
+                      <span style={{padding:'4px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:'700',background:isOverdue?'#FEF2F2':daysUntil===0?'#EFF6FF':daysUntil<=3?'#FEF2F2':daysUntil<=7?'#FEF3C7':'#F0FDF4',color:isOverdue?'#DC2626':daysUntil===0?'#1D4ED8':daysUntil<=3?'#DC2626':daysUntil<=7?'#92400E':'#15803D'}}>
+                        {isOverdue ? Math.abs(daysUntil) + ' days overdue' : daysUntil === 0 ? 'Today!' : daysUntil === 1 ? 'Tomorrow' : daysUntil + ' days left'}
                       </span>
                       <p style={{fontSize:'11px',color:'#94A3B8',margin:'4px 0 0',textTransform:'capitalize'}}>{event.type}</p>
                     </div>
