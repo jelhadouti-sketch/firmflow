@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import PayButton from './pay-button'
 
 export default async function PortalInvoices() {
   const supabase = await createClient()
@@ -66,21 +67,16 @@ export default async function PortalInvoices() {
             <p style={{color:'#64748B',fontSize:'14px'}}>{invoices?.length || 0} total invoices from {firm?.name}</p>
           </div>
 
-          {/* Overdue alert */}
           {overdueAmount > 0 && (
             <div style={{background:'#FEF2F2',border:'1px solid #FECACA',borderRadius:'12px',padding:'16px 20px',marginBottom:'20px',display:'flex',alignItems:'center',gap:'12px'}}>
               <span style={{fontSize:'20px'}}>🚨</span>
               <div style={{flex:1}}>
                 <p style={{fontSize:'14px',fontWeight:'700',color:'#DC2626',margin:'0 0 2px'}}>You have overdue invoices!</p>
-                <p style={{fontSize:'13px',color:'#EF4444',margin:'0'}}>Total overdue: <strong>${overdueAmount.toLocaleString()}</strong> — please contact your firm</p>
+                <p style={{fontSize:'13px',color:'#EF4444',margin:'0'}}>Total overdue: <strong>${overdueAmount.toLocaleString()}</strong></p>
               </div>
-              <a href={'mailto:hello@firmflow.uk'} style={{padding:'8px 16px',background:'#DC2626',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600',whiteSpace:'nowrap'}}>
-                Contact firm →
-              </a>
             </div>
           )}
 
-          {/* Stats */}
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(150px,1fr))',gap:'16px',marginBottom:'28px'}}>
             {[
               { label:'Total invoiced', value:'$' + totalAmount.toLocaleString(), color:'#1D4ED8', bg:'#EFF6FF' },
@@ -95,7 +91,6 @@ export default async function PortalInvoices() {
             ))}
           </div>
 
-          {/* Invoice list */}
           <div style={{display:'flex',flexDirection:'column',gap:'12px'}}>
             {!invoices?.length ? (
               <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',padding:'48px',textAlign:'center',color:'#94A3B8'}}>
@@ -111,8 +106,6 @@ export default async function PortalInvoices() {
                 return (
                   <div key={i} style={{background:'#fff',borderRadius:'12px',border:'1px solid',borderColor:isOverdue?'#FECACA':'#E2E8F0',padding:'20px 24px',boxShadow:'0 1px 4px rgba(0,0,0,0.04)'}}>
                     <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'16px',flexWrap:'wrap'}}>
-
-                      {/* Left - Invoice info */}
                       <div style={{flex:1}}>
                         <div style={{display:'flex',alignItems:'center',gap:'10px',marginBottom:'8px'}}>
                           <span style={{fontSize:'16px',fontWeight:'800',color:'#0F172A'}}>{inv.invoice_number || 'INV-' + (i+1)}</span>
@@ -127,7 +120,6 @@ export default async function PortalInvoices() {
                         </div>
                       </div>
 
-                      {/* Right - Amount + actions */}
                       <div style={{textAlign:'right',flexShrink:0}}>
                         <p style={{fontSize:'28px',fontWeight:'900',color:'#1C64F2',letterSpacing:'-0.04em',margin:'0 0 12px'}}>${(inv.amount || 0).toLocaleString()}</p>
                         <div style={{display:'flex',gap:'8px',justifyContent:'flex-end',flexWrap:'wrap'}}>
@@ -135,7 +127,10 @@ export default async function PortalInvoices() {
                             ⬇ Download PDF
                           </a>
                           {!isPaid && (
-                            <a href={'mailto:hello@firmflow.uk?subject=Payment for ' + (inv.invoice_number || 'invoice')} style={{padding:'7px 14px',background:'#F0FDF4',color:'#15803D',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none'}}>
+                            <PayButton invoiceId={inv.id} amount={inv.amount || 0} />
+                          )}
+                          {!isPaid && (
+                            <a href={'mailto:hello@firmflow.uk?subject=Question about invoice ' + (inv.invoice_number || '')} style={{padding:'7px 14px',background:'#F1F5F9',color:'#475569',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none'}}>
                               📧 Contact firm
                             </a>
                           )}
@@ -148,7 +143,6 @@ export default async function PortalInvoices() {
             )}
           </div>
 
-          {/* Help section */}
           <div style={{background:'#F8FAFC',borderRadius:'12px',border:'1px solid #E2E8F0',padding:'20px 24px',marginTop:'24px',display:'flex',alignItems:'center',gap:'16px'}}>
             <span style={{fontSize:'24px'}}>💬</span>
             <div style={{flex:1}}>
