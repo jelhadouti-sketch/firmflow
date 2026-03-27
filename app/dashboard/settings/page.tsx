@@ -53,7 +53,8 @@ export default async function Settings() {
 
           <SettingsForm
             firm={firm}
-            profile={profile}
+            profileName={profile.full_name || ''}
+            profileRole={profile.role || ''}
             userEmail={user.email || ''}
           />
         </main>

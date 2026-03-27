@@ -1,11 +1,20 @@
 'use client'
 import { useState } from 'react'
 
-export default function SettingsForm({ firm, profile, userEmail }: { firm: any, profile: any, userEmail: string }) {
+export default function SettingsForm({
+  firm,
+  profileName,
+  profileRole,
+  userEmail,
+}: {
+  firm: any
+  profileName: string
+  profileRole: string
+  userEmail: string
+}) {
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
 
-  // Firm fields
   const [firmName, setFirmName] = useState(firm?.name || '')
   const [firmEmail, setFirmEmail] = useState(firm?.email || '')
   const [firmPhone, setFirmPhone] = useState(firm?.phone || '')
@@ -114,7 +123,7 @@ export default function SettingsForm({ firm, profile, userEmail }: { firm: any, 
 
         <div style={{marginBottom:'16px'}}>
           <label style={labelStyle}>Payment terms</label>
-          <select value={paymentTerms} onChange={e => setPaymentTerms(e.target.value)} style={{...inputStyle}}>
+          <select value={paymentTerms} onChange={e => setPaymentTerms(e.target.value)} style={inputStyle}>
             <option value="Payment due upon receipt">Payment due upon receipt</option>
             <option value="Payment due within 7 days">Payment due within 7 days</option>
             <option value="Payment due within 14 days">Payment due within 14 days</option>
@@ -128,9 +137,9 @@ export default function SettingsForm({ firm, profile, userEmail }: { firm: any, 
           <textarea
             value={bankDetails}
             onChange={e => setBankDetails(e.target.value)}
-            placeholder="e.g. Bank: HSBC&#10;Account name: Smith & Associates&#10;Account number: 12345678&#10;Sort code: 12-34-56&#10;IBAN: GB12 HSBC 1234 5678 9012 34"
+            placeholder={'Bank: HSBC\nAccount name: Smith & Associates\nAccount number: 12345678\nSort code: 12-34-56\nIBAN: GB12 HSBC 1234 5678 9012 34'}
             rows={5}
-            style={{...inputStyle, resize:'vertical', fontFamily:'system-ui,sans-serif'}}
+            style={{...inputStyle, resize:'vertical' as const, fontFamily:'system-ui,sans-serif'}}
           />
           <p style={{fontSize:'11px',color:'#94A3B8',marginTop:'4px'}}>Add your bank details so clients can pay by bank transfer</p>
         </div>
@@ -142,7 +151,7 @@ export default function SettingsForm({ firm, profile, userEmail }: { firm: any, 
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'16px'}}>
           <div>
             <label style={labelStyle}>Full name</label>
-            <div style={{...inputStyle, background:'#F8FAFC', color:'#64748B'}}>{profile?.full_name}</div>
+            <div style={{...inputStyle, background:'#F8FAFC', color:'#64748B'}}>{profileName}</div>
           </div>
           <div>
             <label style={labelStyle}>Email address</label>
@@ -150,12 +159,12 @@ export default function SettingsForm({ firm, profile, userEmail }: { firm: any, 
           </div>
           <div>
             <label style={labelStyle}>Role</label>
-            <div style={{...inputStyle, background:'#F8FAFC', color:'#64748B'}}>{profile?.role}</div>
+            <div style={{...inputStyle, background:'#F8FAFC', color:'#64748B'}}>{profileRole}</div>
           </div>
           <div>
             <label style={labelStyle}>Plan</label>
             <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
-              <span style={{padding:'4px 10px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'20px',fontSize:'12px',fontWeight:'700'}}>{profile?.firms?.plan?.toUpperCase()}</span>
+              <span style={{padding:'4px 10px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'20px',fontSize:'12px',fontWeight:'700'}}>{firm?.plan?.toUpperCase()}</span>
               <a href="/dashboard/subscription" style={{fontSize:'13px',color:'#1C64F2',textDecoration:'none',fontWeight:'600'}}>Manage →</a>
             </div>
           </div>
