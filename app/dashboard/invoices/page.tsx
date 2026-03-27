@@ -2,21 +2,19 @@ import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import NewInvoice from './new-invoice'
+import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 
 export default async function Invoices() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('*, firms(*)')
-    .eq('id', user.id)
-    .single()
-
+  const profile = await getProfileWithPermissions(user.id)
   if (!profile) redirect('/login')
+  if (!profile.hasPage('invoices')) redirect('/dashboard')
 
   const firm = profile.firms as any
+  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'invoices')
 
   const { data: invoices } = await supabaseAdmin
     .from('invoices')
@@ -27,21 +25,6 @@ export default async function Invoices() {
   const totalAmount = invoices?.reduce((a, i) => a + (i.amount || 0), 0) || 0
   const paidAmount = invoices?.filter(i => i.status === 'paid').reduce((a, i) => a + (i.amount || 0), 0) || 0
   const pendingAmount = invoices?.filter(i => i.status === 'pending').reduce((a, i) => a + (i.amount || 0), 0) || 0
-
-  const sidebarItems = [
-    { icon:'🏠', label:'Dashboard', href:'/dashboard' },
-    { icon:'📋', label:'Engagements', href:'/dashboard/engagements' },
-    { icon:'📄', label:'Documents', href:'/dashboard/documents' },
-    { icon:'✍', label:'Signatures', href:'/dashboard/signatures' },
-    { icon:'✅', label:'Tasks', href:'/dashboard/tasks' },
-    { icon:'⏱', label:'Time & billing', href:'/dashboard/time' },
-    { icon:'💳', label:'Invoices', href:'/dashboard/invoices', active:true },
-    { icon:'👥', label:'Clients', href:'/dashboard/clients' },
-    { icon:'📅', label:'Calendar', href:'/dashboard/calendar' },
-    { icon:'👨‍💼', label:'Team', href:'/dashboard/team' },
-    { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
-    { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
-  ]
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
@@ -78,9 +61,9 @@ export default async function Invoices() {
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
             {[
-              { label:'Total invoiced', value: `$${totalAmount.toLocaleString()}`, color:'#1D4ED8' },
-              { label:'Collected', value: `$${paidAmount.toLocaleString()}`, color:'#15803D' },
-              { label:'Pending', value: `$${pendingAmount.toLocaleString()}`, color:'#92400E' },
+              { label:'Total invoiced', value: '$' + totalAmount.toLocaleString(), color:'#1D4ED8' },
+              { label:'Collected', value: '$' + paidAmount.toLocaleString(), color:'#15803D' },
+              { label:'Pending', value: '$' + pendingAmount.toLocaleString(), color:'#92400E' },
               { label:'Overdue', value: invoices?.filter(i=>i.status==='overdue').length || 0, color:'#DC2626' },
             ].map((stat, i) => (
               <div key={i} style={{background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0'}}>
@@ -114,7 +97,7 @@ export default async function Invoices() {
                 <tbody>
                   {invoices.map((inv, i) => (
                     <tr key={i} style={{borderTop:'1px solid #F1F5F9'}}>
-                      <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'700',color:'#0F172A'}}>{inv.invoice_number || `INV-${i+1}`}</td>
+                      <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'700',color:'#0F172A'}}>{inv.invoice_number || 'INV-' + (i+1)}</td>
                       <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'700',color:'#1D4ED8'}}>${(inv.amount || 0).toLocaleString()}</td>
                       <td style={{padding:'14px 20px'}}>
                         <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:inv.status==='paid'?'#F0FDF4':inv.status==='overdue'?'#FEF2F2':'#FEF3C7',color:inv.status==='paid'?'#15803D':inv.status==='overdue'?'#DC2626':'#92400E'}}>

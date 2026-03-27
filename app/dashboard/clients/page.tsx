@@ -3,21 +3,21 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import InviteClient from './invite-client'
 import ClientSearch from './client-search'
+import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 
 export default async function Clients() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('*, firms(*)')
-    .eq('id', user.id)
-    .single()
-
+  const profile = await getProfileWithPermissions(user.id)
   if (!profile) redirect('/login')
 
+  // Check if staff has access to this page
+  if (!profile.hasPage('clients')) redirect('/dashboard')
+
   const firm = profile.firms as any
+  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'clients')
 
   const { data: clients } = await supabaseAdmin
     .from('profiles')
@@ -32,21 +32,6 @@ export default async function Clients() {
       return { ...client, email: authUser?.user?.email || '—' }
     })
   )
-
-  const sidebarItems = [
-    { icon:'🏠', label:'Dashboard', href:'/dashboard' },
-    { icon:'📋', label:'Engagements', href:'/dashboard/engagements' },
-    { icon:'📄', label:'Documents', href:'/dashboard/documents' },
-    { icon:'✍', label:'Signatures', href:'/dashboard/signatures' },
-    { icon:'✅', label:'Tasks', href:'/dashboard/tasks' },
-    { icon:'⏱', label:'Time & billing', href:'/dashboard/time' },
-    { icon:'💳', label:'Invoices', href:'/dashboard/invoices' },
-    { icon:'👥', label:'Clients', href:'/dashboard/clients', active:true },
-    { icon:'📅', label:'Calendar', href:'/dashboard/calendar' },
-    { icon:'👨‍💼', label:'Team', href:'/dashboard/team' },
-    { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
-    { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
-  ]
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>

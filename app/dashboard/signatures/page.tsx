@@ -2,27 +2,30 @@ import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import NewSignature from './new-signature'
+import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 
 export default async function Signatures() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('*, firms(*)')
-    .eq('id', user.id)
-    .single()
-
+  const profile = await getProfileWithPermissions(user.id)
   if (!profile) redirect('/login')
+  if (!profile.hasPage('signatures')) redirect('/dashboard')
 
   const firm = profile.firms as any
+  const ownerId = profile.getOwnerId()
+  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'signatures')
 
-  const { data: signatures } = await supabaseAdmin
+  let query = supabaseAdmin
     .from('signature_requests')
     .select('*, documents(name)')
     .eq('firm_id', profile.firm_id)
     .order('created_at', { ascending: false })
+
+  if (ownerId) query = query.eq('sender_id', ownerId)
+
+  const { data: signatures } = await query
 
   const { data: documents } = await supabaseAdmin
     .from('documents')
@@ -35,20 +38,7 @@ export default async function Signatures() {
     .eq('firm_id', profile.firm_id)
     .eq('role', 'client')
 
-  const sidebarItems = [
-    { icon:'🏠', label:'Dashboard', href:'/dashboard' },
-    { icon:'📋', label:'Engagements', href:'/dashboard/engagements' },
-    { icon:'📄', label:'Documents', href:'/dashboard/documents' },
-    { icon:'✍', label:'Signatures', href:'/dashboard/signatures', active:true },
-    { icon:'✅', label:'Tasks', href:'/dashboard/tasks' },
-    { icon:'⏱', label:'Time & billing', href:'/dashboard/time' },
-    { icon:'💳', label:'Invoices', href:'/dashboard/invoices' },
-    { icon:'👥', label:'Clients', href:'/dashboard/clients' },
-    { icon:'📅', label:'Calendar', href:'/dashboard/calendar' },
-    { icon:'👨‍💼', label:'Team', href:'/dashboard/team' },
-    { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
-    { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
-  ]
+  const pendingCount = signatures?.filter(s => s.status === 'pending').length || 0
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
@@ -78,7 +68,7 @@ export default async function Signatures() {
           <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}}>
             <div>
               <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Signatures</h1>
-              <p style={{color:'#64748B',fontSize:'14px'}}>{signatures?.length || 0} total signature requests</p>
+              <p style={{color:'#64748B',fontSize:'14px'}}>{signatures?.length || 0} total · {pendingCount} pending</p>
             </div>
             <NewSignature documents={documents || []} clients={clients || []} />
           </div>
@@ -86,7 +76,7 @@ export default async function Signatures() {
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
             {[
               { label:'Total', value: signatures?.length || 0, color:'#1D4ED8' },
-              { label:'Pending', value: signatures?.filter(s=>s.status==='pending').length || 0, color:'#92400E' },
+              { label:'Pending', value: pendingCount, color:'#92400E' },
               { label:'Signed', value: signatures?.filter(s=>s.status==='signed').length || 0, color:'#15803D' },
             ].map((stat, i) => (
               <div key={i} style={{background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0'}}>
@@ -100,7 +90,6 @@ export default async function Signatures() {
             <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0'}}>
               <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A'}}>All signature requests</h2>
             </div>
-
             {!signatures?.length ? (
               <div style={{padding:'48px',textAlign:'center',color:'#94A3B8'}}>
                 <p style={{fontSize:'32px',marginBottom:'8px'}}>✍</p>

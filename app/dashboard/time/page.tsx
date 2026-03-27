@@ -2,46 +2,34 @@ import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import LogTime from './log-time'
+import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 
 export default async function Time() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('*, firms(*)')
-    .eq('id', user.id)
-    .single()
-
+  const profile = await getProfileWithPermissions(user.id)
   if (!profile) redirect('/login')
+  if (!profile.hasPage('time')) redirect('/dashboard')
 
   const firm = profile.firms as any
+  const ownerId = profile.getOwnerId()
+  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'time')
 
-  const { data: entries } = await supabaseAdmin
+  let query = supabaseAdmin
     .from('time_entries')
     .select('*')
     .eq('firm_id', profile.firm_id)
     .order('created_at', { ascending: false })
 
+  if (ownerId) query = query.eq('user_id', ownerId)
+
+  const { data: entries } = await query
+
   const totalHours = entries?.reduce((a, t) => a + (t.hours || 0), 0) || 0
   const billedHours = entries?.filter(t => t.billed).reduce((a, t) => a + (t.hours || 0), 0) || 0
   const unbilledHours = totalHours - billedHours
-
-  const sidebarItems = [
-    { icon:'🏠', label:'Dashboard', href:'/dashboard' },
-    { icon:'📋', label:'Engagements', href:'/dashboard/engagements' },
-    { icon:'📄', label:'Documents', href:'/dashboard/documents' },
-    { icon:'✍', label:'Signatures', href:'/dashboard/signatures' },
-    { icon:'✅', label:'Tasks', href:'/dashboard/tasks' },
-    { icon:'⏱', label:'Time & billing', href:'/dashboard/time', active:true },
-    { icon:'💳', label:'Invoices', href:'/dashboard/invoices' },
-    { icon:'👥', label:'Clients', href:'/dashboard/clients' },
-    { icon:'📅', label:'Calendar', href:'/dashboard/calendar' },
-    { icon:'👨‍💼', label:'Team', href:'/dashboard/team' },
-    { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
-    { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
-  ]
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
@@ -78,9 +66,9 @@ export default async function Time() {
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
             {[
-              { label:'Total hours', value: `${totalHours.toFixed(1)}h`, color:'#1D4ED8' },
-              { label:'Billed hours', value: `${billedHours.toFixed(1)}h`, color:'#15803D' },
-              { label:'Unbilled hours', value: `${unbilledHours.toFixed(1)}h`, color:'#DC2626' },
+              { label:'Total hours', value: totalHours.toFixed(1) + 'h', color:'#1D4ED8' },
+              { label:'Billed hours', value: billedHours.toFixed(1) + 'h', color:'#15803D' },
+              { label:'Unbilled hours', value: unbilledHours.toFixed(1) + 'h', color:'#DC2626' },
             ].map((stat, i) => (
               <div key={i} style={{background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0'}}>
                 <p style={{fontSize:'13px',color:'#64748B',marginBottom:'8px'}}>{stat.label}</p>

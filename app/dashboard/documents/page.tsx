@@ -2,42 +2,30 @@ import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import UploadDocument from './upload-document'
+import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 
 export default async function Documents() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('*, firms(*)')
-    .eq('id', user.id)
-    .single()
-
+  const profile = await getProfileWithPermissions(user.id)
   if (!profile) redirect('/login')
+  if (!profile.hasPage('documents')) redirect('/dashboard')
 
   const firm = profile.firms as any
+  const ownerId = profile.getOwnerId()
+  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'documents')
 
-  const { data: documents } = await supabaseAdmin
+  let query = supabaseAdmin
     .from('documents')
     .select('*')
     .eq('firm_id', profile.firm_id)
     .order('created_at', { ascending: false })
 
-  const sidebarItems = [
-    { icon:'🏠', label:'Dashboard', href:'/dashboard' },
-    { icon:'📋', label:'Engagements', href:'/dashboard/engagements' },
-    { icon:'📄', label:'Documents', href:'/dashboard/documents', active:true },
-    { icon:'✍', label:'Signatures', href:'/dashboard/signatures' },
-    { icon:'✅', label:'Tasks', href:'/dashboard/tasks' },
-    { icon:'⏱', label:'Time & billing', href:'/dashboard/time' },
-    { icon:'💳', label:'Invoices', href:'/dashboard/invoices' },
-    { icon:'👥', label:'Clients', href:'/dashboard/clients' },
-    { icon:'📅', label:'Calendar', href:'/dashboard/calendar' },
-    { icon:'👨‍💼', label:'Team', href:'/dashboard/team' },
-    { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
-    { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
-  ]
+  if (ownerId) query = query.eq('uploaded_by', ownerId)
+
+  const { data: documents } = await query
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
@@ -115,7 +103,7 @@ export default async function Documents() {
                           {doc.visibility || 'internal'}
                         </span>
                       </td>
-                      <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{doc.file_size ? `${Math.round(doc.file_size/1024)} KB` : '—'}</td>
+                      <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{doc.file_size ? Math.round(doc.file_size/1024) + ' KB' : '—'}</td>
                       <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{doc.created_at ? new Date(doc.created_at).toLocaleDateString('en-GB') : '—'}</td>
                     </tr>
                   ))}

@@ -3,42 +3,30 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import NewEngagement from './new-engagement'
 import EngagementSearch from './engagement-search'
+import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 
 export default async function Engagements() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('*, firms(*)')
-    .eq('id', user.id)
-    .single()
-
+  const profile = await getProfileWithPermissions(user.id)
   if (!profile) redirect('/login')
+  if (!profile.hasPage('engagements')) redirect('/dashboard')
 
   const firm = profile.firms as any
+  const ownerId = profile.getOwnerId()
+  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'engagements')
 
-  const { data: engagements } = await supabaseAdmin
+  let query = supabaseAdmin
     .from('engagements')
     .select('*')
     .eq('firm_id', profile.firm_id)
     .order('created_at', { ascending: false })
 
-  const sidebarItems = [
-    { icon:'🏠', label:'Dashboard', href:'/dashboard' },
-    { icon:'📋', label:'Engagements', href:'/dashboard/engagements', active:true },
-    { icon:'📄', label:'Documents', href:'/dashboard/documents' },
-    { icon:'✍', label:'Signatures', href:'/dashboard/signatures' },
-    { icon:'✅', label:'Tasks', href:'/dashboard/tasks' },
-    { icon:'⏱', label:'Time & billing', href:'/dashboard/time' },
-    { icon:'💳', label:'Invoices', href:'/dashboard/invoices' },
-    { icon:'👥', label:'Clients', href:'/dashboard/clients' },
-    { icon:'📅', label:'Calendar', href:'/dashboard/calendar' },
-    { icon:'👨‍💼', label:'Team', href:'/dashboard/team' },
-    { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
-    { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
-  ]
+  if (ownerId) query = query.eq('owner_id', ownerId)
+
+  const { data: engagements } = await query
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>

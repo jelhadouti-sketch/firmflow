@@ -2,42 +2,30 @@ import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import NewTask from './new-task'
+import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 
 export default async function Tasks() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('*, firms(*)')
-    .eq('id', user.id)
-    .single()
-
+  const profile = await getProfileWithPermissions(user.id)
   if (!profile) redirect('/login')
+  if (!profile.hasPage('tasks')) redirect('/dashboard')
 
   const firm = profile.firms as any
+  const ownerId = profile.getOwnerId()
+  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'tasks')
 
-  const { data: tasks } = await supabaseAdmin
+  let query = supabaseAdmin
     .from('tasks')
     .select('*')
     .eq('firm_id', profile.firm_id)
     .order('created_at', { ascending: false })
 
-  const sidebarItems = [
-    { icon:'🏠', label:'Dashboard', href:'/dashboard' },
-    { icon:'📋', label:'Engagements', href:'/dashboard/engagements' },
-    { icon:'📄', label:'Documents', href:'/dashboard/documents' },
-    { icon:'✍', label:'Signatures', href:'/dashboard/signatures' },
-    { icon:'✅', label:'Tasks', href:'/dashboard/tasks', active:true },
-    { icon:'⏱', label:'Time & billing', href:'/dashboard/time' },
-    { icon:'💳', label:'Invoices', href:'/dashboard/invoices' },
-    { icon:'👥', label:'Clients', href:'/dashboard/clients' },
-    { icon:'📅', label:'Calendar', href:'/dashboard/calendar' },
-    { icon:'👨‍💼', label:'Team', href:'/dashboard/team' },
-    { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
-    { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
-  ]
+  if (ownerId) query = query.eq('assignee_id', ownerId)
+
+  const { data: tasks } = await query
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
@@ -111,7 +99,7 @@ export default async function Tasks() {
                     <tr key={i} style={{borderTop:'1px solid #F1F5F9'}}>
                       <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'600',color:task.done?'#94A3B8':'#0F172A',textDecoration:task.done?'line-through':'none'}}>{task.title}</td>
                       <td style={{padding:'14px 20px'}}>
-                        <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:task.priority==='high'?'#FEF2F2':task.priority==='medium'?'#FEF3C7':'#F1F5F9',color:task.priority==='high'?'#DC2626':task.priority==='medium'?'#92400E':'#64748B'}}>
+                        <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:task.priority==='high'?'#FEF2F2':task.priority==='med'?'#FEF3C7':'#F1F5F9',color:task.priority==='high'?'#DC2626':task.priority==='med'?'#92400E':'#64748B'}}>
                           {task.priority || 'low'}
                         </span>
                       </td>
