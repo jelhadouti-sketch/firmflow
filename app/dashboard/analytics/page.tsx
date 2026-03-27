@@ -16,32 +16,16 @@ export default async function Analytics() {
   const firm = profile.firms as any
   const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'analytics')
 
-  // Get all invoices
-  const { data: invoices } = await supabaseAdmin
-    .from('invoices')
-    .select('*')
-    .eq('firm_id', profile.firm_id)
+  // Fetch all data
+  const { data: invoices } = await supabaseAdmin.from('invoices').select('*').eq('firm_id', profile.firm_id)
+  const { data: timeEntries } = await supabaseAdmin.from('time_entries').select('*').eq('firm_id', profile.firm_id)
+  const { data: engagements } = await supabaseAdmin.from('engagements').select('*').eq('firm_id', profile.firm_id)
+  const { data: clients } = await supabaseAdmin.from('profiles').select('*').eq('firm_id', profile.firm_id).eq('role', 'client')
+  const { data: tasks } = await supabaseAdmin.from('tasks').select('*').eq('firm_id', profile.firm_id)
+  const { data: signatures } = await supabaseAdmin.from('signature_requests').select('*').eq('firm_id', profile.firm_id)
+  const { data: teamMembers } = await supabaseAdmin.from('profiles').select('*').eq('firm_id', profile.firm_id).in('role', ['admin', 'staff'])
 
-  // Get all time entries
-  const { data: timeEntries } = await supabaseAdmin
-    .from('time_entries')
-    .select('*')
-    .eq('firm_id', profile.firm_id)
-
-  // Get all engagements
-  const { data: engagements } = await supabaseAdmin
-    .from('engagements')
-    .select('*')
-    .eq('firm_id', profile.firm_id)
-
-  // Get all clients
-  const { data: clients } = await supabaseAdmin
-    .from('profiles')
-    .select('*')
-    .eq('firm_id', profile.firm_id)
-    .eq('role', 'client')
-
-  // Build monthly revenue (last 6 months)
+  // Build last 6 months
   const months = []
   for (let i = 5; i >= 0; i--) {
     const d = new Date()
@@ -62,7 +46,12 @@ export default async function Analytics() {
     hours: timeEntries?.filter(t => t.entry_date?.startsWith(m.key)).reduce((a, t) => a + (t.hours || 0), 0) || 0
   }))
 
-  // Invoice breakdown by status
+  const monthlyClients = months.map(m => ({
+    month: m.label,
+    count: clients?.filter(c => c.created_at?.startsWith(m.key)).length || 0
+  }))
+
+  // Invoice breakdown
   const invoicesByStatus = ['paid', 'pending', 'overdue'].map(status => ({
     status,
     count: invoices?.filter(i => i.status === status).length || 0,
@@ -71,26 +60,55 @@ export default async function Analytics() {
 
   // Engagements by type
   const typeMap: Record<string, number> = {}
-  engagements?.forEach(e => {
-    if (e.type) typeMap[e.type] = (typeMap[e.type] || 0) + 1
-  })
-  const engagementsByType = Object.entries(typeMap)
-    .map(([type, count]) => ({ type, count }))
-    .sort((a, b) => b.count - a.count)
+  engagements?.forEach(e => { if (e.type) typeMap[e.type] = (typeMap[e.type] || 0) + 1 })
+  const engagementsByType = Object.entries(typeMap).map(([type, count]) => ({ type, count })).sort((a, b) => b.count - a.count)
 
-  // Top clients by revenue
-  const clientRevenue = clients?.map(client => {
-    const revenue = invoices?.filter(i => i.client_id === client.id && i.status === 'paid').reduce((a, i) => a + (i.amount || 0), 0) || 0
-    const clientEngagements = engagements?.filter(e => e.client_id === client.id).length || 0
-    return { name: client.full_name, revenue, engagements: clientEngagements }
-  }).sort((a, b) => b.revenue - a.revenue).slice(0, 5) || []
+  // Top clients
+  const topClients = (clients || []).map(client => ({
+    id: client.id,
+    name: client.full_name,
+    revenue: invoices?.filter(i => i.client_id === client.id && i.status === 'paid').reduce((a, i) => a + (i.amount || 0), 0) || 0,
+    engagements: engagements?.filter(e => e.client_id === client.id).length || 0
+  })).sort((a, b) => b.revenue - a.revenue).slice(0, 5)
+
+  // Team performance
+  const teamPerformance = (teamMembers || []).map(member => ({
+    name: member.full_name,
+    hours: timeEntries?.filter(t => t.user_id === member.id).reduce((a, t) => a + (t.hours || 0), 0) || 0,
+    tasks: tasks?.filter(t => t.assignee_id === member.id && t.done).length || 0,
+    invoices: invoices?.filter(i => i.client_id === member.id).length || 0
+  })).sort((a, b) => b.hours - a.hours)
+
+  // KPIs
+  const totalInvoices = invoices?.length || 0
+  const avgInvoiceValue = totalInvoices > 0 ? Math.round((invoices?.reduce((a, i) => a + (i.amount || 0), 0) || 0) / totalInvoices) : 0
+  const totalTasks = tasks?.length || 0
+  const completedTasks = tasks?.filter(t => t.done).length || 0
+  const taskCompletionRate = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0
+  const totalSigs = signatures?.length || 0
+  const signedSigs = signatures?.filter(s => s.status === 'signed').length || 0
+  const signatureCompletionRate = totalSigs > 0 ? (signedSigs / totalSigs) * 100 : 0
+  const overdueInvoices = invoices?.filter(i => i.status === 'overdue').length || 0
+  const overdueAmount = invoices?.filter(i => i.status === 'overdue').reduce((a, i) => a + (i.amount || 0), 0) || 0
+  const totalClients = clients?.length || 0
+  const thisMonth = new Date().toISOString().slice(0, 7)
+  const newClientsThisMonth = clients?.filter(c => c.created_at?.startsWith(thisMonth)).length || 0
 
   const analyticsData = {
     monthlyRevenue,
     monthlyHours,
+    monthlyClients,
     invoicesByStatus,
     engagementsByType,
-    topClients: clientRevenue
+    topClients,
+    teamPerformance,
+    avgInvoiceValue,
+    taskCompletionRate,
+    signatureCompletionRate,
+    overdueInvoices,
+    overdueAmount,
+    totalClients,
+    newClientsThisMonth
   }
 
   return (
@@ -120,7 +138,7 @@ export default async function Analytics() {
         <main style={{flex:1,padding:'32px',overflow:'auto'}}>
           <div style={{marginBottom:'24px'}}>
             <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Analytics</h1>
-            <p style={{color:'#64748B',fontSize:'14px'}}>Revenue, hours and performance overview</p>
+            <p style={{color:'#64748B',fontSize:'14px'}}>Revenue, performance and firm overview</p>
           </div>
           <Charts data={analyticsData} />
         </main>
