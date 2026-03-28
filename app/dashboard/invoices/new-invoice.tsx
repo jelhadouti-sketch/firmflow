@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 interface Client {
   id: string
@@ -11,6 +11,8 @@ export default function NewInvoice({ clients }: { clients: Client[] }) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [clientId, setClientId] = useState('')
+  const [clientSearch, setClientSearch] = useState('')
+  const [showClientDropdown, setShowClientDropdown] = useState(false)
   const [invoiceNumber, setInvoiceNumber] = useState('INV-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random()*900)+100))
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
@@ -18,11 +20,41 @@ export default function NewInvoice({ clients }: { clients: Client[] }) {
   const [dueDate, setDueDate] = useState('')
   const [notes, setNotes] = useState('')
   const [sendPaymentLink, setSendPaymentLink] = useState(true)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const subtotal = Number(amount) || 0
   const tax = Number(taxRate) || 0
   const taxAmount = subtotal * (tax / 100)
   const total = subtotal + taxAmount
+
+  const selectedClient = clients.find(c => c.id === clientId)
+
+  const filteredClients = clients.filter(c =>
+    c.full_name.toLowerCase().includes(clientSearch.toLowerCase()) ||
+    c.email.toLowerCase().includes(clientSearch.toLowerCase())
+  )
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setShowClientDropdown(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  function selectClient(client: Client) {
+    setClientId(client.id)
+    setClientSearch(client.full_name + ' — ' + client.email)
+    setShowClientDropdown(false)
+  }
+
+  function clearClient() {
+    setClientId('')
+    setClientSearch('')
+    setSendPaymentLink(false)
+  }
 
   async function handleSubmit() {
     if (!amount || !dueDate) return
@@ -88,30 +120,93 @@ export default function NewInvoice({ clients }: { clients: Client[] }) {
           <button onClick={() => setOpen(false)} style={{background:'none',border:'none',fontSize:'20px',cursor:'pointer',color:'#64748B'}}>×</button>
         </div>
 
-        {/* Client selector */}
-        <div style={{marginBottom:'16px'}}>
+        {/* Client search selector */}
+        <div style={{marginBottom:'16px'}} ref={dropdownRef}>
           <label style={labelStyle}>Client</label>
-          <select value={clientId} onChange={e => setClientId(e.target.value)} style={inputStyle}>
-            <option value="">— No client (internal invoice) —</option>
-            {clients.length === 0 ? (
-              <option disabled>No clients yet — invite a client first</option>
-            ) : (
-              clients.map(c => (
-                <option key={c.id} value={c.id}>{c.full_name} — {c.email}</option>
-              ))
+          <div style={{position:'relative'}}>
+            <div style={{position:'relative'}}>
+              <span style={{position:'absolute',left:'12px',top:'50%',transform:'translateY(-50%)',fontSize:'14px',zIndex:1}}>🔍</span>
+              <input
+                value={clientSearch}
+                onChange={e => {
+                  setClientSearch(e.target.value)
+                  setClientId('')
+                  setShowClientDropdown(true)
+                }}
+                onFocus={() => setShowClientDropdown(true)}
+                placeholder="Search by name or email..."
+                style={{...inputStyle, paddingLeft:'36px', paddingRight: clientId ? '36px' : '12px'}}
+              />
+              {clientId && (
+                <button onClick={clearClient} style={{position:'absolute',right:'12px',top:'50%',transform:'translateY(-50%)',background:'none',border:'none',fontSize:'16px',cursor:'pointer',color:'#94A3B8',padding:'0'}}>×</button>
+              )}
+            </div>
+
+            {/* Dropdown */}
+            {showClientDropdown && (
+              <div style={{position:'absolute',top:'calc(100% + 4px)',left:0,right:0,background:'#fff',borderRadius:'10px',border:'1px solid #E2E8F0',boxShadow:'0 8px 24px rgba(0,0,0,0.12)',zIndex:100,maxHeight:'220px',overflowY:'auto'}}>
+                {/* No client option */}
+                <div
+                  onClick={() => { setClientId(''); setClientSearch(''); setShowClientDropdown(false); setSendPaymentLink(false) }}
+                  style={{padding:'10px 14px',cursor:'pointer',display:'flex',alignItems:'center',gap:'10px',borderBottom:'1px solid #F1F5F9',background:!clientId?'#F8FAFC':'#fff'}}
+                >
+                  <span style={{fontSize:'16px'}}>🚫</span>
+                  <div>
+                    <p style={{fontSize:'13px',fontWeight:'600',color:'#64748B',margin:'0'}}>No client</p>
+                    <p style={{fontSize:'11px',color:'#94A3B8',margin:'0'}}>Internal invoice only</p>
+                  </div>
+                </div>
+
+                {clients.length === 0 ? (
+                  <div style={{padding:'16px',textAlign:'center'}}>
+                    <p style={{fontSize:'13px',color:'#94A3B8',margin:'0 0 4px'}}>No clients found</p>
+                    <a href="/dashboard/clients" style={{fontSize:'12px',color:'#1C64F2',fontWeight:'600'}}>Invite a client first →</a>
+                  </div>
+                ) : filteredClients.length === 0 ? (
+                  <div style={{padding:'16px',textAlign:'center'}}>
+                    <p style={{fontSize:'13px',color:'#94A3B8',margin:'0'}}>No clients match "{clientSearch}"</p>
+                  </div>
+                ) : (
+                  filteredClients.map(client => (
+                    <div
+                      key={client.id}
+                      onClick={() => selectClient(client)}
+                      style={{padding:'10px 14px',cursor:'pointer',display:'flex',alignItems:'center',gap:'10px',background:clientId===client.id?'#EFF6FF':'#fff',borderBottom:'1px solid #F1F5F9'}}
+                      onMouseEnter={e => (e.currentTarget.style.background = clientId===client.id?'#EFF6FF':'#F8FAFC')}
+                      onMouseLeave={e => (e.currentTarget.style.background = clientId===client.id?'#EFF6FF':'#fff')}
+                    >
+                      <div style={{width:'36px',height:'36px',borderRadius:'50%',background:'linear-gradient(135deg,#1C64F2,#7C3AED)',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'13px',fontWeight:'800',flexShrink:0}}>
+                        {client.full_name?.charAt(0)?.toUpperCase() || '?'}
+                      </div>
+                      <div style={{flex:1,minWidth:0}}>
+                        <p style={{fontSize:'13px',fontWeight:'700',color:clientId===client.id?'#1D4ED8':'#0F172A',margin:'0 0 2px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{client.full_name}</p>
+                        <p style={{fontSize:'11px',color:'#64748B',margin:'0',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{client.email}</p>
+                      </div>
+                      {clientId === client.id && <span style={{color:'#1C64F2',fontSize:'16px',flexShrink:0}}>✓</span>}
+                    </div>
+                  ))
+                )}
+              </div>
             )}
-          </select>
-          {clients.length === 0 && (
-            <p style={{fontSize:'11px',color:'#DC2626',marginTop:'4px'}}>
-              ⚠️ No clients found. <a href="/dashboard/clients" style={{color:'#1C64F2'}}>Invite a client first →</a>
-            </p>
+          </div>
+
+          {/* Selected client badge */}
+          {clientId && selectedClient && (
+            <div style={{marginTop:'8px',padding:'8px 12px',background:'#EFF6FF',borderRadius:'8px',border:'1px solid #BFDBFE',display:'flex',alignItems:'center',gap:'8px'}}>
+              <div style={{width:'24px',height:'24px',borderRadius:'50%',background:'linear-gradient(135deg,#1C64F2,#7C3AED)',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'10px',fontWeight:'800',flexShrink:0}}>
+                {selectedClient.full_name?.charAt(0)?.toUpperCase()}
+              </div>
+              <span style={{fontSize:'12px',fontWeight:'600',color:'#1D4ED8'}}>{selectedClient.full_name}</span>
+              <span style={{fontSize:'12px',color:'#64748B'}}>·</span>
+              <span style={{fontSize:'12px',color:'#64748B'}}>{selectedClient.email}</span>
+            </div>
           )}
         </div>
 
-        {/* Send payment link — PROMINENT */}
-        <div style={{marginBottom:'16px',border:'2px solid',borderColor:clientId ? (sendPaymentLink ? '#1C64F2' : '#E2E8F0') : '#E2E8F0',borderRadius:'10px',overflow:'hidden',opacity:clientId ? 1 : 0.5}}>
-          <div style={{padding:'14px 16px',background:clientId && sendPaymentLink ? '#EFF6FF' : '#F8FAFC'}}>
-            <label style={{display:'flex',alignItems:'flex-start',gap:'12px',cursor:clientId ? 'pointer' : 'not-allowed'}}>
+        {/* Send payment link toggle */}
+        <div style={{marginBottom:'16px',border:'2px solid',borderColor:clientId?(sendPaymentLink?'#1C64F2':'#E2E8F0'):'#E2E8F0',borderRadius:'10px',overflow:'hidden',opacity:clientId?1:0.5}}>
+          <div style={{padding:'14px 16px',background:clientId&&sendPaymentLink?'#EFF6FF':'#F8FAFC'}}>
+            <label style={{display:'flex',alignItems:'flex-start',gap:'12px',cursor:clientId?'pointer':'not-allowed'}}>
               <input
                 type="checkbox"
                 checked={sendPaymentLink}
@@ -120,19 +215,19 @@ export default function NewInvoice({ clients }: { clients: Client[] }) {
                 style={{marginTop:'2px',flexShrink:0,cursor:'pointer',width:'18px',height:'18px',accentColor:'#1C64F2'}}
               />
               <div style={{flex:1}}>
-                <p style={{fontSize:'14px',fontWeight:'700',color:clientId && sendPaymentLink ? '#1D4ED8' : '#374151',margin:'0 0 3px'}}>
+                <p style={{fontSize:'14px',fontWeight:'700',color:clientId&&sendPaymentLink?'#1D4ED8':'#374151',margin:'0 0 3px'}}>
                   📧 Send payment link to client
                 </p>
                 <p style={{fontSize:'12px',color:'#64748B',margin:'0'}}>
                   {clientId
                     ? sendPaymentLink
                       ? '✅ Client will receive an email with this invoice and a secure link to pay online'
-                      : 'Client will NOT receive an email — invoice will only be saved in the system'
+                      : '❌ Client will NOT receive an email — invoice saved in system only'
                     : 'Select a client above to enable this option'
                   }
                 </p>
               </div>
-              <div style={{padding:'4px 10px',borderRadius:'20px',background:clientId && sendPaymentLink ? '#1C64F2' : '#E2E8F0',color:clientId && sendPaymentLink ? '#fff' : '#64748B',fontSize:'11px',fontWeight:'700',whiteSpace:'nowrap',flexShrink:0}}>
+              <div style={{padding:'4px 10px',borderRadius:'20px',background:clientId&&sendPaymentLink?'#1C64F2':'#E2E8F0',color:clientId&&sendPaymentLink?'#fff':'#64748B',fontSize:'11px',fontWeight:'700',whiteSpace:'nowrap',flexShrink:0}}>
                 {clientId && sendPaymentLink ? 'ON' : 'OFF'}
               </div>
             </label>
@@ -155,14 +250,7 @@ export default function NewInvoice({ clients }: { clients: Client[] }) {
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',marginBottom:'16px'}}>
           <div>
             <label style={labelStyle}>Amount ($) *</label>
-            <input
-              value={amount}
-              onChange={e => setAmount(e.target.value)}
-              type="number"
-              min="0"
-              placeholder="500"
-              style={inputStyle}
-            />
+            <input value={amount} onChange={e => setAmount(e.target.value)} type="number" min="0" placeholder="500" style={inputStyle} />
           </div>
           <div>
             <label style={labelStyle}>Tax rate (%) <span style={{color:'#94A3B8',fontWeight:'400'}}>optional</span></label>
@@ -228,7 +316,7 @@ export default function NewInvoice({ clients }: { clients: Client[] }) {
           <button
             onClick={handleSubmit}
             disabled={loading || !amount || !dueDate}
-            style={{padding:'10px 20px',background: !amount || !dueDate ? '#94A3B8' : '#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:!amount||!dueDate?'not-allowed':'pointer'}}
+            style={{padding:'10px 20px',background:!amount||!dueDate?'#94A3B8':'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:!amount||!dueDate?'not-allowed':'pointer'}}
           >
             {loading ? 'Creating...' : clientId && sendPaymentLink ? '📧 Create & send invoice' : '💾 Create invoice'}
           </button>
