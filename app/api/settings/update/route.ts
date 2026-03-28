@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   const {
     firmName, firmEmail, firmPhone, firmAddress,
     firmCity, firmCountry, taxNumber, paymentTerms,
-    bankDetails, brandColor
+    bankDetails, brandColor, currency
   } = await req.json()
 
   const { error } = await supabaseAdmin
@@ -34,7 +34,8 @@ export async function POST(req: NextRequest) {
       tax_number: taxNumber,
       payment_terms: paymentTerms,
       bank_details: bankDetails,
-      brand_color: brandColor
+      brand_color: brandColor,
+      currency: currency || 'GBP'
     })
     .eq('id', profile.firm_id)
 

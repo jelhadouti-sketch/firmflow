@@ -1,5 +1,6 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
+import { CURRENCIES, getCurrency } from '@/lib/currencies'
 
 interface Client {
   id: string
@@ -7,7 +8,7 @@ interface Client {
   email: string
 }
 
-export default function NewInvoice({ clients }: { clients: Client[] }) {
+export default function NewInvoice({ clients, defaultCurrency = 'GBP' }: { clients: Client[], defaultCurrency?: string }) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [clientId, setClientId] = useState('')
@@ -20,8 +21,10 @@ export default function NewInvoice({ clients }: { clients: Client[] }) {
   const [dueDate, setDueDate] = useState('')
   const [notes, setNotes] = useState('')
   const [sendPaymentLink, setSendPaymentLink] = useState(true)
+  const [currency, setCurrency] = useState(defaultCurrency)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
+  const cur = getCurrency(currency)
   const subtotal = Number(amount) || 0
   const tax = Number(taxRate) || 0
   const taxAmount = subtotal * (tax / 100)
@@ -70,7 +73,8 @@ export default function NewInvoice({ clients }: { clients: Client[] }) {
         tax_rate: tax,
         due_date: dueDate,
         notes,
-        send_payment_link: sendPaymentLink && !!clientId
+        send_payment_link: sendPaymentLink && !!clientId,
+        currency
       })
     })
     const data = await res.json()
@@ -142,10 +146,8 @@ export default function NewInvoice({ clients }: { clients: Client[] }) {
               )}
             </div>
 
-            {/* Dropdown */}
             {showClientDropdown && (
               <div style={{position:'absolute',top:'calc(100% + 4px)',left:0,right:0,background:'#fff',borderRadius:'10px',border:'1px solid #E2E8F0',boxShadow:'0 8px 24px rgba(0,0,0,0.12)',zIndex:100,maxHeight:'220px',overflowY:'auto'}}>
-                {/* No client option */}
                 <div
                   onClick={() => { setClientId(''); setClientSearch(''); setShowClientDropdown(false); setSendPaymentLink(false) }}
                   style={{padding:'10px 14px',cursor:'pointer',display:'flex',alignItems:'center',gap:'10px',borderBottom:'1px solid #F1F5F9',background:!clientId?'#F8FAFC':'#fff'}}
@@ -190,7 +192,6 @@ export default function NewInvoice({ clients }: { clients: Client[] }) {
             )}
           </div>
 
-          {/* Selected client badge */}
           {clientId && selectedClient && (
             <div style={{marginTop:'8px',padding:'8px 12px',background:'#EFF6FF',borderRadius:'8px',border:'1px solid #BFDBFE',display:'flex',alignItems:'center',gap:'8px'}}>
               <div style={{width:'24px',height:'24px',borderRadius:'50%',background:'linear-gradient(135deg,#1C64F2,#7C3AED)',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'10px',fontWeight:'800',flexShrink:0}}>
@@ -234,10 +235,20 @@ export default function NewInvoice({ clients }: { clients: Client[] }) {
           </div>
         </div>
 
-        {/* Invoice number */}
-        <div style={{marginBottom:'16px'}}>
-          <label style={labelStyle}>Invoice number</label>
-          <input value={invoiceNumber} onChange={e => setInvoiceNumber(e.target.value)} style={inputStyle} />
+        {/* Invoice number + Currency */}
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',marginBottom:'16px'}}>
+          <div>
+            <label style={labelStyle}>Invoice number</label>
+            <input value={invoiceNumber} onChange={e => setInvoiceNumber(e.target.value)} style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>Currency</label>
+            <select value={currency} onChange={e => setCurrency(e.target.value)} style={inputStyle}>
+              {CURRENCIES.map(c => (
+                <option key={c.code} value={c.code}>{c.flag} {c.code} — {c.symbol} {c.name}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Description */}
@@ -249,8 +260,11 @@ export default function NewInvoice({ clients }: { clients: Client[] }) {
         {/* Amount + Tax */}
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',marginBottom:'16px'}}>
           <div>
-            <label style={labelStyle}>Amount ($) *</label>
-            <input value={amount} onChange={e => setAmount(e.target.value)} type="number" min="0" placeholder="500" style={inputStyle} />
+            <label style={labelStyle}>Amount ({cur.symbol}) *</label>
+            <div style={{position:'relative'}}>
+              <span style={{position:'absolute',left:'12px',top:'50%',transform:'translateY(-50%)',fontSize:'13px',color:'#64748B',fontWeight:'600'}}>{cur.symbol}</span>
+              <input value={amount} onChange={e => setAmount(e.target.value)} type="number" min="0" placeholder="500" style={{...inputStyle, paddingLeft:'32px'}} />
+            </div>
           </div>
           <div>
             <label style={labelStyle}>Tax rate (%) <span style={{color:'#94A3B8',fontWeight:'400'}}>optional</span></label>
@@ -273,20 +287,23 @@ export default function NewInvoice({ clients }: { clients: Client[] }) {
         {/* Total preview */}
         {amount && (
           <div style={{background:'#F8FAFC',borderRadius:'10px',padding:'16px',marginBottom:'16px',border:'1px solid #E2E8F0'}}>
-            <p style={{fontSize:'12px',fontWeight:'700',color:'#374151',margin:'0 0 10px',textTransform:'uppercase',letterSpacing:'0.05em'}}>Invoice summary</p>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'10px'}}>
+              <p style={{fontSize:'12px',fontWeight:'700',color:'#374151',margin:'0',textTransform:'uppercase',letterSpacing:'0.05em'}}>Invoice summary</p>
+              <span style={{fontSize:'11px',color:'#64748B',background:'#E2E8F0',padding:'2px 8px',borderRadius:'4px',fontWeight:'600'}}>{cur.flag} {currency}</span>
+            </div>
             <div style={{display:'flex',justifyContent:'space-between',marginBottom:'8px'}}>
               <span style={{fontSize:'13px',color:'#64748B'}}>Subtotal</span>
-              <span style={{fontSize:'13px',color:'#0F172A'}}>${subtotal.toLocaleString()}</span>
+              <span style={{fontSize:'13px',color:'#0F172A'}}>{cur.symbol}{subtotal.toLocaleString()}</span>
             </div>
             {tax > 0 && (
               <div style={{display:'flex',justifyContent:'space-between',marginBottom:'8px'}}>
                 <span style={{fontSize:'13px',color:'#64748B'}}>Tax ({tax}%)</span>
-                <span style={{fontSize:'13px',color:'#0F172A'}}>${taxAmount.toFixed(2)}</span>
+                <span style={{fontSize:'13px',color:'#0F172A'}}>{cur.symbol}{taxAmount.toFixed(2)}</span>
               </div>
             )}
             <div style={{display:'flex',justifyContent:'space-between',borderTop:'1px solid #E2E8F0',paddingTop:'10px'}}>
               <span style={{fontSize:'14px',fontWeight:'700',color:'#0F172A'}}>Total due</span>
-              <span style={{fontSize:'18px',fontWeight:'900',color:'#1C64F2'}}>${total.toFixed(2)}</span>
+              <span style={{fontSize:'18px',fontWeight:'900',color:'#1C64F2'}}>{cur.symbol}{total.toFixed(2)}</span>
             </div>
           </div>
         )}

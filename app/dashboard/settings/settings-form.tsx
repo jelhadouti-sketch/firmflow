@@ -1,5 +1,6 @@
 'use client'
 import { useState, useRef } from 'react'
+import { CURRENCIES } from '@/lib/currencies'
 
 export default function SettingsForm({
   firm,
@@ -29,6 +30,9 @@ export default function SettingsForm({
   const [paymentTerms, setPaymentTerms] = useState(firm?.payment_terms || 'Payment due within 30 days')
   const [bankDetails, setBankDetails] = useState(firm?.bank_details || '')
   const [brandColor, setBrandColor] = useState(firm?.brand_color || '#1C64F2')
+  const [currency, setCurrency] = useState(firm?.currency || 'GBP')
+
+  const selectedCurrency = CURRENCIES.find(c => c.code === currency) || CURRENCIES[0]
 
   async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -67,7 +71,7 @@ export default function SettingsForm({
       body: JSON.stringify({
         firmName, firmEmail, firmPhone, firmAddress,
         firmCity, firmCountry, taxNumber, paymentTerms,
-        bankDetails, brandColor
+        bankDetails, brandColor, currency
       })
     })
     if (res.ok) {
@@ -112,12 +116,9 @@ export default function SettingsForm({
         <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',marginBottom:'4px'}}>🎨 Logo & branding</h2>
         <p style={{fontSize:'13px',color:'#64748B',marginBottom:'20px'}}>Your logo appears on invoices, emails, and the client portal</p>
 
-        {/* Logo upload */}
         <div style={{marginBottom:'20px'}}>
           <label style={labelStyle}>Firm logo</label>
           <div style={{display:'flex',alignItems:'flex-start',gap:'20px',flexWrap:'wrap'}}>
-
-            {/* Logo preview */}
             <div style={{width:'120px',height:'80px',borderRadius:'10px',border:'2px dashed #E2E8F0',display:'flex',alignItems:'center',justifyContent:'center',background:'#F8FAFC',overflow:'hidden',flexShrink:0}}>
               {logoUrl ? (
                 <img src={logoUrl} alt="Logo" style={{width:'100%',height:'100%',objectFit:'contain',padding:'8px'}} />
@@ -128,8 +129,6 @@ export default function SettingsForm({
                 </div>
               )}
             </div>
-
-            {/* Upload controls */}
             <div style={{flex:1}}>
               <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/jpg,image/svg+xml,image/webp" onChange={handleLogoUpload} style={{display:'none'}} />
               <div style={{display:'flex',gap:'8px',marginBottom:'8px',flexWrap:'wrap'}}>
@@ -148,7 +147,6 @@ export default function SettingsForm({
           </div>
         </div>
 
-        {/* Brand color */}
         <div>
           <label style={labelStyle}>Brand color</label>
           <div style={{display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap'}}>
@@ -164,7 +162,6 @@ export default function SettingsForm({
           </div>
           <p style={{fontSize:'12px',color:'#94A3B8',marginTop:'8px'}}>Used as the primary color in your invoices and emails</p>
 
-          {/* Preview */}
           <div style={{marginTop:'12px',background:'#F8FAFC',borderRadius:'8px',padding:'16px',border:'1px solid #E2E8F0'}}>
             <p style={{fontSize:'12px',fontWeight:'600',color:'#374151',margin:'0 0 10px'}}>Preview</p>
             <div style={{display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap'}}>
@@ -226,10 +223,40 @@ export default function SettingsForm({
         </div>
       </div>
 
-      {/* Invoice settings */}
+      {/* Currency & Invoice settings */}
       <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0',marginBottom:'20px'}}>
-        <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',marginBottom:'4px'}}>💳 Invoice settings</h2>
-        <p style={{fontSize:'13px',color:'#64748B',marginBottom:'20px'}}>These details will appear on all invoices sent to clients</p>
+        <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',marginBottom:'4px'}}>💳 Currency & invoice settings</h2>
+        <p style={{fontSize:'13px',color:'#64748B',marginBottom:'20px'}}>Set your default currency and invoice preferences</p>
+
+        <div style={{marginBottom:'20px'}}>
+          <label style={labelStyle}>Default currency</label>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill, minmax(170px, 1fr))',gap:'8px'}}>
+            {CURRENCIES.map(c => (
+              <button
+                key={c.code}
+                onClick={() => setCurrency(c.code)}
+                style={{
+                  display:'flex',alignItems:'center',gap:'10px',padding:'12px 14px',
+                  borderRadius:'10px',border: currency === c.code ? '2px solid #1C64F2' : '1px solid #E2E8F0',
+                  background: currency === c.code ? '#EFF6FF' : '#fff',
+                  cursor:'pointer',textAlign:'left',transition:'all 0.15s'
+                }}
+              >
+                <span style={{fontSize:'20px'}}>{c.flag}</span>
+                <div>
+                  <p style={{fontSize:'13px',fontWeight:'700',color: currency === c.code ? '#1C64F2' : '#0F172A',margin:'0'}}>{c.code}</p>
+                  <p style={{fontSize:'11px',color:'#64748B',margin:'0'}}>{c.symbol} · {c.name}</p>
+                </div>
+                {currency === c.code && <span style={{marginLeft:'auto',fontSize:'14px'}}>✅</span>}
+              </button>
+            ))}
+          </div>
+          <div style={{marginTop:'12px',background:'#F8FAFC',borderRadius:'8px',padding:'14px 16px',border:'1px solid #E2E8F0'}}>
+            <p style={{fontSize:'12px',color:'#64748B',margin:'0'}}>
+              {selectedCurrency.flag} Your invoices will display amounts in <strong>{selectedCurrency.name} ({selectedCurrency.symbol})</strong>. You can override currency per invoice.
+            </p>
+          </div>
+        </div>
 
         <div style={{marginBottom:'16px'}}>
           <label style={labelStyle}>Payment terms</label>
@@ -294,7 +321,6 @@ export default function SettingsForm({
         </div>
       </div>
 
-      {/* Save button */}
       <button
         onClick={handleSave}
         disabled={loading}

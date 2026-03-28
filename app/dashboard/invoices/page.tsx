@@ -5,6 +5,7 @@ import MobileNav from '@/components/mobile-nav'
 import NewInvoice from './new-invoice'
 import InvoiceActions from './invoice-actions'
 import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
+import { getCurrency } from '@/lib/currencies'
 
 export default async function Invoices() {
   const supabase = await createClient()
@@ -17,8 +18,9 @@ export default async function Invoices() {
 
   const firm = profile.firms as any
   const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'invoices')
+  const defaultCurrency = firm?.currency || 'GBP'
+  const defaultCur = getCurrency(defaultCurrency)
 
-  // Get clients with emails
   const { data: clients } = await supabaseAdmin
     .from('profiles')
     .select('*')
@@ -70,17 +72,17 @@ export default async function Invoices() {
           <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}}>
             <div>
               <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Invoices</h1>
-              <p style={{color:'#64748B',fontSize:'14px'}}>{invoices?.length || 0} total invoices</p>
+              <p style={{color:'#64748B',fontSize:'14px'}}>{invoices?.length || 0} total invoices · Default currency: {defaultCur.flag} {defaultCurrency}</p>
             </div>
-            <NewInvoice clients={clientsWithEmail} />
+            <NewInvoice clients={clientsWithEmail} defaultCurrency={defaultCurrency} />
           </div>
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
             {[
-              { label:'Total invoiced', value:'$' + totalAmount.toLocaleString(), color:'#1D4ED8' },
-              { label:'Collected', value:'$' + paidAmount.toLocaleString(), color:'#15803D' },
-              { label:'Pending', value:'$' + pendingAmount.toLocaleString(), color:'#92400E' },
-              { label:'Overdue', value:invoices?.filter(i=>i.status==='overdue').length || 0, color:'#DC2626' },
+              { label:'Total invoiced', value: defaultCur.symbol + totalAmount.toLocaleString(), color:'#1D4ED8' },
+              { label:'Collected', value: defaultCur.symbol + paidAmount.toLocaleString(), color:'#15803D' },
+              { label:'Pending', value: defaultCur.symbol + pendingAmount.toLocaleString(), color:'#92400E' },
+              { label:'Overdue', value: invoices?.filter(i=>i.status==='overdue').length || 0, color:'#DC2626' },
             ].map((stat, i) => (
               <div key={i} style={{background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0'}}>
                 <p style={{fontSize:'13px',color:'#64748B',marginBottom:'8px'}}>{stat.label}</p>
@@ -98,7 +100,7 @@ export default async function Invoices() {
                 <p style={{fontSize:'32px',marginBottom:'8px'}}>💳</p>
                 <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No invoices yet</p>
                 <p style={{fontSize:'13px',marginBottom:'20px'}}>Create your first invoice to get started</p>
-                <NewInvoice clients={clientsWithEmail} />
+                <NewInvoice clients={clientsWithEmail} defaultCurrency={defaultCurrency} />
               </div>
             ) : (
               <table style={{width:'100%',borderCollapse:'collapse'}}>
@@ -107,34 +109,41 @@ export default async function Invoices() {
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Invoice #</th>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Client</th>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Amount</th>
+                    <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Currency</th>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Status</th>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Due date</th>
                     <th style={{padding:'12px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {invoices.map((inv, i) => (
-                    <tr key={i} style={{borderTop:'1px solid #F1F5F9'}}>
-                      <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'700',color:'#0F172A'}}>{inv.invoice_number || 'INV-' + (i+1)}</td>
-                      <td style={{padding:'14px 20px',fontSize:'13px',color:'#475569'}}>{(inv.profiles as any)?.full_name || '—'}</td>
-                      <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'700',color:'#1D4ED8'}}>${(inv.amount || 0).toLocaleString()}</td>
-                      <td style={{padding:'14px 20px'}}>
-                        <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:inv.status==='paid'?'#F0FDF4':inv.status==='overdue'?'#FEF2F2':'#FEF3C7',color:inv.status==='paid'?'#15803D':inv.status==='overdue'?'#DC2626':'#92400E'}}>
-                          {inv.status === 'paid' ? '✅ Paid' : inv.status === 'overdue' ? '🚨 Overdue' : '⏳ Pending'}
-                        </span>
-                      </td>
-                      <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{inv.due_at ? new Date(inv.due_at).toLocaleDateString('en-GB') : '—'}</td>
-                      <td style={{padding:'14px 20px'}}>
-                        <InvoiceActions
-                          invoiceId={inv.id}
-                          clientId={inv.client_id || ''}
-                          status={inv.status}
-                          invoiceNumber={inv.invoice_number || 'INV'}
-                          amount={inv.amount || 0}
-                        />
-                      </td>
-                    </tr>
-                  ))}
+                  {invoices.map((inv, i) => {
+                    const invCur = getCurrency(inv.currency || defaultCurrency)
+                    return (
+                      <tr key={i} style={{borderTop:'1px solid #F1F5F9'}}>
+                        <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'700',color:'#0F172A'}}>{inv.invoice_number || 'INV-' + (i+1)}</td>
+                        <td style={{padding:'14px 20px',fontSize:'13px',color:'#475569'}}>{(inv.profiles as any)?.full_name || '—'}</td>
+                        <td style={{padding:'14px 20px',fontSize:'13px',fontWeight:'700',color:'#1D4ED8'}}>{invCur.symbol}{(inv.amount || 0).toLocaleString()}</td>
+                        <td style={{padding:'14px 20px'}}>
+                          <span style={{fontSize:'12px',color:'#64748B',background:'#F1F5F9',padding:'2px 8px',borderRadius:'4px',fontWeight:'600'}}>{invCur.flag} {invCur.code}</span>
+                        </td>
+                        <td style={{padding:'14px 20px'}}>
+                          <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:inv.status==='paid'?'#F0FDF4':inv.status==='overdue'?'#FEF2F2':'#FEF3C7',color:inv.status==='paid'?'#15803D':inv.status==='overdue'?'#DC2626':'#92400E'}}>
+                            {inv.status === 'paid' ? '✅ Paid' : inv.status === 'overdue' ? '🚨 Overdue' : '⏳ Pending'}
+                          </span>
+                        </td>
+                        <td style={{padding:'14px 20px',fontSize:'13px',color:'#64748B'}}>{inv.due_at ? new Date(inv.due_at).toLocaleDateString('en-GB') : '—'}</td>
+                        <td style={{padding:'14px 20px'}}>
+                          <InvoiceActions
+                            invoiceId={inv.id}
+                            clientId={inv.client_id || ''}
+                            status={inv.status}
+                            invoiceNumber={inv.invoice_number || 'INV'}
+                            amount={inv.amount || 0}
+                          />
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             )}

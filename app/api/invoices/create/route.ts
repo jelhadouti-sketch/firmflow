@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { getCurrency } from '@/lib/currencies'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -18,7 +19,16 @@ export async function POST(req: NextRequest) {
 
   if (!profile) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-  const { invoice_number, client_id, description, amount, tax_rate, due_date, notes, send_payment_link } = await req.json()
+  const { invoice_number, client_id, description, amount, tax_rate, due_date, notes, send_payment_link, currency } = await req.json()
+
+  // Get firm default currency if not specified
+  let invoiceCurrency = currency
+  if (!invoiceCurrency) {
+    const { data: firm } = await supabaseAdmin.from('firms').select('currency').eq('id', profile.firm_id).single()
+    invoiceCurrency = firm?.currency || 'GBP'
+  }
+
+  const cur = getCurrency(invoiceCurrency)
 
   const { data: invoice, error } = await supabaseAdmin
     .from('invoices')
@@ -31,14 +41,14 @@ export async function POST(req: NextRequest) {
       due_at: due_date || null,
       issued_at: new Date().toISOString(),
       status: 'pending',
-      payment_enabled: send_payment_link === true
+      payment_enabled: send_payment_link === true,
+      currency: invoiceCurrency
     })
     .select()
     .single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
 
-  // Send payment link email to client only if enabled
   if (send_payment_link && client_id && invoice) {
     const { data: clientAuth } = await supabaseAdmin.auth.admin.getUserById(client_id)
     const clientEmail = clientAuth?.user?.email
@@ -55,17 +65,19 @@ export async function POST(req: NextRequest) {
       .eq('id', profile.firm_id)
       .single()
 
+    const brandColor = firm?.brand_color || '#1C64F2'
+
     if (clientEmail) {
-      const portalUrl = process.env.NEXT_PUBLIC_APP_URL + '/portal/invoices'
+      const portalUrl = 'https://firmflow.uk/portal/invoices'
       try {
         await resend.emails.send({
           from: process.env.RESEND_FROM || 'hello@firmflow.uk',
           to: clientEmail,
-          subject: 'New invoice from ' + (firm?.name || 'your firm') + ' — ' + invoice_number + ' $' + (amount || 0).toLocaleString(),
+          subject: `New invoice from ${firm?.name || 'your firm'} — ${invoice_number} ${cur.symbol}${(amount || 0).toLocaleString()}`,
           html: `
             <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:600px;margin:0 auto">
-              <div style="background:#1C64F2;padding:32px 40px;border-radius:12px 12px 0 0">
-                <div style="font-size:22px;font-weight:800;color:#fff">⬡ FirmFlow</div>
+              <div style="background:${brandColor};padding:32px 40px;border-radius:12px 12px 0 0">
+                ${firm?.logo_url ? `<img src="${firm.logo_url}" alt="${firm.name}" style="height:32px;margin-bottom:8px" />` : `<div style="font-size:22px;font-weight:800;color:#fff">⬡ ${firm?.name || 'FirmFlow'}</div>`}
                 <div style="color:rgba(255,255,255,0.8);font-size:14px;margin-top:4px">New invoice</div>
               </div>
               <div style="padding:40px;border:1px solid #E2E8F0;border-top:none;border-radius:0 0 12px 12px">
@@ -74,7 +86,7 @@ export async function POST(req: NextRequest) {
                   <strong>${firm?.name || 'Your firm'}</strong> has sent you a new invoice.
                 </p>
 
-                ${notes ? `<div style="background:#F8FAFC;border-left:4px solid #1C64F2;padding:16px;border-radius:0 8px 8px 0;margin:0 0 24px"><p style="font-size:14px;color:#374151;margin:0;font-style:italic">${notes}</p></div>` : ''}
+                ${notes ? `<div style="background:#F8FAFC;border-left:4px solid ${brandColor};padding:16px;border-radius:0 8px 8px 0;margin:0 0 24px"><p style="font-size:14px;color:#374151;margin:0;font-style:italic">${notes}</p></div>` : ''}
 
                 <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:24px;margin:0 0 24px">
                   <div style="margin-bottom:12px">
@@ -91,12 +103,13 @@ export async function POST(req: NextRequest) {
                   </div>
                   <div style="border-top:1px solid #E2E8F0;padding-top:16px">
                     <p style="font-size:12px;color:#64748B;margin:0 0 4px">Amount due</p>
-                    <p style="font-size:32px;font-weight:900;color:#1C64F2;margin:0">$${(amount || 0).toLocaleString()}</p>
+                    <p style="font-size:32px;font-weight:900;color:${brandColor};margin:0">${cur.symbol}${(amount || 0).toLocaleString()}</p>
+                    <p style="font-size:12px;color:#94A3B8;margin:4px 0 0">${cur.flag} ${cur.name}</p>
                   </div>
                 </div>
 
                 <div style="text-align:center;margin:28px 0">
-                  <a href="${portalUrl}" style="display:inline-block;background:#1C64F2;color:#fff;padding:16px 40px;border-radius:10px;text-decoration:none;font-weight:700;font-size:16px">
+                  <a href="${portalUrl}" style="display:inline-block;background:${brandColor};color:#fff;padding:16px 40px;border-radius:10px;text-decoration:none;font-weight:700;font-size:16px">
                     💳 View &amp; Pay Invoice →
                   </a>
                 </div>
@@ -104,7 +117,7 @@ export async function POST(req: NextRequest) {
                 ${firm?.bank_details ? `<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:16px;margin-top:16px"><p style="font-size:12px;font-weight:700;color:#374151;margin:0 0 8px">BANK TRANSFER DETAILS</p><pre style="font-size:12px;color:#475569;margin:0;white-space:pre-wrap;font-family:monospace">${firm.bank_details}</pre></div>` : ''}
               </div>
               <p style="text-align:center;color:#94A3B8;font-size:12px;margin-top:20px">
-                Powered by <strong>FirmFlow</strong> · firmflow.uk
+                Powered by <strong>${firm?.name || 'FirmFlow'}</strong> · firmflow.uk
               </p>
             </div>
           `
