@@ -14,37 +14,56 @@ export default function ResetPassword() {
   useEffect(() => {
     const supabase = createClient()
 
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
+        if (session) {
+          setReady(true)
+          setSessionChecked(true)
+        }
+      }
+    })
+
     async function setupSession() {
-      // Try code param first (PKCE flow)
+      // Handle code in URL (PKCE flow)
       const urlParams = new URLSearchParams(window.location.search)
       const code = urlParams.get('code')
 
       if (code) {
-        const { data, error } = await supabase.auth.exchangeCodeForSession(code)
-        if (!error && data.session) {
-          setReady(true)
-          setSessionChecked(true)
-          return
+        try {
+          const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+          if (!error && data.session) {
+            setReady(true)
+            setSessionChecked(true)
+            return
+          } else {
+            console.error('Code exchange error:', error)
+          }
+        } catch (e) {
+          console.error('Code exchange exception:', e)
         }
       }
 
-      // Try hash token (implicit flow)
+      // Handle hash token (implicit flow)
       const hash = window.location.hash
-      if (hash) {
+      if (hash && hash.length > 1) {
         const hashParams = new URLSearchParams(hash.substring(1))
         const accessToken = hashParams.get('access_token')
         const refreshToken = hashParams.get('refresh_token')
         const type = hashParams.get('type')
 
         if (accessToken && (type === 'recovery' || type === 'signup')) {
-          const { data, error } = await supabase.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken || ''
-          })
-          if (!error && data.session) {
-            setReady(true)
-            setSessionChecked(true)
-            return
+          try {
+            const { data, error } = await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken || ''
+            })
+            if (!error && data.session) {
+              setReady(true)
+              setSessionChecked(true)
+              return
+            }
+          } catch (e) {
+            console.error('Set session error:', e)
           }
         }
       }
@@ -57,14 +76,7 @@ export default function ResetPassword() {
       setSessionChecked(true)
     }
 
-    // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
-        if (session) setReady(true)
-      }
-    })
-
-    setTimeout(setupSession, 500)
+    setupSession()
 
     return () => subscription.unsubscribe()
   }, [])
@@ -86,7 +98,6 @@ export default function ResetPassword() {
     setLoading(true)
     const supabase = createClient()
 
-    // Verify session exists before updating
     const { data: { session } } = await supabase.auth.getSession()
     if (!session) {
       setError('Your session has expired. Please request a new password reset link.')
@@ -150,7 +161,18 @@ export default function ResetPassword() {
                 Go to login →
               </a>
             </div>
-          ) : !ready && sessionChecked ? (
+          ) : !sessionChecked ? (
+            <div style={{textAlign:'center'}}>
+              <p style={{fontSize:'40px',margin:'0 0 16px'}}>🔐</p>
+              <h2 style={{fontSize:'18px',fontWeight:'700',color:'#0F172A',margin:'0 0 8px'}}>Verifying your link...</h2>
+              <p style={{fontSize:'14px',color:'#64748B',margin:'0 0 24px'}}>Please wait a moment...</p>
+              <div style={{display:'flex',justifyContent:'center',gap:'6px'}}>
+                {[0,1,2].map(i => (
+                  <div key={i} style={{width:'10px',height:'10px',borderRadius:'50%',background:'#1C64F2',opacity: 0.4 + (i * 0.2)}} />
+                ))}
+              </div>
+            </div>
+          ) : !ready ? (
             <div style={{textAlign:'center'}}>
               <p style={{fontSize:'40px',margin:'0 0 16px'}}>⚠️</p>
               <h2 style={{fontSize:'18px',fontWeight:'700',color:'#0F172A',margin:'0 0 8px'}}>Link expired or invalid</h2>
@@ -159,18 +181,7 @@ export default function ResetPassword() {
                 Request new link →
               </a>
               <br />
-              <a href="/login" style={{fontSize:'13px',color:'#64748B',textDecoration:'none'}}>← Back to login</a>
-            </div>
-          ) : !ready ? (
-            <div style={{textAlign:'center'}}>
-              <p style={{fontSize:'40px',margin:'0 0 16px'}}>🔐</p>
-              <h2 style={{fontSize:'18px',fontWeight:'700',color:'#0F172A',margin:'0 0 8px'}}>Verifying your link...</h2>
-              <p style={{fontSize:'14px',color:'#64748B',margin:'0 0 24px'}}>Please wait a moment...</p>
-              <div style={{display:'flex',justifyContent:'center',gap:'6px'}}>
-                {[0,1,2].map(i => (
-                  <div key={i} style={{width:'8px',height:'8px',borderRadius:'50%',background:'#1C64F2',opacity:0.6}} />
-                ))}
-              </div>
+              <a href="/login" style={{fontSize:'13px',color:'#64748B',textDecoration:'none',marginTop:'8px',display:'inline-block'}}>← Back to login</a>
             </div>
           ) : (
             <>
@@ -183,9 +194,9 @@ export default function ResetPassword() {
               {error && (
                 <div style={{background:'#FEF2F2',border:'1px solid #FECACA',borderRadius:'8px',padding:'12px 16px',marginBottom:'20px'}}>
                   <p style={{fontSize:'13px',color:'#DC2626',margin:'0 0 8px'}}>⚠️ {error}</p>
-                  {error.includes('expired') || error.includes('session') ? (
+                  {(error.includes('expired') || error.includes('session') || error.includes('missing')) && (
                     <a href="/forgot-password" style={{fontSize:'12px',color:'#1C64F2',fontWeight:'600'}}>Request new reset link →</a>
-                  ) : null}
+                  )}
                 </div>
               )}
 
