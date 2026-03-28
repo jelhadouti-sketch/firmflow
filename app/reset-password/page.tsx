@@ -13,17 +13,31 @@ export default function ResetPassword() {
   useEffect(() => {
     const supabase = createClient()
 
-    // Check if we have a session already (from hash token)
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setReady(true)
-      }
-    })
+    const hashParams = new URLSearchParams(window.location.hash.substring(1))
+    const accessToken = hashParams.get('access_token')
+    const refreshToken = hashParams.get('refresh_token')
+    const type = hashParams.get('type')
 
-    // Also listen for PASSWORD_RECOVERY event
+    if (accessToken && type === 'recovery') {
+      supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken || ''
+      }).then(({ error }) => {
+        if (!error) {
+          setReady(true)
+        } else {
+          setError('Link expired. Please request a new one.')
+        }
+      })
+    } else {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) setReady(true)
+      })
+    }
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && session)) {
-        setReady(true)
+      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
+        if (session) setReady(true)
       }
     })
 
@@ -106,18 +120,29 @@ export default function ResetPassword() {
               <p style={{fontSize:'40px',margin:'0 0 16px'}}>🔐</p>
               <h2 style={{fontSize:'18px',fontWeight:'700',color:'#0F172A',margin:'0 0 8px'}}>Verifying your link...</h2>
               <p style={{fontSize:'14px',color:'#64748B',margin:'0 0 24px'}}>Please wait while we verify your reset link.</p>
-              <div style={{background:'#FEF3C7',border:'1px solid #FDE68A',borderRadius:'8px',padding:'14px 16px',marginBottom:'16px'}}>
-                <p style={{fontSize:'13px',color:'#92400E',margin:'0'}}>⚠️ If this takes too long, your link may have expired.</p>
-              </div>
-              <button
-                onClick={() => setReady(true)}
-                style={{padding:'10px 20px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer',marginRight:'8px'}}
-              >
-                Continue anyway →
-              </button>
-              <a href="/forgot-password" style={{display:'inline-block',padding:'10px 20px',background:'#F1F5F9',color:'#475569',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>
-                Request new link
-              </a>
+              {error ? (
+                <div style={{background:'#FEF2F2',border:'1px solid #FECACA',borderRadius:'8px',padding:'14px 16px',marginBottom:'16px'}}>
+                  <p style={{fontSize:'13px',color:'#DC2626',margin:'0 0 12px'}}>⚠️ {error}</p>
+                  <a href="/forgot-password" style={{display:'inline-block',padding:'8px 16px',background:'#DC2626',color:'#fff',borderRadius:'6px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>
+                    Request new link →
+                  </a>
+                </div>
+              ) : (
+                <div style={{background:'#FEF3C7',border:'1px solid #FDE68A',borderRadius:'8px',padding:'14px 16px',marginBottom:'16px'}}>
+                  <p style={{fontSize:'13px',color:'#92400E',margin:'0 0 12px'}}>⚠️ If this takes too long, your link may have expired.</p>
+                  <div style={{display:'flex',gap:'8px',justifyContent:'center'}}>
+                    <button
+                      onClick={() => setReady(true)}
+                      style={{padding:'8px 16px',background:'#1C64F2',color:'#fff',borderRadius:'6px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}
+                    >
+                      Continue anyway →
+                    </button>
+                    <a href="/forgot-password" style={{display:'inline-block',padding:'8px 16px',background:'#F1F5F9',color:'#475569',borderRadius:'6px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>
+                      New link
+                    </a>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <>
