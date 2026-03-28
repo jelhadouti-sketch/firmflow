@@ -16,7 +16,7 @@ export default function ForgotPassword() {
 
     const supabase = createClient()
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://firmflow.uk/reset-password',
+      redirectTo: 'https://firmflow.uk/auth/callback?next=/reset-password',
     })
 
     if (error) {
@@ -32,7 +32,6 @@ export default function ForgotPassword() {
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'}}>
       <div style={{width:'100%',maxWidth:'420px'}}>
 
-        {/* Logo */}
         <div style={{textAlign:'center',marginBottom:'32px'}}>
           <a href="/" style={{textDecoration:'none'}}>
             <span style={{fontSize:'28px',fontWeight:'900',color:'#1C64F2',letterSpacing:'-0.04em'}}>⬡ FirmFlow</span>
