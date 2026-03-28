@@ -16,7 +16,7 @@ export default function Signup() {
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, fullName: name, firmName })
+        body: JSON.stringify({ email, password, fullName: name, firmName, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, locale: navigator.language })
       })
       const data = await res.json()
       if (data.error) {
