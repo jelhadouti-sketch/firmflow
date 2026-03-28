@@ -56,6 +56,7 @@ export default async function PortalDashboard() {
     { icon:'📄', label:'Documents', href:'/portal/documents' },
     { icon:'✍', label:'Signatures', href:'/portal/signatures' },
     { icon:'💳', label:'Invoices', href:'/portal/invoices' },
+    { icon:'💬', label:'Messages', href:'/portal/messages' },
   ]
 
   return (

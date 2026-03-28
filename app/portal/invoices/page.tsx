@@ -36,6 +36,7 @@ export default async function PortalInvoices() {
     { icon:'📄', label:'Documents', href:'/portal/documents' },
     { icon:'✍', label:'Signatures', href:'/portal/signatures' },
     { icon:'💳', label:'Invoices', href:'/portal/invoices', active:true },
+    { icon:'💬', label:'Messages', href:'/portal/messages' },
   ]
 
   return (

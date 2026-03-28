@@ -32,6 +32,7 @@ export default async function PortalSignatures() {
     { icon:'📄', label:'Documents', href:'/portal/documents' },
     { icon:'✍', label:'Signatures', href:'/portal/signatures', active:true },
     { icon:'💳', label:'Invoices', href:'/portal/invoices' },
+    { icon:'💬', label:'Messages', href:'/portal/messages' },
   ]
 
   return (

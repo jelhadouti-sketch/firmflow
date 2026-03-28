@@ -42,6 +42,7 @@ export function buildSidebar(hasPage: (page: string) => boolean, isAdmin: boolea
     { icon:'⏱', label:'Time & billing', href:'/dashboard/time', show: hasPage('time') },
     { icon:'💳', label:'Invoices', href:'/dashboard/invoices', show: hasPage('invoices') },
     { icon:'👥', label:'Clients', href:'/dashboard/clients', show: hasPage('clients') },
+    { icon:'💬', label:'Messages', href:'/dashboard/messages', show: hasPage('messages') },
     { icon:'📅', label:'Calendar', href:'/dashboard/calendar', show: hasPage('calendar') }, 
     { icon:'📊', label:'Analytics', href:'/dashboard/analytics', show: isAdmin },
     { icon:'👨‍💼', label:'Team', href:'/dashboard/team', show: isAdmin },
