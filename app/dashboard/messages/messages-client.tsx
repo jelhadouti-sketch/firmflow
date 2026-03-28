@@ -57,8 +57,12 @@ export default function MessagesClient({
   const [newFirstMsg, setNewFirstMsg] = useState('')
   const [creating, setCreating] = useState(false)
   const [showMobileChat, setShowMobileChat] = useState(false)
+  const [clientSearch, setClientSearch] = useState('')
+  const [showClientDropdown, setShowClientDropdown] = useState(false)
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+  const clientDropdownRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -68,12 +72,22 @@ export default function MessagesClient({
     scrollToBottom()
   }, [messages])
 
-  // Load messages when conversation is selected
   useEffect(() => {
     if (!activeConvo) return
     loadMessages(activeConvo)
     markAsRead(activeConvo)
   }, [activeConvo])
+
+  // Close client dropdown when clicking outside
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (clientDropdownRef.current && !clientDropdownRef.current.contains(e.target as Node)) {
+        setShowClientDropdown(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
 
   // Real-time subscription
   useEffect(() => {
@@ -84,7 +98,6 @@ export default function MessagesClient({
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
         const newMessage = payload.new as Message
 
-        // Update messages if we're in that conversation
         if (newMessage.conversation_id === activeConvo) {
           setMessages(prev => [...prev, newMessage])
           if (newMessage.sender_id !== userId) {
@@ -92,7 +105,6 @@ export default function MessagesClient({
           }
         }
 
-        // Update conversation list
         setConversations(prev => {
           const updated = prev.map(c => {
             if (c.id === newMessage.conversation_id) {
@@ -103,13 +115,16 @@ export default function MessagesClient({
           return updated.sort((a, b) => new Date(b.last_message_at).getTime() - new Date(a.last_message_at).getTime())
         })
 
-        // Update unread count
         if (newMessage.sender_id !== userId && newMessage.conversation_id !== activeConvo) {
           setUnreadMap(prev => ({
             ...prev,
             [newMessage.conversation_id]: (prev[newMessage.conversation_id] || 0) + 1
           }))
         }
+      })
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, (payload) => {
+        const deleted = payload.old as Message
+        setMessages(prev => prev.filter(m => m.id !== deleted.id))
       })
       .subscribe()
 
@@ -160,6 +175,44 @@ export default function MessagesClient({
     inputRef.current?.focus()
   }
 
+  async function deleteMessage(msgId: string) {
+    const supabase = createClient()
+    await supabase.from('messages').delete().eq('id', msgId)
+    setMessages(prev => prev.filter(m => m.id !== msgId))
+    setDeleteConfirm(null)
+
+    // Update conversation preview if we deleted the last message
+    if (activeConvo) {
+      const remaining = messages.filter(m => m.id !== msgId)
+      if (remaining.length > 0) {
+        const last = remaining[remaining.length - 1]
+        await supabase.from('conversations').update({
+          last_message_preview: last.content.substring(0, 80),
+          last_message_at: last.created_at,
+        }).eq('id', activeConvo)
+
+        setConversations(prev => prev.map(c => {
+          if (c.id === activeConvo) {
+            return { ...c, last_message_preview: last.content.substring(0, 80), last_message_at: last.created_at }
+          }
+          return c
+        }))
+      }
+    }
+  }
+
+  async function deleteConversation(convoId: string) {
+    const supabase = createClient()
+    await supabase.from('messages').delete().eq('conversation_id', convoId)
+    await supabase.from('conversations').delete().eq('id', convoId)
+    setConversations(prev => prev.filter(c => c.id !== convoId))
+    if (activeConvo === convoId) {
+      setActiveConvo(null)
+      setMessages([])
+      setShowMobileChat(false)
+    }
+  }
+
   async function createConversation() {
     if (!newClient || !newSubject.trim() || !newFirstMsg.trim()) return
     setCreating(true)
@@ -189,6 +242,7 @@ export default function MessagesClient({
       setNewSubject('')
       setNewClient('')
       setNewFirstMsg('')
+      setClientSearch('')
       setShowMobileChat(true)
     }
     setCreating(false)
@@ -217,11 +271,17 @@ export default function MessagesClient({
     return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' · ' + d.toLocaleDateString([], { month: 'short', day: 'numeric' })
   }
 
+  const selectedClient = clients.find(c => c.id === newClient)
+  const filteredClients = clients.filter(c =>
+    (c.full_name || '').toLowerCase().includes(clientSearch.toLowerCase()) ||
+    (c.email || '').toLowerCase().includes(clientSearch.toLowerCase())
+  )
+
   const activeConversation = conversations.find(c => c.id === activeConvo)
   const filtered = conversations.filter(c =>
-    c.client?.full_name?.toLowerCase().includes(search.toLowerCase()) ||
-    c.subject?.toLowerCase().includes(search.toLowerCase()) ||
-    c.client?.email?.toLowerCase().includes(search.toLowerCase())
+    (c.client?.full_name || '').toLowerCase().includes(search.toLowerCase()) ||
+    (c.subject || '').toLowerCase().includes(search.toLowerCase()) ||
+    (c.client?.email || '').toLowerCase().includes(search.toLowerCase())
   )
 
   const totalUnread = Object.values(unreadMap).reduce((a, b) => a + b, 0)
@@ -231,7 +291,6 @@ export default function MessagesClient({
 
       {/* Conversation List */}
       <div className={showMobileChat ? 'hide-mobile' : ''} style={{width:'360px',borderRight:'1px solid #E2E8F0',background:'#fff',display:'flex',flexDirection:'column',flexShrink:0}}>
-        {/* Header */}
         <div style={{padding:'20px 20px 12px'}}>
           <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'16px'}}>
             <div>
@@ -257,7 +316,6 @@ export default function MessagesClient({
           />
         </div>
 
-        {/* Conversations */}
         <div style={{flex:1,overflowY:'auto'}}>
           {filtered.length === 0 ? (
             <div style={{padding:'40px 20px',textAlign:'center'}}>
@@ -274,11 +332,11 @@ export default function MessagesClient({
               <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'4px'}}>
                 <div style={{display:'flex',alignItems:'center',gap:'8px',flex:1,minWidth:0}}>
                   <div style={{width:'36px',height:'36px',borderRadius:'50%',background:activeConvo === c.id ? '#1C64F2' : '#E2E8F0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'14px',color:activeConvo === c.id ? '#fff' : '#475569',fontWeight:'700',flexShrink:0}}>
-                    {c.client?.full_name?.[0]?.toUpperCase() || '?'}
+                    {(c.client?.full_name || c.client?.email || '?')[0].toUpperCase()}
                   </div>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
-                      <span style={{fontSize:'13px',fontWeight:'700',color:'#0F172A',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{c.client?.full_name || 'Unknown'}</span>
+                      <span style={{fontSize:'13px',fontWeight:'700',color:'#0F172A',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{c.client?.full_name || c.client?.email || 'Unknown'}</span>
                       {(unreadMap[c.id] || 0) > 0 && (
                         <span style={{background:'#DC2626',color:'#fff',fontSize:'10px',fontWeight:'700',borderRadius:'10px',padding:'1px 6px',flexShrink:0}}>{unreadMap[c.id]}</span>
                       )}
@@ -310,12 +368,18 @@ export default function MessagesClient({
                 ←
               </button>
               <div style={{width:'40px',height:'40px',borderRadius:'50%',background:'#1C64F2',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'16px',color:'#fff',fontWeight:'700'}}>
-                {activeConversation.client?.full_name?.[0]?.toUpperCase() || '?'}
+                {(activeConversation.client?.full_name || activeConversation.client?.email || '?')[0].toUpperCase()}
               </div>
               <div style={{flex:1}}>
-                <h3 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',margin:'0'}}>{activeConversation.client?.full_name}</h3>
+                <h3 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',margin:'0'}}>{activeConversation.client?.full_name || activeConversation.client?.email}</h3>
                 <p style={{fontSize:'12px',color:'#64748B',margin:'0'}}>{activeConversation.subject} · {activeConversation.client?.email}</p>
               </div>
+              <button
+                onClick={() => { if (confirm('Delete this entire conversation?')) deleteConversation(activeConvo) }}
+                style={{padding:'6px 12px',background:'#FEF2F2',color:'#DC2626',borderRadius:'6px',border:'none',fontSize:'12px',fontWeight:'600',cursor:'pointer'}}
+              >
+                🗑️ Delete
+              </button>
             </div>
 
             {/* Messages */}
@@ -341,14 +405,26 @@ export default function MessagesClient({
                             <span style={{fontSize:'11px',color:'#94A3B8',background:'#F1F5F9',padding:'4px 12px',borderRadius:'10px'}}>{new Date(msg.created_at).toLocaleDateString([], { weekday:'long', month:'long', day:'numeric' })}</span>
                           </div>
                         )}
-                        <div style={{display:'flex',justifyContent:isMe ? 'flex-end' : 'flex-start',marginBottom:'8px'}}>
-                          <div style={{maxWidth:'70%'}}>
+                        <div style={{display:'flex',justifyContent:isMe ? 'flex-end' : 'flex-start',marginBottom:'8px',position:'relative'}}
+                          onMouseEnter={() => {}}
+                        >
+                          <div style={{maxWidth:'70%',position:'relative'}} className="msg-bubble">
                             <div style={{padding:'12px 16px',borderRadius:isMe ? '16px 16px 4px 16px' : '16px 16px 16px 4px',background:isMe ? '#1C64F2' : '#fff',color:isMe ? '#fff' : '#0F172A',fontSize:'14px',lineHeight:'1.5',border:isMe ? 'none' : '1px solid #E2E8F0',boxShadow:'0 1px 3px rgba(0,0,0,0.06)',whiteSpace:'pre-wrap',wordBreak:'break-word'}}>
                               {msg.content}
                             </div>
                             <div style={{display:'flex',alignItems:'center',gap:'6px',marginTop:'4px',justifyContent:isMe ? 'flex-end' : 'flex-start'}}>
                               <span style={{fontSize:'11px',color:'#94A3B8'}}>{formatMsgTime(msg.created_at)}</span>
                               {isMe && <span style={{fontSize:'11px',color:msg.read ? '#1C64F2' : '#94A3B8'}}>{msg.read ? '✓✓' : '✓'}</span>}
+                              {isMe && (
+                                deleteConfirm === msg.id ? (
+                                  <span style={{display:'flex',gap:'4px'}}>
+                                    <button onClick={() => deleteMessage(msg.id)} style={{fontSize:'11px',color:'#DC2626',background:'none',border:'none',cursor:'pointer',fontWeight:'600',padding:'0'}}>Delete</button>
+                                    <button onClick={() => setDeleteConfirm(null)} style={{fontSize:'11px',color:'#64748B',background:'none',border:'none',cursor:'pointer',padding:'0'}}>Cancel</button>
+                                  </span>
+                                ) : (
+                                  <button onClick={() => setDeleteConfirm(msg.id)} style={{fontSize:'11px',color:'#94A3B8',background:'none',border:'none',cursor:'pointer',padding:'0',opacity:0.6}} title="Delete message">🗑️</button>
+                                )
+                              )}
                             </div>
                           </div>
                         </div>
@@ -401,28 +477,64 @@ export default function MessagesClient({
 
       {/* New Conversation Modal */}
       {showNew && (
-        <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:200,padding:'20px'}} onClick={() => setShowNew(false)}>
+        <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:200,padding:'20px'}} onClick={() => { setShowNew(false); setClientSearch(''); setNewClient('') }}>
           <div onClick={e => e.stopPropagation()} style={{background:'#fff',borderRadius:'16px',width:'480px',maxWidth:'100%',boxShadow:'0 20px 60px rgba(0,0,0,0.15)'}}>
             <div style={{padding:'24px 24px 0'}}>
               <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'20px'}}>
                 <h2 style={{fontSize:'18px',fontWeight:'800',color:'#0F172A',margin:'0'}}>✏️ New conversation</h2>
-                <button onClick={() => setShowNew(false)} style={{background:'none',border:'none',fontSize:'20px',cursor:'pointer',color:'#64748B'}}>✕</button>
+                <button onClick={() => { setShowNew(false); setClientSearch(''); setNewClient('') }} style={{background:'none',border:'none',fontSize:'20px',cursor:'pointer',color:'#64748B'}}>✕</button>
               </div>
             </div>
 
             <div style={{padding:'0 24px 24px'}}>
-              <div style={{marginBottom:'16px'}}>
+              {/* Searchable Client Picker */}
+              <div style={{marginBottom:'16px',position:'relative'}} ref={clientDropdownRef}>
                 <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>Client</label>
-                <select
-                  value={newClient}
-                  onChange={e => setNewClient(e.target.value)}
-                  style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'14px',outline:'none',boxSizing:'border-box',color:'#0F172A',background:'#fff'}}
-                >
-                  <option value="">Select a client...</option>
-                  {clients.map(c => (
-                    <option key={c.id} value={c.id}>{c.full_name} ({c.email})</option>
-                  ))}
-                </select>
+                {selectedClient ? (
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 12px',border:'1px solid #1C64F2',borderRadius:'8px',background:'#EFF6FF'}}>
+                    <div>
+                      <span style={{fontSize:'14px',fontWeight:'600',color:'#0F172A'}}>{selectedClient.full_name || 'No name'}</span>
+                      <span style={{fontSize:'12px',color:'#64748B',marginLeft:'8px'}}>{selectedClient.email}</span>
+                    </div>
+                    <button onClick={() => { setNewClient(''); setClientSearch('') }} style={{background:'none',border:'none',fontSize:'16px',cursor:'pointer',color:'#64748B'}}>✕</button>
+                  </div>
+                ) : (
+                  <div>
+                    <input
+                      type="text"
+                      value={clientSearch}
+                      onChange={e => { setClientSearch(e.target.value); setShowClientDropdown(true) }}
+                      onFocus={() => setShowClientDropdown(true)}
+                      placeholder="🔍 Search by name or email..."
+                      style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'14px',outline:'none',boxSizing:'border-box',color:'#0F172A'}}
+                    />
+                    {showClientDropdown && (
+                      <div style={{position:'absolute',left:0,right:0,top:'100%',marginTop:'4px',background:'#fff',border:'1px solid #E2E8F0',borderRadius:'8px',boxShadow:'0 8px 24px rgba(0,0,0,0.12)',maxHeight:'200px',overflowY:'auto',zIndex:10}}>
+                        {filteredClients.length === 0 ? (
+                          <div style={{padding:'12px 16px',textAlign:'center'}}>
+                            <p style={{fontSize:'13px',color:'#64748B',margin:'0'}}>No clients found</p>
+                          </div>
+                        ) : filteredClients.map(c => (
+                          <div
+                            key={c.id}
+                            onClick={() => { setNewClient(c.id); setClientSearch(''); setShowClientDropdown(false) }}
+                            style={{padding:'10px 14px',cursor:'pointer',borderBottom:'1px solid #F1F5F9',display:'flex',alignItems:'center',gap:'10px'}}
+                            onMouseEnter={e => (e.currentTarget.style.background = '#F8FAFC')}
+                            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                          >
+                            <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'#E2E8F0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'13px',fontWeight:'700',color:'#475569',flexShrink:0}}>
+                              {(c.full_name || c.email || '?')[0].toUpperCase()}
+                            </div>
+                            <div>
+                              <p style={{fontSize:'13px',fontWeight:'600',color:'#0F172A',margin:'0'}}>{c.full_name || 'No name'}</p>
+                              <p style={{fontSize:'12px',color:'#64748B',margin:'0'}}>{c.email}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div style={{marginBottom:'16px'}}>
@@ -449,7 +561,7 @@ export default function MessagesClient({
 
               <div style={{display:'flex',gap:'10px',justifyContent:'flex-end'}}>
                 <button
-                  onClick={() => setShowNew(false)}
+                  onClick={() => { setShowNew(false); setClientSearch(''); setNewClient('') }}
                   style={{padding:'10px 20px',background:'#F1F5F9',color:'#475569',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}
                 >
                   Cancel
