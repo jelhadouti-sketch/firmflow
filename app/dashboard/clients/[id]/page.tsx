@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
+import MobileNav from '@/components/mobile-nav'
 
 export default async function ClientDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -8,15 +10,11 @@ export default async function ClientDetail({ params }: { params: Promise<{ id: s
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('*, firms(*)')
-    .eq('id', user.id)
-    .single()
-
+  const profile = await getProfileWithPermissions(user.id)
   if (!profile) redirect('/login')
 
   const firm = profile.firms as any
+  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'clients')
 
   const { data: client } = await supabaseAdmin
     .from('profiles')
@@ -51,18 +49,11 @@ export default async function ClientDetail({ params }: { params: Promise<{ id: s
     .eq('firm_id', profile.firm_id)
     .order('created_at', { ascending: false })
 
-  const sidebarItems = [
-    { icon:'🏠', label:'Dashboard', href:'/dashboard' },
-    { icon:'📋', label:'Engagements', href:'/dashboard/engagements' },
-    { icon:'📄', label:'Documents', href:'/dashboard/documents' },
-    { icon:'✍', label:'Signatures', href:'/dashboard/signatures' },
-    { icon:'✅', label:'Tasks', href:'/dashboard/tasks' },
-    { icon:'⏱', label:'Time & billing', href:'/dashboard/time' },
-    { icon:'💳', label:'Invoices', href:'/dashboard/invoices' },
-    { icon:'👥', label:'Clients', href:'/dashboard/clients', active:true },
-    { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
-    { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
-  ]
+  const { count: unreadCount } = await supabaseAdmin
+    .from('notifications')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+    .eq('read', false)
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
@@ -73,13 +64,17 @@ export default async function ClientDetail({ params }: { params: Promise<{ id: s
           <span style={{fontSize:'14px',fontWeight:'600',color:'#0F172A'}}>{firm?.name}</span>
         </div>
         <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
+          <a href="/dashboard/notifications" style={{position:'relative',textDecoration:'none',fontSize:'18px'}}>
+            🔔
+            {(unreadCount || 0) > 0 && <span style={{position:'absolute',top:'-4px',right:'-6px',background:'#DC2626',color:'#fff',fontSize:'10px',fontWeight:'700',borderRadius:'50%',width:'16px',height:'16px',display:'flex',alignItems:'center',justifyContent:'center'}}>{unreadCount}</span>}
+          </a>
           <a href="/dashboard/clients" style={{fontSize:'13px',color:'#64748B',textDecoration:'none'}}>← Back to clients</a>
           <a href="/api/auth/logout" style={{padding:'6px 14px',background:'#F1F5F9',color:'#475569',borderRadius:'6px',textDecoration:'none',fontSize:'13px'}}>Sign out</a>
         </div>
       </header>
 
       <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
-        <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
+        <aside className="hide-mobile" style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
           {sidebarItems.map((item, i) => (
             <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
               <span>{item.icon}</span>
@@ -91,16 +86,17 @@ export default async function ClientDetail({ params }: { params: Promise<{ id: s
         <main style={{flex:1,padding:'32px',overflow:'auto'}}>
 
           {/* Client header */}
-          <div style={{background:'#fff',borderRadius:'16px',padding:'28px',border:'1px solid #E2E8F0',marginBottom:'24px',display:'flex',alignItems:'center',gap:'20px',boxShadow:'0 1px 4px rgba(0,0,0,0.04)'}}>
+          <div style={{background:'#fff',borderRadius:'16px',padding:'28px',border:'1px solid #E2E8F0',marginBottom:'24px',display:'flex',alignItems:'center',gap:'20px',boxShadow:'0 1px 4px rgba(0,0,0,0.04)',flexWrap:'wrap'}}>
             <div style={{width:'72px',height:'72px',borderRadius:'50%',background:'linear-gradient(135deg,#1C64F2,#7C3AED)',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'28px',fontWeight:'800',flexShrink:0}}>
               {client.full_name?.charAt(0)?.toUpperCase() || '?'}
             </div>
-            <div style={{flex:1}}>
+            <div style={{flex:1,minWidth:'200px'}}>
               <h1 style={{fontSize:'22px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>{client.full_name}</h1>
               <p style={{fontSize:'14px',color:'#64748B',margin:'0'}}>{clientEmail}</p>
               <p style={{fontSize:'12px',color:'#94A3B8',margin:'4px 0 0'}}>Client since {client.created_at ? new Date(client.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : '—'}</p>
             </div>
-            <div style={{display:'flex',gap:'8px'}}>
+            <div style={{display:'flex',gap:'8px',flexWrap:'wrap'}}>
+              <a href={`/dashboard/messages`} style={{padding:'9px 16px',background:'#EFF6FF',color:'#1C64F2',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>💬 Message</a>
               <a href="/dashboard/signatures" style={{padding:'9px 16px',background:'#1C64F2',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>✍ Request signature</a>
               <a href="/dashboard/invoices" style={{padding:'9px 16px',background:'#F0FDF4',color:'#15803D',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>💳 New invoice</a>
             </div>
@@ -110,9 +106,9 @@ export default async function ClientDetail({ params }: { params: Promise<{ id: s
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'24px'}}>
             {[
               { label:'Engagements', value: engagements?.length || 0, color:'#1D4ED8' },
-              { label:'Signatures', value: signatures?.length || 0, color:'#7C3AED' },
-              { label:'Signed', value: signatures?.filter(s=>s.status==='signed').length || 0, color:'#15803D' },
-              { label:'Pending', value: signatures?.filter(s=>s.status==='pending').length || 0, color:'#92400E' },
+              { label:'Invoices', value: invoices?.length || 0, color:'#7C3AED' },
+              { label:'Signatures', value: signatures?.length || 0, color:'#15803D' },
+              { label:'Pending sigs', value: signatures?.filter(s=>s.status==='pending').length || 0, color:'#92400E' },
             ].map((stat, i) => (
               <div key={i} style={{background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0'}}>
                 <p style={{fontSize:'13px',color:'#64748B',marginBottom:'8px'}}>{stat.label}</p>
@@ -171,9 +167,37 @@ export default async function ClientDetail({ params }: { params: Promise<{ id: s
               )}
             </div>
 
+            {/* Invoices */}
+            <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden',gridColumn:'1 / -1'}}>
+              <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0'}}>
+                <h2 style={{fontSize:'14px',fontWeight:'700',color:'#0F172A',margin:'0'}}>💳 Invoices</h2>
+              </div>
+              {!invoices?.length ? (
+                <div style={{padding:'24px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>No invoices yet</div>
+              ) : (
+                <div>
+                  {invoices.map((inv, i) => (
+                    <div key={i} style={{padding:'12px 20px',borderBottom:'1px solid #F1F5F9',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                      <div>
+                        <p style={{fontSize:'13px',fontWeight:'600',color:'#0F172A',margin:'0 0 2px'}}>{inv.invoice_number || `INV-${String(i+1).padStart(3,'0')}`}</p>
+                        <p style={{fontSize:'11px',color:'#94A3B8',margin:'0'}}>{inv.created_at ? new Date(inv.created_at).toLocaleDateString('en-GB') : '—'}</p>
+                      </div>
+                      <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
+                        <span style={{fontSize:'14px',fontWeight:'700',color:'#0F172A'}}>£{(inv.total || 0).toFixed(2)}</span>
+                        <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:inv.status==='paid'?'#F0FDF4':inv.status==='pending'?'#FEF3C7':'#F1F5F9',color:inv.status==='paid'?'#15803D':inv.status==='pending'?'#92400E':'#64748B'}}>
+                          {inv.status === 'paid' ? '✅ Paid' : inv.status === 'pending' ? '⏳ Pending' : inv.status}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
           </div>
         </main>
       </div>
+      <MobileNav items={sidebarItems} />
     </div>
   )
 }
