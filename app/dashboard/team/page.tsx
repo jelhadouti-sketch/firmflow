@@ -3,6 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import MobileNav from '@/components/mobile-nav'
 import InviteMember from './invite-member'
+import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 import EditMember from './edit-member'
 
 export default async function Team() {
@@ -10,15 +11,12 @@ export default async function Team() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('*, firms(*)')
-    .eq('id', user.id)
-    .single()
-
+  const profile = await getProfileWithPermissions(user.id)
   if (!profile) redirect('/login')
+  if (!profile.isAdmin) redirect('/dashboard')
 
   const firm = profile.firms as any
+  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'team')
 
   const { data: members } = await supabaseAdmin
     .from('profiles')
@@ -33,24 +31,6 @@ export default async function Team() {
       return { ...member, email: authUser?.user?.email || '—' }
     })
   )
-
-  const sidebarItems = [
-    { icon:'🏠', label:'Dashboard', href:'/dashboard' },
-    { icon:'📋', label:'Engagements', href:'/dashboard/engagements' },
-    { icon:'📄', label:'Documents', href:'/dashboard/documents' },
-    { icon:'✍', label:'Signatures', href:'/dashboard/signatures' },
-    { icon:'✅', label:'Tasks', href:'/dashboard/tasks' },
-    { icon:'⏱', label:'Time & billing', href:'/dashboard/time' },
-    { icon:'💳', label:'Invoices', href:'/dashboard/invoices' },
-    { icon:'👥', label:'Clients', href:'/dashboard/clients' },
-    { icon:'📅', label:'Calendar', href:'/dashboard/calendar' },
-    { icon:'👨‍💼', label:'Team', href:'/dashboard/team', active:true },
-    { icon:'🔔', label:'Notifications', href:'/dashboard/notifications' },
-    { icon:'📊', label:'Analytics', href:'/dashboard/analytics' },
-    { icon:'🔁', label:'Recurring', href:'/dashboard/recurring' },
-    { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
-    { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
-  ]
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
@@ -67,7 +47,7 @@ export default async function Team() {
       </header>
 
       <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
-        <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
+        <aside className="hide-mobile" style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
           {sidebarItems.map((item, i) => (
             <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
               <span>{item.icon}</span>
@@ -82,7 +62,7 @@ export default async function Team() {
               <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Team</h1>
               <p style={{color:'#64748B',fontSize:'14px'}}>{membersWithEmail.length} team members</p>
             </div>
-            {profile.role === 'admin' && <InviteMember />}
+            {profile.isAdmin && <InviteMember />}
           </div>
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
@@ -108,7 +88,7 @@ export default async function Team() {
                 <p style={{fontSize:'32px',marginBottom:'8px'}}>👥</p>
                 <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No team members yet</p>
                 <p style={{fontSize:'13px',marginBottom:'20px'}}>Invite your first team member to get started</p>
-                {profile.role === 'admin' && <InviteMember />}
+                {profile.isAdmin && <InviteMember />}
               </div>
             ) : (
               <div>
@@ -148,7 +128,7 @@ export default async function Team() {
                       <span style={{fontSize:'12px',color:'#94A3B8'}}>
                         Joined {member.created_at ? new Date(member.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—'}
                       </span>
-                      {profile.role === 'admin' && (
+                      {profile.isAdmin && (
                         <EditMember member={member} currentUserId={user.id} />
                       )}
                     </div>
