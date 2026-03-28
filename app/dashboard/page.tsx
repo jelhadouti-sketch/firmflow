@@ -49,13 +49,21 @@ export default async function Dashboard() {
     .eq('user_id', user.id)
     .eq('read', false)
 
+  const brandColor = firm?.brand_color || '#1C64F2'
+
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
       <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
         <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
-          <span style={{fontSize:'18px',fontWeight:'800',color:'#1C64F2'}}>⬡ FirmFlow</span>
-          <span style={{color:'#E2E8F0'}}>|</span>
-          <span style={{fontSize:'14px',fontWeight:'600',color:'#0F172A'}}>{firm?.name}</span>
+          {firm?.logo_url ? (
+            <img src={firm.logo_url} alt={firm?.name} style={{height:'36px',maxWidth:'140px',objectFit:'contain'}} />
+          ) : (
+            <>
+              <span style={{fontSize:'18px',fontWeight:'800',color:brandColor}}>⬡ FirmFlow</span>
+              <span style={{color:'#E2E8F0'}}>|</span>
+              <span style={{fontSize:'14px',fontWeight:'600',color:'#0F172A'}}>{firm?.name}</span>
+            </>
+          )}
           <span style={{padding:'2px 8px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'20px',fontSize:'11px',fontWeight:'700'}}>{firm?.plan?.toUpperCase()}</span>
         </div>
         <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
@@ -73,7 +81,7 @@ export default async function Dashboard() {
       <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
         <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
           {sidebarItems.map((item, i) => (
-            <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
+            <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?brandColor+'15':'transparent',color:item.active?brandColor:'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
               <span>{item.icon}</span>
               <span>{item.label}</span>
             </a>
@@ -89,12 +97,12 @@ export default async function Dashboard() {
           </div>
 
           {isAdmin && firm?.plan === 'starter' && (
-            <div style={{background:'linear-gradient(135deg,#1C64F2,#7C3AED)',borderRadius:'12px',padding:'20px 24px',marginBottom:'24px',display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:'12px'}}>
+            <div style={{background:`linear-gradient(135deg,${brandColor},#7C3AED)`,borderRadius:'12px',padding:'20px 24px',marginBottom:'24px',display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:'12px'}}>
               <div>
                 <p style={{color:'#fff',fontWeight:'700',fontSize:'15px',margin:'0 0 4px'}}>🚀 Upgrade to Pro</p>
                 <p style={{color:'rgba(255,255,255,0.8)',fontSize:'13px',margin:'0'}}>Unlimited documents, 20 team seats, AI assistant and more</p>
               </div>
-              <a href="/dashboard/subscription" style={{padding:'10px 20px',background:'#fff',color:'#1C64F2',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'700',whiteSpace:'nowrap'}}>
+              <a href="/dashboard/subscription" style={{padding:'10px 20px',background:'#fff',color:brandColor,borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'700',whiteSpace:'nowrap'}}>
                 Upgrade to Pro →
               </a>
             </div>
@@ -116,25 +124,27 @@ export default async function Dashboard() {
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'16px',marginBottom:'28px'}}>
             {[
-              { label:'Engagements', value:engCount||0, icon:'📋', textColor:'#1D4ED8', show: profile.hasPage('engagements') },
-              { label:'Documents', value:docCount||0, icon:'📄', textColor:'#15803D', show: profile.hasPage('documents') },
-              { label:'Pending signatures', value:sigCount||0, icon:'✍', textColor:'#92400E', show: profile.hasPage('signatures') },
-              { label:'Open tasks', value:taskCount||0, icon:'✅', textColor:'#DC2626', show: profile.hasPage('tasks') },
+              { label:'Engagements', value:engCount||0, icon:'📋', textColor:brandColor, show: profile.hasPage('engagements'), href:'/dashboard/engagements' },
+              { label:'Documents', value:docCount||0, icon:'📄', textColor:'#15803D', show: profile.hasPage('documents'), href:'/dashboard/documents' },
+              { label:'Pending signatures', value:sigCount||0, icon:'✍', textColor:'#92400E', show: profile.hasPage('signatures'), href:'/dashboard/signatures' },
+              { label:'Open tasks', value:taskCount||0, icon:'✅', textColor:'#DC2626', show: profile.hasPage('tasks'), href:'/dashboard/tasks' },
             ].filter(s => s.show).map((stat, i) => (
-              <div key={i} style={{background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0',boxShadow:'0 1px 3px rgba(0,0,0,0.04)'}}>
-                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'12px'}}>
-                  <span style={{fontSize:'13px',color:'#64748B',fontWeight:'500'}}>{stat.label}</span>
-                  <span style={{fontSize:'18px'}}>{stat.icon}</span>
+              <a key={i} href={stat.href} style={{textDecoration:'none'}}>
+                <div style={{background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0',boxShadow:'0 1px 3px rgba(0,0,0,0.04)',cursor:'pointer'}}>
+                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'12px'}}>
+                    <span style={{fontSize:'13px',color:'#64748B',fontWeight:'500'}}>{stat.label}</span>
+                    <span style={{fontSize:'18px'}}>{stat.icon}</span>
+                  </div>
+                  <div style={{fontSize:'32px',fontWeight:'900',color:stat.textColor,letterSpacing:'-0.04em'}}>{stat.value}</div>
                 </div>
-                <div style={{fontSize:'32px',fontWeight:'900',color:stat.textColor,letterSpacing:'-0.04em'}}>{stat.value}</div>
-              </div>
+              </a>
             ))}
           </div>
 
           <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0',marginBottom:'24px'}}>
             <h2 style={{fontSize:'15px',fontWeight:'700',marginBottom:'16px',color:'#0F172A'}}>Quick actions</h2>
             <div style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
-              {profile.hasPage('engagements') && <a href="/dashboard/engagements" style={{padding:'9px 16px',background:'#1C64F2',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ New engagement</a>}
+              {profile.hasPage('engagements') && <a href="/dashboard/engagements" style={{padding:'9px 16px',background:brandColor,color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ New engagement</a>}
               {profile.hasPage('documents') && <a href="/dashboard/documents" style={{padding:'9px 16px',background:'#057A55',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ Upload document</a>}
               {profile.hasPage('clients') && <a href="/dashboard/clients" style={{padding:'9px 16px',background:'#7C3AED',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ Invite client</a>}
               {profile.hasPage('time') && <a href="/dashboard/time" style={{padding:'9px 16px',background:'#92400E',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ Log time</a>}
@@ -147,6 +157,7 @@ export default async function Dashboard() {
               <h2 style={{fontSize:'15px',fontWeight:'700',marginBottom:'16px',color:'#0F172A'}}>Getting started</h2>
               {[
                 { done:true, label:'Create your firm account', desc:'Your workspace is ready!' },
+                { done:false, label:'Upload your logo', desc:'Go to Settings → Logo & branding', href:'/dashboard/settings' },
                 { done:false, label:'Invite your first client', desc:'Go to Clients → Invite client', href:'/dashboard/clients' },
                 { done:false, label:'Upload your first document', desc:'Go to Documents → Upload', href:'/dashboard/documents' },
                 { done:false, label:'Create your first engagement', desc:'Go to Engagements → New engagement', href:'/dashboard/engagements' },
@@ -161,7 +172,7 @@ export default async function Dashboard() {
                     <p style={{fontSize:'12px',color:'#94A3B8',margin:'0'}}>{item.desc}</p>
                   </div>
                   {!item.done && item.href && (
-                    <a href={item.href} style={{fontSize:'12px',color:'#1C64F2',textDecoration:'none',fontWeight:'600',whiteSpace:'nowrap'}}>Go →</a>
+                    <a href={item.href} style={{fontSize:'12px',color:brandColor,textDecoration:'none',fontWeight:'600',whiteSpace:'nowrap'}}>Go →</a>
                   )}
                 </div>
               ))}
