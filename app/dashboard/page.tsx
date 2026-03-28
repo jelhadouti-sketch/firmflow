@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
+import MobileNav from '@/components/mobile-nav'
 
 export default async function Dashboard() {
   const supabase = await createClient()
@@ -65,7 +66,7 @@ export default async function Dashboard() {
               <span style={{position:'absolute',top:'-4px',right:'-4px',background:'#DC2626',color:'#fff',borderRadius:'50%',width:'16px',height:'16px',fontSize:'9px',fontWeight:'800',display:'flex',alignItems:'center',justifyContent:'center'}}>{unreadCount}</span>
             )}
           </a>
-          <span style={{fontSize:'13px',color:'#64748B'}}>{user.email}</span>
+          <span className="header-email" style={{fontSize:'13px',color:'#64748B'}}>{user.email}</span>
           <a href="/api/auth/logout" style={{padding:'6px 14px',background:'#F1F5F9',color:'#475569',borderRadius:'6px',textDecoration:'none',fontSize:'13px',fontWeight:'500'}}>Sign out</a>
         </div>
       </header>
@@ -135,7 +136,7 @@ export default async function Dashboard() {
 
           <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0',marginBottom:'24px'}}>
             <h2 style={{fontSize:'15px',fontWeight:'700',marginBottom:'16px',color:'#0F172A'}}>Quick actions</h2>
-            <div style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
+            <div className="quick-actions" style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
               {profile.hasPage('engagements') && <a href="/dashboard/engagements" style={{padding:'9px 16px',background:'#1C64F2',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ New engagement</a>}
               {profile.hasPage('documents') && <a href="/dashboard/documents" style={{padding:'9px 16px',background:'#057A55',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ Upload document</a>}
               {profile.hasPage('clients') && <a href="/dashboard/clients" style={{padding:'9px 16px',background:'#7C3AED',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>+ Invite client</a>}
@@ -173,6 +174,8 @@ export default async function Dashboard() {
           )}
         </main>
       </div>
+
+      <MobileNav items={sidebarItems} />
     </div>
   )
 }

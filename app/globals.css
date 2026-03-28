@@ -1,26 +1,281 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ================================
+   MOBILE NAVIGATION
+================================ */
+
+.mobile-nav {
+  display: none;
+}
+
+.mobile-header-menu {
+  display: none;
+}
+
+/* ================================
+   RESPONSIVE BREAKPOINTS
+================================ */
+
+@media (max-width: 768px) {
+
+  /* Hide desktop sidebar on mobile */
+  aside {
+    display: none !important;
+  }
+
+  /* Show mobile bottom nav */
+  .mobile-nav {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 1px solid #E2E8F0;
+    padding: 8px 0 12px;
+    z-index: 200;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  /* Add padding to main content for mobile nav */
+  main {
+    padding-bottom: 80px !important;
+  }
+
+  /* Header adjustments */
+  header {
+    padding: 0 16px !important;
+    height: 56px !important;
+  }
+
+  /* Header email — hide on mobile */
+  .header-email {
+    display: none !important;
+  }
+
+  /* Main content padding */
+  main {
+    padding: 16px 16px 80px !important;
+  }
+
+  /* Page titles */
+  h1 {
+    font-size: 20px !important;
+  }
+
+  /* Stats grid — 2 columns on mobile */
+  .stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Tables — horizontal scroll */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+
+  /* Modals — full screen on mobile */
+  .modal-container {
+    padding: 0 !important;
+    align-items: flex-end !important;
+  }
+
+  .modal-box {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 20px 20px 0 0 !important;
+    max-height: 92vh !important;
+    overflow-y: auto !important;
+  }
+
+  /* Forms — full width */
+  input, select, textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+
+  /* Grid columns — stack on mobile */
+  .two-col {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Buttons — full width on mobile */
+  .btn-full-mobile {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* Cards — full width */
+  .card {
+    border-radius: 8px !important;
+    padding: 14px !important;
+  }
+
+  /* Page header flex — wrap on mobile */
+  .page-header {
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+  }
+
+  /* Analytics charts */
+  .chart-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Team member rows */
+  .team-row {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  /* Invoice actions */
+  .invoice-actions {
+    flex-wrap: wrap !important;
+  }
+
+  /* Portal sidebar — hide and show bottom nav */
+  .portal-sidebar {
+    display: none !important;
+  }
+
+  /* Notification items */
+  .notif-item {
+    flex-wrap: wrap !important;
+  }
+
+  /* Calendar */
+  .calendar-header {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  /* Recurring table */
+  .recurring-table {
+    font-size: 12px !important;
+  }
+
+  /* Quick actions — wrap */
+  .quick-actions {
+    flex-wrap: wrap !important;
+  }
+
+  .quick-actions a {
+    flex: 1 !important;
+    min-width: 140px !important;
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra small screens */
+  header {
+    padding: 0 12px !important;
+  }
+
+  main {
+    padding: 12px 12px 80px !important;
+  }
+
+  h1 {
+    font-size: 18px !important;
+  }
+
+  /* Stats — single column on very small screens */
+  .stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* Modal */
+  .modal-box {
+    padding: 20px 16px !important;
+  }
+}
+
+/* ================================
+   MOBILE NAV ITEM STYLES
+================================ */
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-decoration: none;
+  color: #64748B;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 8px;
+  min-width: 48px;
+  transition: color 0.15s;
+}
+
+.mobile-nav-item.active {
+  color: #1C64F2;
+}
+
+.mobile-nav-item span:first-child {
+  font-size: 20px;
+}
+
+/* ================================
+   SCROLLBAR STYLING
+================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* ================================
+   UTILITY CLASSES
+================================ */
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+/* ================================
+   PRINT STYLES
+================================ */
+
+@media print {
+  aside, header, .mobile-nav {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+  }
 }
