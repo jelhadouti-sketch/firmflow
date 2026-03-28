@@ -12,11 +12,22 @@ export default function ResetPassword() {
 
   useEffect(() => {
     const supabase = createClient()
-    supabase.auth.onAuthStateChange(async (event) => {
-      if (event === 'PASSWORD_RECOVERY') {
+
+    // Check if we have a session already (from hash token)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
         setReady(true)
       }
     })
+
+    // Also listen for PASSWORD_RECOVERY event
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && session)) {
+        setReady(true)
+      }
+    })
+
+    return () => subscription.unsubscribe()
   }, [])
 
   async function handleSubmit(e: React.FormEvent) {
@@ -69,7 +80,6 @@ export default function ResetPassword() {
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'}}>
       <div style={{width:'100%',maxWidth:'420px'}}>
 
-        {/* Logo */}
         <div style={{textAlign:'center',marginBottom:'32px'}}>
           <a href="/" style={{textDecoration:'none'}}>
             <span style={{fontSize:'28px',fontWeight:'900',color:'#1C64F2',letterSpacing:'-0.04em'}}>⬡ FirmFlow</span>
@@ -83,9 +93,9 @@ export default function ResetPassword() {
             <div style={{textAlign:'center'}}>
               <p style={{fontSize:'48px',margin:'0 0 16px'}}>🎉</p>
               <h2 style={{fontSize:'20px',fontWeight:'800',color:'#0F172A',margin:'0 0 8px'}}>Password updated!</h2>
-              <p style={{fontSize:'14px',color:'#475569',margin:'0 0 24px'}}>Your password has been successfully changed. Redirecting you to login...</p>
+              <p style={{fontSize:'14px',color:'#475569',margin:'0 0 24px'}}>Your password has been successfully changed. Redirecting to login...</p>
               <div style={{background:'#F0FDF4',borderRadius:'8px',padding:'14px 16px',marginBottom:'24px'}}>
-                <p style={{fontSize:'13px',color:'#15803D',margin:'0'}}>✅ You will be redirected to login in 3 seconds</p>
+                <p style={{fontSize:'13px',color:'#15803D',margin:'0'}}>✅ Redirecting in 3 seconds...</p>
               </div>
               <a href="/login" style={{display:'inline-block',padding:'12px 28px',background:'#1C64F2',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'14px',fontWeight:'700'}}>
                 Go to login →
@@ -93,12 +103,21 @@ export default function ResetPassword() {
             </div>
           ) : !ready ? (
             <div style={{textAlign:'center'}}>
-              <p style={{fontSize:'40px',margin:'0 0 16px'}}>⏳</p>
+              <p style={{fontSize:'40px',margin:'0 0 16px'}}>🔐</p>
               <h2 style={{fontSize:'18px',fontWeight:'700',color:'#0F172A',margin:'0 0 8px'}}>Verifying your link...</h2>
               <p style={{fontSize:'14px',color:'#64748B',margin:'0 0 24px'}}>Please wait while we verify your reset link.</p>
-              <div style={{background:'#FEF3C7',border:'1px solid #FDE68A',borderRadius:'8px',padding:'14px 16px'}}>
-                <p style={{fontSize:'13px',color:'#92400E',margin:'0'}}>⚠️ If this takes too long, your link may have expired. <a href="/forgot-password" style={{color:'#1C64F2',fontWeight:'600'}}>Request a new one →</a></p>
+              <div style={{background:'#FEF3C7',border:'1px solid #FDE68A',borderRadius:'8px',padding:'14px 16px',marginBottom:'16px'}}>
+                <p style={{fontSize:'13px',color:'#92400E',margin:'0'}}>⚠️ If this takes too long, your link may have expired.</p>
               </div>
+              <button
+                onClick={() => setReady(true)}
+                style={{padding:'10px 20px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer',marginRight:'8px'}}
+              >
+                Continue anyway →
+              </button>
+              <a href="/forgot-password" style={{display:'inline-block',padding:'10px 20px',background:'#F1F5F9',color:'#475569',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>
+                Request new link
+              </a>
             </div>
           ) : (
             <>
@@ -163,7 +182,7 @@ export default function ResetPassword() {
                     { label: 'One number', met: /[0-9]/.test(password) },
                     { label: 'One special character', met: /[^A-Za-z0-9]/.test(password) },
                   ].map((req, i) => (
-                    <p key={i} style={{fontSize:'12px',color:req.met ? '#15803D' : '#64748B',margin:'3px 0 0'}}>
+                    <p key={i} style={{fontSize:'12px',color:req.met?'#15803D':'#64748B',margin:'3px 0 0'}}>
                       {req.met ? '✅' : '○'} {req.label}
                     </p>
                   ))}
