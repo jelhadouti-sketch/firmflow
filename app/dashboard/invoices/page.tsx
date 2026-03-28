@@ -17,6 +17,20 @@ export default async function Invoices() {
   const firm = profile.firms as any
   const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'invoices')
 
+  // Get clients with emails
+  const { data: clients } = await supabaseAdmin
+    .from('profiles')
+    .select('*')
+    .eq('firm_id', profile.firm_id)
+    .eq('role', 'client')
+
+  const clientsWithEmail = await Promise.all(
+    (clients || []).map(async (client) => {
+      const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(client.id)
+      return { ...client, email: authUser?.user?.email || '—' }
+    })
+  )
+
   const { data: invoices } = await supabaseAdmin
     .from('invoices')
     .select('*, profiles!client_id(full_name)')
@@ -57,7 +71,7 @@ export default async function Invoices() {
               <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Invoices</h1>
               <p style={{color:'#64748B',fontSize:'14px'}}>{invoices?.length || 0} total invoices</p>
             </div>
-            <NewInvoice />
+            <NewInvoice clients={clientsWithEmail} />
           </div>
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
@@ -83,7 +97,7 @@ export default async function Invoices() {
                 <p style={{fontSize:'32px',marginBottom:'8px'}}>💳</p>
                 <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No invoices yet</p>
                 <p style={{fontSize:'13px',marginBottom:'20px'}}>Create your first invoice to get started</p>
-                <NewInvoice />
+                <NewInvoice clients={clientsWithEmail} />
               </div>
             ) : (
               <table style={{width:'100%',borderCollapse:'collapse'}}>
@@ -112,7 +126,7 @@ export default async function Invoices() {
                       <td style={{padding:'14px 20px'}}>
                         <InvoiceActions
                           invoiceId={inv.id}
-                          clientId={inv.client_id}
+                          clientId={inv.client_id || ''}
                           status={inv.status}
                           invoiceNumber={inv.invoice_number || 'INV'}
                           amount={inv.amount || 0}
