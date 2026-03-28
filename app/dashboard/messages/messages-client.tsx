@@ -226,7 +226,7 @@ export default function MessagesClient({
         subject: newSubject.trim(),
         last_message_preview: newFirstMsg.trim().substring(0, 80),
       })
-      .select('*, client:profiles!conversations_client_id_fkey(id, full_name, email)')
+      .select('*, client:profiles!conversations_client_id_fkey(id, full_name)')
       .single()
 
     if (convo) {
