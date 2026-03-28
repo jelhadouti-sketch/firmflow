@@ -23,52 +23,7 @@ export default function ResetPassword() {
       }
     })
 
-    async function setupSession() {
-      // Handle code in URL (PKCE flow)
-      const urlParams = new URLSearchParams(window.location.search)
-      const code = urlParams.get('code')
-
-      if (code) {
-        try {
-          const { data, error } = await supabase.auth.exchangeCodeForSession(code)
-          if (!error && data.session) {
-            setReady(true)
-            setSessionChecked(true)
-            return
-          } else {
-            console.error('Code exchange error:', error)
-          }
-        } catch (e) {
-          console.error('Code exchange exception:', e)
-        }
-      }
-
-      // Handle hash token (implicit flow)
-      const hash = window.location.hash
-      if (hash && hash.length > 1) {
-        const hashParams = new URLSearchParams(hash.substring(1))
-        const accessToken = hashParams.get('access_token')
-        const refreshToken = hashParams.get('refresh_token')
-        const type = hashParams.get('type')
-
-        if (accessToken && (type === 'recovery' || type === 'signup')) {
-          try {
-            const { data, error } = await supabase.auth.setSession({
-              access_token: accessToken,
-              refresh_token: refreshToken || ''
-            })
-            if (!error && data.session) {
-              setReady(true)
-              setSessionChecked(true)
-              return
-            }
-          } catch (e) {
-            console.error('Set session error:', e)
-          }
-        }
-      }
-
-      // Check existing session
+    async function checkSession() {
       const { data: { session } } = await supabase.auth.getSession()
       if (session) {
         setReady(true)
@@ -76,8 +31,7 @@ export default function ResetPassword() {
       setSessionChecked(true)
     }
 
-    setupSession()
-
+    checkSession()
     return () => subscription.unsubscribe()
   }, [])
 
@@ -168,7 +122,7 @@ export default function ResetPassword() {
               <p style={{fontSize:'14px',color:'#64748B',margin:'0 0 24px'}}>Please wait a moment...</p>
               <div style={{display:'flex',justifyContent:'center',gap:'6px'}}>
                 {[0,1,2].map(i => (
-                  <div key={i} style={{width:'10px',height:'10px',borderRadius:'50%',background:'#1C64F2',opacity: 0.4 + (i * 0.2)}} />
+                  <div key={i} style={{width:'10px',height:'10px',borderRadius:'50%',background:'#1C64F2',opacity:0.4 + (i * 0.2)}} />
                 ))}
               </div>
             </div>
