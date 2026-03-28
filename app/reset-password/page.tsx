@@ -13,33 +13,41 @@ export default function ResetPassword() {
   useEffect(() => {
     const supabase = createClient()
 
-    const hashParams = new URLSearchParams(window.location.hash.substring(1))
-    const accessToken = hashParams.get('access_token')
-    const refreshToken = hashParams.get('refresh_token')
-    const type = hashParams.get('type')
-
-    if (accessToken && type === 'recovery') {
-      supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken || ''
-      }).then(({ error }) => {
-        if (!error) {
-          setReady(true)
-        } else {
-          setError('Link expired. Please request a new one.')
-        }
-      })
-    } else {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session) setReady(true)
-      })
-    }
-
+    // Listen immediately for auth state change
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
         if (session) setReady(true)
       }
     })
+
+    // Small delay to let hash load properly
+    setTimeout(() => {
+      const hash = window.location.hash
+      const hashParams = new URLSearchParams(hash.substring(1))
+      const accessToken = hashParams.get('access_token')
+      const refreshToken = hashParams.get('refresh_token')
+      const type = hashParams.get('type')
+
+      if (accessToken && (type === 'recovery' || type === 'signup')) {
+        supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken || ''
+        }).then(({ data, error }) => {
+          if (!error && data.session) {
+            setReady(true)
+          } else {
+            setError('Link expired. Please request a new one.')
+          }
+        })
+      } else {
+        // Check if already has session
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (session) {
+            setReady(true)
+          }
+        })
+      }
+    }, 800)
 
     return () => subscription.unsubscribe()
   }, [])
@@ -68,6 +76,8 @@ export default function ResetPassword() {
     } else {
       setDone(true)
       setLoading(false)
+      // Sign out after password change so user logs in fresh
+      await supabase.auth.signOut()
       setTimeout(() => {
         window.location.href = '/login'
       }, 3000)
@@ -128,9 +138,9 @@ export default function ResetPassword() {
                   </a>
                 </div>
               ) : (
-                <div style={{background:'#FEF3C7',border:'1px solid #FDE68A',borderRadius:'8px',padding:'14px 16px',marginBottom:'16px'}}>
-                  <p style={{fontSize:'13px',color:'#92400E',margin:'0 0 12px'}}>⚠️ If this takes too long, your link may have expired.</p>
-                  <div style={{display:'flex',gap:'8px',justifyContent:'center'}}>
+                <div style={{background:'#EFF6FF',border:'1px solid #BFDBFE',borderRadius:'8px',padding:'14px 16px',marginBottom:'16px'}}>
+                  <p style={{fontSize:'13px',color:'#1D4ED8',margin:'0 0 12px'}}>🔄 Verifying your reset link...</p>
+                  <div style={{display:'flex',gap:'8px',justifyContent:'center',flexWrap:'wrap'}}>
                     <button
                       onClick={() => setReady(true)}
                       style={{padding:'8px 16px',background:'#1C64F2',color:'#fff',borderRadius:'6px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}
