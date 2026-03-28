@@ -19,30 +19,52 @@ export default async function MessagesPage() {
   // Get all conversations for this firm
   const { data: conversations } = await supabaseAdmin
     .from('conversations')
-    .select('*, client:profiles!conversations_client_id_fkey(id, full_name, email)')
+    .select('*, client:profiles!conversations_client_id_fkey(id, full_name)')
     .eq('firm_id', profile.firm_id)
     .order('last_message_at', { ascending: false })
 
-  // Get unread counts per conversation
-  const { data: unreadData } = await supabaseAdmin
-    .from('messages')
-    .select('conversation_id')
-    .eq('read', false)
-    .neq('sender_id', user.id)
-    .in('conversation_id', (conversations || []).map(c => c.id))
+  // Get all auth users to map emails
+  const { data: { users: authUsers } } = await supabaseAdmin.auth.admin.listUsers()
+  const emailMap: Record<string, string> = {}
+  authUsers?.forEach(u => { emailMap[u.id] = u.email || '' })
 
-  const unreadMap: Record<string, number> = {}
-  unreadData?.forEach(m => {
-    unreadMap[m.conversation_id] = (unreadMap[m.conversation_id] || 0) + 1
-  })
+  // Add emails to conversations
+  const convosWithEmail = (conversations || []).map(c => ({
+    ...c,
+    client: {
+      ...c.client,
+      email: emailMap[c.client?.id] || ''
+    }
+  }))
+
+  // Get unread counts per conversation
+  const convoIds = (conversations || []).map(c => c.id)
+  let unreadMap: Record<string, number> = {}
+  if (convoIds.length > 0) {
+    const { data: unreadData } = await supabaseAdmin
+      .from('messages')
+      .select('conversation_id')
+      .eq('read', false)
+      .neq('sender_id', user.id)
+      .in('conversation_id', convoIds)
+
+    unreadData?.forEach(m => {
+      unreadMap[m.conversation_id] = (unreadMap[m.conversation_id] || 0) + 1
+    })
+  }
 
   // Get all clients for new conversation
-  const { data: clients } = await supabaseAdmin
+  const { data: clientProfiles } = await supabaseAdmin
     .from('profiles')
-    .select('id, full_name, email')
+    .select('id, full_name')
     .eq('firm_id', profile.firm_id)
     .eq('role', 'client')
     .order('full_name')
+
+  const clients = (clientProfiles || []).map(c => ({
+    ...c,
+    email: emailMap[c.id] || ''
+  }))
 
   const { count: unreadCount } = await supabaseAdmin
     .from('notifications')
@@ -80,9 +102,9 @@ export default async function MessagesPage() {
 
         <main style={{flex:1,overflow:'hidden'}}>
           <MessagesClient
-            conversations={conversations || []}
+            conversations={convosWithEmail}
             unreadMap={unreadMap}
-            clients={clients || []}
+            clients={clients}
             userId={user.id}
             firmId={profile.firm_id}
             userName={profile.full_name || user.email || ''}
