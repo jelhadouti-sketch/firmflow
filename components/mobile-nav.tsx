@@ -6,22 +6,23 @@ interface NavItem {
   label: string
   href: string
   active?: boolean
-  show?: boolean
 }
 
-export default function MobileNav({ items, isPortal = false }: { items: NavItem[], isPortal?: boolean }) {
+export default function MobileNav({ items }: { items: NavItem[] }) {
   const [menuOpen, setMenuOpen] = useState(false)
 
-  // Show max 4 items in bottom nav + "More" button
   const mainItems = items.slice(0, 4)
   const moreItems = items.slice(4)
 
   return (
     <>
-      {/* Bottom navigation */}
       <nav className="mobile-nav" style={{display:'none'}}>
         {mainItems.map((item, i) => (
-          <a key={i} href={item.href} className={`mobile-nav-item ${item.active ? 'active' : ''}`}>
+          
+            key={i}
+            href={item.href}
+            className={'mobile-nav-item' + (item.active ? ' active' : '')}
+          >
             <span>{item.icon}</span>
             <span>{item.label}</span>
           </a>
@@ -30,15 +31,14 @@ export default function MobileNav({ items, isPortal = false }: { items: NavItem[
           <button
             onClick={() => setMenuOpen(true)}
             className="mobile-nav-item"
-            style={{background:'none',border:'none',cursor:'pointer'}}
+            style={{background:'none',border:'none',cursor:'pointer',display:'flex',flexDirection:'column' as const,alignItems:'center',gap:'2px',color:'#64748B',fontSize:'10px',fontWeight:'500',padding:'4px 8px'}}
           >
-            <span>⋯</span>
+            <span style={{fontSize:'20px'}}>⋯</span>
             <span>More</span>
           </button>
         )}
       </nav>
 
-      {/* More menu overlay */}
       {menuOpen && (
         <div
           onClick={() => setMenuOpen(false)}
@@ -49,7 +49,7 @@ export default function MobileNav({ items, isPortal = false }: { items: NavItem[
             style={{background:'#fff',width:'100%',borderRadius:'20px 20px 0 0',padding:'20px',maxHeight:'70vh',overflowY:'auto'}}
           >
             <div style={{width:'40px',height:'4px',background:'#E2E8F0',borderRadius:'2px',margin:'0 auto 20px'}}></div>
-            <p style={{fontSize:'13px',fontWeight:'700',color:'#64748B',marginBottom:'12px',textTransform:'uppercase',letterSpacing:'0.05em'}}>More pages</p>
+            <p style={{fontSize:'13px',fontWeight:'700',color:'#64748B',marginBottom:'12px',textTransform:'uppercase' as const,letterSpacing:'0.05em'}}>More pages</p>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px'}}>
               {moreItems.map((item, i) => (
                 
