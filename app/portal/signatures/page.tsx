@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import MobileNav from '@/components/mobile-nav'
 
 export default async function PortalSignatures() {
   const supabase = await createClient()
@@ -122,6 +123,7 @@ export default async function PortalSignatures() {
           </div>
         </main>
       </div>
+      <MobileNav items={sidebarItems} />
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import MobileNav from '@/components/mobile-nav'
 import InviteMember from './invite-member'
 import EditMember from './edit-member'
 
@@ -158,6 +159,7 @@ export default async function Team() {
           </div>
         </main>
       </div>
+      <MobileNav items={sidebarItems} />
     </div>
   )
 }

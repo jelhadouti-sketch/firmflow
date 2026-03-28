@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import MobileNav from '@/components/mobile-nav'
 import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 import SettingsForm from './settings-form'
 
@@ -59,6 +60,7 @@ export default async function Settings() {
           />
         </main>
       </div>
+      <MobileNav items={sidebarItems} />
     </div>
   )
 }

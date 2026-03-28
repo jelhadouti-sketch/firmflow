@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import MobileNav from '@/components/mobile-nav'
 
 export default async function PortalDocuments() {
   const supabase = await createClient()
@@ -111,6 +112,7 @@ export default async function PortalDocuments() {
           </div>
         </main>
       </div>
+      <MobileNav items={sidebarItems} />
     </div>
   )
 }

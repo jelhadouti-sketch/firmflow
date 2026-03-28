@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import MobileNav from '@/components/mobile-nav'
 import PayButton from './pay-button'
 
 export default async function PortalInvoices() {
@@ -156,6 +157,7 @@ export default async function PortalInvoices() {
           </div>
         </main>
       </div>
+      <MobileNav items={sidebarItems} />
     </div>
   )
 }

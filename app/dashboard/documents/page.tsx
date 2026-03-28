@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import MobileNav from '@/components/mobile-nav'
 import UploadDocument from './upload-document'
 import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 
@@ -113,6 +114,7 @@ export default async function Documents() {
           </div>
         </main>
       </div>
+      <MobileNav items={sidebarItems} />
     </div>
   )
 }

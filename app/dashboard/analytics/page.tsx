@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import MobileNav from '@/components/mobile-nav'
 import Charts from './charts'
 import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 
@@ -143,6 +144,7 @@ export default async function Analytics() {
           <Charts data={analyticsData} />
         </main>
       </div>
+      <MobileNav items={sidebarItems} />
     </div>
   )
 }

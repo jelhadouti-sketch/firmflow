@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import MobileNav from '@/components/mobile-nav'
 import NewEngagement from './new-engagement'
 import EngagementSearch from './engagement-search'
 import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
@@ -89,6 +90,7 @@ export default async function Engagements() {
           </div>
         </main>
       </div>
+      <MobileNav items={sidebarItems} />
     </div>
   )
 }

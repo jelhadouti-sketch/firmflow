@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import MobileNav from '@/components/mobile-nav'
 import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 import NotificationActions from './notification-actions'
 
@@ -134,6 +135,7 @@ export default async function Notifications() {
           )}
         </main>
       </div>
+      <MobileNav items={sidebarItems} />
     </div>
   )
 }

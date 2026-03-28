@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import MobileNav from '@/components/mobile-nav'
 import UpgradeButton from './upgrade-button'
 
 export default async function Subscription() {
@@ -123,6 +124,7 @@ export default async function Subscription() {
           </p>
         </main>
       </div>
+      <MobileNav items={sidebarItems} />
     </div>
   )
 }

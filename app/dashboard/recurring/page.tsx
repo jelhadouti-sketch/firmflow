@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import MobileNav from '@/components/mobile-nav'
 import NewRecurring from './new-recurring'
 import RecurringActions from './recurring-actions'
 import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
@@ -196,6 +197,7 @@ export default async function RecurringInvoices() {
           </div>
         </main>
       </div>
+      <MobileNav items={sidebarItems} />
     </div>
   )
 }
