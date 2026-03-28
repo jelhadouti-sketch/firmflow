@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
         await resend.emails.send({
           from: process.env.RESEND_FROM || 'hello@firmflow.uk',
           to: clientEmail,
-          subject: 'New invoice from ' + (firm?.name || 'your firm') + ' — ' + invoiceNumber + ' $' + (amount || 0).toLocaleString(),
+          subject: 'New invoice from ' + (firm?.name || 'your firm') + ' — ' + invoice_number + ' $' + (amount || 0).toLocaleString(),
           html: `
             <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:600px;margin:0 auto">
               <div style="background:#1C64F2;padding:32px 40px;border-radius:12px 12px 0 0">
