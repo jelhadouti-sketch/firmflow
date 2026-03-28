@@ -103,6 +103,7 @@ export default async function PortalInvoices() {
                 const isOverdue = inv.status === 'overdue'
                 const isPending = inv.status === 'pending'
                 const isPaid = inv.status === 'paid'
+                const canPay = !isPaid && inv.payment_enabled === true
                 return (
                   <div key={i} style={{background:'#fff',borderRadius:'12px',border:'1px solid',borderColor:isOverdue?'#FECACA':'#E2E8F0',padding:'20px 24px',boxShadow:'0 1px 4px rgba(0,0,0,0.04)'}}>
                     <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'16px',flexWrap:'wrap'}}>
@@ -126,7 +127,7 @@ export default async function PortalInvoices() {
                           <a href={'/api/invoices/pdf?id=' + inv.id} style={{padding:'7px 14px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none'}}>
                             ⬇ Download PDF
                           </a>
-                          {!isPaid && (
+                          {canPay && (
                             <PayButton invoiceId={inv.id} amount={inv.amount || 0} />
                           )}
                           {!isPaid && (

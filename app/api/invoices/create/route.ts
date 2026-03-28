@@ -30,14 +30,15 @@ export async function POST(req: NextRequest) {
       amount,
       due_at: due_date || null,
       issued_at: new Date().toISOString(),
-      status: 'pending'
+      status: 'pending',
+      payment_enabled: send_payment_link === true
     })
     .select()
     .single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
 
-  // Send payment link email to client
+  // Send payment link email to client only if enabled
   if (send_payment_link && client_id && invoice) {
     const { data: clientAuth } = await supabaseAdmin.auth.admin.getUserById(client_id)
     const clientEmail = clientAuth?.user?.email
@@ -56,7 +57,6 @@ export async function POST(req: NextRequest) {
 
     if (clientEmail) {
       const portalUrl = process.env.NEXT_PUBLIC_APP_URL + '/portal/invoices'
-
       try {
         await resend.emails.send({
           from: process.env.RESEND_FROM || 'hello@firmflow.uk',
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
                   <strong>${firm?.name || 'Your firm'}</strong> has sent you a new invoice.
                 </p>
 
-                ${notes ? '<div style="background:#F8FAFC;border-left:4px solid #1C64F2;padding:16px;border-radius:0 8px 8px 0;margin:0 0 24px"><p style="font-size:14px;color:#374151;margin:0;font-style:italic">' + notes + '</p></div>' : ''}
+                ${notes ? `<div style="background:#F8FAFC;border-left:4px solid #1C64F2;padding:16px;border-radius:0 8px 8px 0;margin:0 0 24px"><p style="font-size:14px;color:#374151;margin:0;font-style:italic">${notes}</p></div>` : ''}
 
                 <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:24px;margin:0 0 24px">
                   <div style="margin-bottom:12px">
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
                   </a>
                 </div>
 
-                ${firm?.bank_details ? '<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:16px;margin-top:16px"><p style="font-size:12px;font-weight:700;color:#374151;margin:0 0 8px">BANK TRANSFER DETAILS</p><pre style="font-size:12px;color:#475569;margin:0;white-space:pre-wrap;font-family:monospace">' + firm.bank_details + '</pre></div>' : ''}
+                ${firm?.bank_details ? `<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:16px;margin-top:16px"><p style="font-size:12px;font-weight:700;color:#374151;margin:0 0 8px">BANK TRANSFER DETAILS</p><pre style="font-size:12px;color:#475569;margin:0;white-space:pre-wrap;font-family:monospace">${firm.bank_details}</pre></div>` : ''}
               </div>
               <p style="text-align:center;color:#94A3B8;font-size:12px;margin-top:20px">
                 Powered by <strong>FirmFlow</strong> · firmflow.uk
