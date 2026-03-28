@@ -1,6 +1,7 @@
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { NextRequest, NextResponse } from 'next/server'
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
+import { getCurrency } from '@/lib/currencies'
 
 function hexToRgb(hex: string): [number, number, number] {
   try {
@@ -36,6 +37,8 @@ export async function GET(req: NextRequest) {
     const firm = invoice.firms as any
     const client = invoice.profiles as any
     const [r, g, b] = hexToRgb(firm?.brand_color || '#1C64F2')
+    const cur = getCurrency(invoice.currency || firm?.currency || 'GBP')
+    const sym = cur.symbol
 
     const pdfDoc = await PDFDocument.create()
     const page = pdfDoc.addPage([595, 842])
@@ -44,7 +47,6 @@ export async function GET(req: NextRequest) {
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica)
     const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
-    // Try to embed logo safely
     let logoImage = null
     if (firm?.logo_url) {
       try {
@@ -92,7 +94,6 @@ export async function GET(req: NextRequest) {
       })
     }
 
-    // Powered by
     page.drawText('Powered by FirmFlow · firmflow.uk', {
       x: 40,
       y: height - 112,
@@ -110,13 +111,21 @@ export async function GET(req: NextRequest) {
       color: rgb(1, 1, 1),
     })
 
-    // Invoice number
     page.drawText(invoice.invoice_number || 'INV-001', {
       x: width - 150,
       y: height - 78,
       size: 11,
       font,
       color: rgb(0.75, 0.85, 1),
+    })
+
+    // Currency badge
+    page.drawText(cur.code + ' (' + sym + ')', {
+      x: width - 150,
+      y: height - 95,
+      size: 9,
+      font: boldFont,
+      color: rgb(0.85, 0.92, 1),
     })
 
     // Status badge
@@ -126,7 +135,7 @@ export async function GET(req: NextRequest) {
 
     page.drawRectangle({
       x: width - 150,
-      y: height - 102,
+      y: height - 115,
       width: 80,
       height: 22,
       color: statusBg,
@@ -134,7 +143,7 @@ export async function GET(req: NextRequest) {
 
     page.drawText(statusText, {
       x: width - 145,
-      y: height - 95,
+      y: height - 108,
       size: 10,
       font: boldFont,
       color: statusColor,
@@ -247,6 +256,7 @@ export async function GET(req: NextRequest) {
       ['Issue date:', invoice.issued_at ? new Date(invoice.issued_at).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'}) : '—'],
       ['Due date:', invoice.due_at ? new Date(invoice.due_at).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'}) : '—'],
       ['Terms:', firm?.payment_terms || 'Net 30'],
+      ['Currency:', cur.code + ' (' + cur.name + ')'],
     ]
 
     details.forEach(([label, value], i) => {
@@ -270,7 +280,7 @@ export async function GET(req: NextRequest) {
     // Divider
     page.drawRectangle({
       x: 40,
-      y: height - 295,
+      y: height - 305,
       width: width - 80,
       height: 1,
       color: rgb(0.89, 0.91, 0.94),
@@ -279,7 +289,7 @@ export async function GET(req: NextRequest) {
     // Table header
     page.drawRectangle({
       x: 40,
-      y: height - 325,
+      y: height - 335,
       width: width - 80,
       height: 28,
       color: rgb(0.97, 0.98, 0.99),
@@ -287,7 +297,7 @@ export async function GET(req: NextRequest) {
 
     page.drawRectangle({
       x: 40,
-      y: height - 325,
+      y: height - 335,
       width: 4,
       height: 28,
       color: rgb(r, g, b),
@@ -295,7 +305,7 @@ export async function GET(req: NextRequest) {
 
     page.drawText('DESCRIPTION', {
       x: 56,
-      y: height - 316,
+      y: height - 326,
       size: 9,
       font: boldFont,
       color: rgb(0.39, 0.45, 0.55),
@@ -303,7 +313,7 @@ export async function GET(req: NextRequest) {
 
     page.drawText('QTY', {
       x: width - 180,
-      y: height - 316,
+      y: height - 326,
       size: 9,
       font: boldFont,
       color: rgb(0.39, 0.45, 0.55),
@@ -311,7 +321,7 @@ export async function GET(req: NextRequest) {
 
     page.drawText('UNIT PRICE', {
       x: width - 140,
-      y: height - 316,
+      y: height - 326,
       size: 9,
       font: boldFont,
       color: rgb(0.39, 0.45, 0.55),
@@ -319,7 +329,7 @@ export async function GET(req: NextRequest) {
 
     page.drawText('AMOUNT', {
       x: width - 80,
-      y: height - 316,
+      y: height - 326,
       size: 9,
       font: boldFont,
       color: rgb(0.39, 0.45, 0.55),
@@ -328,7 +338,7 @@ export async function GET(req: NextRequest) {
     // Table row
     page.drawText(invoice.description || 'Professional services', {
       x: 56,
-      y: height - 353,
+      y: height - 363,
       size: 12,
       font,
       color: rgb(0.06, 0.09, 0.16),
@@ -336,23 +346,23 @@ export async function GET(req: NextRequest) {
 
     page.drawText('1', {
       x: width - 175,
-      y: height - 353,
+      y: height - 363,
       size: 12,
       font,
       color: rgb(0.06, 0.09, 0.16),
     })
 
-    page.drawText('$' + (invoice.amount || 0).toLocaleString(), {
+    page.drawText(sym + (invoice.amount || 0).toLocaleString(), {
       x: width - 140,
-      y: height - 353,
+      y: height - 363,
       size: 12,
       font,
       color: rgb(0.06, 0.09, 0.16),
     })
 
-    page.drawText('$' + (invoice.amount || 0).toLocaleString(), {
+    page.drawText(sym + (invoice.amount || 0).toLocaleString(), {
       x: width - 80,
-      y: height - 353,
+      y: height - 363,
       size: 12,
       font: boldFont,
       color: rgb(0.06, 0.09, 0.16),
@@ -361,40 +371,45 @@ export async function GET(req: NextRequest) {
     // Row divider
     page.drawRectangle({
       x: 40,
-      y: height - 373,
+      y: height - 383,
       width: width - 80,
       height: 1,
       color: rgb(0.93, 0.95, 0.97),
     })
 
+    // Tax info
+    const taxRate = invoice.tax_rate || 0
+    const subtotalAmt = taxRate > 0 ? (invoice.amount || 0) / (1 + taxRate / 100) : (invoice.amount || 0)
+    const taxAmt = (invoice.amount || 0) - subtotalAmt
+
     // Subtotal
     page.drawText('Subtotal:', {
       x: width - 200,
-      y: height - 397,
+      y: height - 407,
       size: 10,
       font,
       color: rgb(0.39, 0.45, 0.55),
     })
 
-    page.drawText('$' + (invoice.amount || 0).toLocaleString(), {
+    page.drawText(sym + subtotalAmt.toFixed(2), {
       x: width - 90,
-      y: height - 397,
+      y: height - 407,
       size: 10,
       font,
       color: rgb(0.06, 0.09, 0.16),
     })
 
-    page.drawText('Tax (0%):', {
+    page.drawText('Tax (' + taxRate + '%):', {
       x: width - 200,
-      y: height - 413,
+      y: height - 423,
       size: 10,
       font,
       color: rgb(0.39, 0.45, 0.55),
     })
 
-    page.drawText('$0', {
+    page.drawText(sym + taxAmt.toFixed(2), {
       x: width - 90,
-      y: height - 413,
+      y: height - 423,
       size: 10,
       font,
       color: rgb(0.06, 0.09, 0.16),
@@ -403,23 +418,23 @@ export async function GET(req: NextRequest) {
     // Total box
     page.drawRectangle({
       x: width - 220,
-      y: height - 453,
+      y: height - 463,
       width: 180,
       height: 32,
       color: rgb(r, g, b),
     })
 
-    page.drawText('TOTAL DUE', {
-      x: width - 210,
-      y: height - 443,
-      size: 9,
+    page.drawText('TOTAL DUE (' + cur.code + ')', {
+      x: width - 215,
+      y: height - 453,
+      size: 8,
       font: boldFont,
       color: rgb(0.75, 0.88, 1),
     })
 
-    page.drawText('$' + (invoice.amount || 0).toLocaleString(), {
+    page.drawText(sym + (invoice.amount || 0).toLocaleString(), {
       x: width - 100,
-      y: height - 443,
+      y: height - 453,
       size: 14,
       font: boldFont,
       color: rgb(1, 1, 1),
@@ -428,7 +443,7 @@ export async function GET(req: NextRequest) {
     // Notes
     page.drawText('NOTES & PAYMENT TERMS', {
       x: 40,
-      y: height - 400,
+      y: height - 410,
       size: 9,
       font: boldFont,
       color: rgb(0.39, 0.45, 0.55),
@@ -436,7 +451,7 @@ export async function GET(req: NextRequest) {
 
     page.drawText(firm?.payment_terms || 'Payment due within 30 days', {
       x: 40,
-      y: height - 415,
+      y: height - 425,
       size: 10,
       font,
       color: rgb(0.39, 0.45, 0.55),
@@ -444,7 +459,7 @@ export async function GET(req: NextRequest) {
 
     page.drawText('Thank you for your business!', {
       x: 40,
-      y: height - 430,
+      y: height - 440,
       size: 10,
       font,
       color: rgb(0.39, 0.45, 0.55),
@@ -454,7 +469,7 @@ export async function GET(req: NextRequest) {
     if (firm?.bank_details) {
       page.drawText('BANK TRANSFER DETAILS', {
         x: 40,
-        y: height - 460,
+        y: height - 470,
         size: 9,
         font: boldFont,
         color: rgb(0.39, 0.45, 0.55),
@@ -464,7 +479,7 @@ export async function GET(req: NextRequest) {
       bankLines.forEach((line: string, i: number) => {
         page.drawText(line.substring(0, 60), {
           x: 40,
-          y: height - 475 - (i * 14),
+          y: height - 485 - (i * 14),
           size: 9,
           font,
           color: rgb(0.39, 0.45, 0.55),
@@ -475,15 +490,15 @@ export async function GET(req: NextRequest) {
     // Pay online box
     page.drawRectangle({
       x: 40,
-      y: height - 575,
+      y: height - 585,
       width: width - 80,
       height: 36,
       color: rgb(0.94, 0.97, 1),
     })
 
-    page.drawText('Pay online: ' + (process.env.NEXT_PUBLIC_APP_URL || 'https://firmflow.uk') + '/portal/invoices', {
+    page.drawText('Pay online: https://firmflow.uk/portal/invoices', {
       x: 52,
-      y: height - 562,
+      y: height - 572,
       size: 10,
       font: boldFont,
       color: rgb(r, g, b),
@@ -491,7 +506,7 @@ export async function GET(req: NextRequest) {
 
     page.drawText('Log in to your client portal to pay securely with credit card.', {
       x: 52,
-      y: height - 576,
+      y: height - 586,
       size: 9,
       font,
       color: rgb(0.39, 0.45, 0.55),

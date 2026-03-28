@@ -3,6 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import MobileNav from '@/components/mobile-nav'
 import PayButton from './pay-button'
+import { getCurrency } from '@/lib/currencies'
 
 export default async function PortalInvoices() {
   const supabase = await createClient()
@@ -19,6 +20,8 @@ export default async function PortalInvoices() {
   if (profile.role !== 'client') redirect('/dashboard')
 
   const firm = profile.firms as any
+  const defaultCurrency = firm?.currency || 'GBP'
+  const defaultCur = getCurrency(defaultCurrency)
 
   const { data: invoices } = await supabaseAdmin
     .from('invoices')
@@ -54,7 +57,7 @@ export default async function PortalInvoices() {
       </header>
 
       <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
-        <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
+        <aside className="hide-mobile" style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
           {sidebarItems.map((item, i) => (
             <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
               <span>{item.icon}</span>
@@ -74,17 +77,17 @@ export default async function PortalInvoices() {
               <span style={{fontSize:'20px'}}>🚨</span>
               <div style={{flex:1}}>
                 <p style={{fontSize:'14px',fontWeight:'700',color:'#DC2626',margin:'0 0 2px'}}>You have overdue invoices!</p>
-                <p style={{fontSize:'13px',color:'#EF4444',margin:'0'}}>Total overdue: <strong>${overdueAmount.toLocaleString()}</strong></p>
+                <p style={{fontSize:'13px',color:'#EF4444',margin:'0'}}>Total overdue: <strong>{defaultCur.symbol}{overdueAmount.toLocaleString()}</strong></p>
               </div>
             </div>
           )}
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(150px,1fr))',gap:'16px',marginBottom:'28px'}}>
             {[
-              { label:'Total invoiced', value:'$' + totalAmount.toLocaleString(), color:'#1D4ED8', bg:'#EFF6FF' },
-              { label:'Pending', value:'$' + pendingAmount.toLocaleString(), color:'#92400E', bg:'#FEF3C7' },
-              { label:'Paid', value:'$' + paidAmount.toLocaleString(), color:'#15803D', bg:'#F0FDF4' },
-              { label:'Overdue', value:'$' + overdueAmount.toLocaleString(), color:'#DC2626', bg:'#FEF2F2' },
+              { label:'Total invoiced', value: defaultCur.symbol + totalAmount.toLocaleString(), color:'#1D4ED8', bg:'#EFF6FF' },
+              { label:'Pending', value: defaultCur.symbol + pendingAmount.toLocaleString(), color:'#92400E', bg:'#FEF3C7' },
+              { label:'Paid', value: defaultCur.symbol + paidAmount.toLocaleString(), color:'#15803D', bg:'#F0FDF4' },
+              { label:'Overdue', value: defaultCur.symbol + overdueAmount.toLocaleString(), color:'#DC2626', bg:'#FEF2F2' },
             ].map((stat, i) => (
               <div key={i} style={{background:stat.bg,borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0'}}>
                 <p style={{fontSize:'13px',color:'#64748B',marginBottom:'8px'}}>{stat.label}</p>
@@ -102,6 +105,7 @@ export default async function PortalInvoices() {
               </div>
             ) : (
               invoices.map((inv, i) => {
+                const invCur = getCurrency(inv.currency || defaultCurrency)
                 const isOverdue = inv.status === 'overdue'
                 const isPending = inv.status === 'pending'
                 const isPaid = inv.status === 'paid'
@@ -115,6 +119,7 @@ export default async function PortalInvoices() {
                           <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:'700',background:isPaid?'#F0FDF4':isOverdue?'#FEF2F2':'#FEF3C7',color:isPaid?'#15803D':isOverdue?'#DC2626':'#92400E'}}>
                             {isPaid ? '✅ Paid' : isOverdue ? '🚨 Overdue' : '⏳ Pending'}
                           </span>
+                          <span style={{fontSize:'11px',color:'#64748B',background:'#F1F5F9',padding:'2px 8px',borderRadius:'4px',fontWeight:'600'}}>{invCur.flag} {invCur.code}</span>
                         </div>
                         <p style={{fontSize:'13px',color:'#475569',margin:'0 0 6px'}}>{inv.description || 'Professional services'}</p>
                         <div style={{display:'flex',gap:'16px',flexWrap:'wrap'}}>
@@ -124,7 +129,7 @@ export default async function PortalInvoices() {
                       </div>
 
                       <div style={{textAlign:'right',flexShrink:0}}>
-                        <p style={{fontSize:'28px',fontWeight:'900',color:'#1C64F2',letterSpacing:'-0.04em',margin:'0 0 12px'}}>${(inv.amount || 0).toLocaleString()}</p>
+                        <p style={{fontSize:'28px',fontWeight:'900',color:'#1C64F2',letterSpacing:'-0.04em',margin:'0 0 12px'}}>{invCur.symbol}{(inv.amount || 0).toLocaleString()}</p>
                         <div style={{display:'flex',gap:'8px',justifyContent:'flex-end',flexWrap:'wrap'}}>
                           <a href={'/api/invoices/pdf?id=' + inv.id} style={{padding:'7px 14px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none'}}>
                             ⬇ Download PDF
@@ -133,8 +138,8 @@ export default async function PortalInvoices() {
                             <PayButton invoiceId={inv.id} amount={inv.amount || 0} />
                           )}
                           {!isPaid && (
-                            <a href={'mailto:hello@firmflow.uk?subject=Question about invoice ' + (inv.invoice_number || '')} style={{padding:'7px 14px',background:'#F1F5F9',color:'#475569',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none'}}>
-                              📧 Contact firm
+                            <a href={'/portal/messages'} style={{padding:'7px 14px',background:'#F1F5F9',color:'#475569',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none'}}>
+                              💬 Message firm
                             </a>
                           )}
                         </div>
@@ -152,8 +157,8 @@ export default async function PortalInvoices() {
               <p style={{fontSize:'14px',fontWeight:'700',color:'#0F172A',margin:'0 0 4px'}}>Questions about an invoice?</p>
               <p style={{fontSize:'13px',color:'#64748B',margin:'0'}}>Contact <strong>{firm?.name}</strong> if you have any questions about your invoices or payments.</p>
             </div>
-            <a href={'mailto:hello@firmflow.uk'} style={{padding:'9px 18px',background:'#1C64F2',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600',whiteSpace:'nowrap'}}>
-              Contact us →
+            <a href="/portal/messages" style={{padding:'9px 18px',background:'#1C64F2',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600',whiteSpace:'nowrap'}}>
+              💬 Message us →
             </a>
           </div>
         </main>
