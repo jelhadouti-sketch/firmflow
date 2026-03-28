@@ -1,0 +1,20 @@
+Reverted: app/dashboard/engagements/page.tsx
+Reverted: app/dashboard/documents/page.tsx
+Reverted: app/dashboard/signatures/page.tsx
+Reverted: app/dashboard/tasks/page.tsx
+Reverted: app/dashboard/time/page.tsx
+Reverted: app/dashboard/invoices/page.tsx
+Reverted: app/dashboard/clients/page.tsx
+Reverted: app/dashboard/calendar/page.tsx
+Reverted: app/dashboard/analytics/page.tsx
+Reverted: app/dashboard/team/page.tsx
+Reverted: app/dashboard/notifications/page.tsx
+Reverted: app/dashboard/recurring/page.tsx
+Reverted: app/dashboard/settings/page.tsx
+Reverted: app/dashboard/subscription/page.tsx
+Reverted: app/portal/dashboard/page.tsx
+Reverted: app/portal/documents/page.tsx
+Reverted: app/portal/signatures/page.tsx
+Reverted: app/portal/invoices/page.tsx
+Skipped: app/dashboard/page.tsx
+Done!
