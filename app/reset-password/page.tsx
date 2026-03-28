@@ -13,15 +13,17 @@ export default function ResetPassword() {
   useEffect(() => {
     const supabase = createClient()
 
-    // Listen immediately for auth state change
+    // Listen for auth state change first
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
-        if (session) setReady(true)
+      if (event === 'PASSWORD_RECOVERY') {
+        setReady(true)
+      } else if (event === 'SIGNED_IN' && session) {
+        setReady(true)
       }
     })
 
-    // Small delay to let hash load properly
-    setTimeout(() => {
+    setTimeout(async () => {
+      // Try hash token approach first
       const hash = window.location.hash
       const hashParams = new URLSearchParams(hash.substring(1))
       const accessToken = hashParams.get('access_token')
@@ -29,25 +31,34 @@ export default function ResetPassword() {
       const type = hashParams.get('type')
 
       if (accessToken && (type === 'recovery' || type === 'signup')) {
-        supabase.auth.setSession({
+        const { data, error } = await supabase.auth.setSession({
           access_token: accessToken,
           refresh_token: refreshToken || ''
-        }).then(({ data, error }) => {
-          if (!error && data.session) {
-            setReady(true)
-          } else {
-            setError('Link expired. Please request a new one.')
-          }
         })
-      } else {
-        // Check if already has session
-        supabase.auth.getSession().then(({ data: { session } }) => {
-          if (session) {
-            setReady(true)
-          }
-        })
+        if (!error && data.session) {
+          setReady(true)
+          return
+        }
       }
-    }, 800)
+
+      // Try code approach (PKCE flow)
+      const urlParams = new URLSearchParams(window.location.search)
+      const code = urlParams.get('code')
+
+      if (code) {
+        const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+        if (!error && data.session) {
+          setReady(true)
+          return
+        }
+      }
+
+      // Check existing session
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session) {
+        setReady(true)
+      }
+    }, 500)
 
     return () => subscription.unsubscribe()
   }, [])
@@ -76,7 +87,6 @@ export default function ResetPassword() {
     } else {
       setDone(true)
       setLoading(false)
-      // Sign out after password change so user logs in fresh
       await supabase.auth.signOut()
       setTimeout(() => {
         window.location.href = '/login'
