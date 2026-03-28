@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import MobileNav from '@/components/mobile-nav'
 import InviteClient from './invite-client'
 import ClientSearch from './client-search'
+import ExportButton from "@/components/export-button"
 import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 
 export default async function Clients() {
@@ -64,7 +65,7 @@ export default async function Clients() {
               <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Clients</h1>
               <p style={{color:'#64748B',fontSize:'14px'}}>{clientsWithEmail.length} total clients</p>
             </div>
-            <InviteClient />
+            <div style={{display:"flex",gap:"8px"}}><ExportButton type="clients" /><InviteClient /></div>
           </div>
 
           {!clientsWithEmail.length ? (
@@ -72,7 +73,7 @@ export default async function Clients() {
               <p style={{fontSize:'32px',marginBottom:'8px'}}>👥</p>
               <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No clients yet</p>
               <p style={{fontSize:'13px',marginBottom:'20px'}}>Invite your first client to get started</p>
-              <InviteClient />
+              <div style={{display:"flex",gap:"8px"}}><ExportButton type="clients" /><InviteClient /></div>
             </div>
           ) : (
             <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>

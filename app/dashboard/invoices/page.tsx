@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import MobileNav from '@/components/mobile-nav'
+import ExportButton from "@/components/export-button"
 import NewInvoice from './new-invoice'
 import InvoiceActions from './invoice-actions'
 import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
@@ -74,7 +75,7 @@ export default async function Invoices() {
               <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Invoices</h1>
               <p style={{color:'#64748B',fontSize:'14px'}}>{invoices?.length || 0} total invoices · Default currency: {defaultCur.flag} {defaultCurrency}</p>
             </div>
-            <NewInvoice clients={clientsWithEmail} defaultCurrency={defaultCurrency} />
+            <div style={{display:"flex",gap:"8px"}}><ExportButton type="invoices" /><NewInvoice clients={clientsWithEmail} defaultCurrency={defaultCurrency} /></div>
           </div>
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
@@ -100,7 +101,7 @@ export default async function Invoices() {
                 <p style={{fontSize:'32px',marginBottom:'8px'}}>💳</p>
                 <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No invoices yet</p>
                 <p style={{fontSize:'13px',marginBottom:'20px'}}>Create your first invoice to get started</p>
-                <NewInvoice clients={clientsWithEmail} defaultCurrency={defaultCurrency} />
+                <div style={{display:"flex",gap:"8px"}}><ExportButton type="invoices" /><NewInvoice clients={clientsWithEmail} defaultCurrency={defaultCurrency} /></div>
               </div>
             ) : (
               <table style={{width:'100%',borderCollapse:'collapse'}}>
