@@ -18,7 +18,8 @@ export async function POST(req: NextRequest) {
 
   const {
     firmName, firmEmail, firmPhone, firmAddress,
-    firmCity, firmCountry, taxNumber, paymentTerms, bankDetails
+    firmCity, firmCountry, taxNumber, paymentTerms,
+    bankDetails, brandColor
   } = await req.json()
 
   const { error } = await supabaseAdmin
@@ -32,11 +33,11 @@ export async function POST(req: NextRequest) {
       country: firmCountry,
       tax_number: taxNumber,
       payment_terms: paymentTerms,
-      bank_details: bankDetails
+      bank_details: bankDetails,
+      brand_color: brandColor
     })
     .eq('id', profile.firm_id)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
-
   return NextResponse.json({ success: true })
 }

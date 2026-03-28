@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 export default function SettingsForm({
   firm,
@@ -14,6 +14,10 @@ export default function SettingsForm({
 }) {
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [logoLoading, setLogoLoading] = useState(false)
+  const [logoUrl, setLogoUrl] = useState(firm?.logo_url || '')
+  const [logoError, setLogoError] = useState('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [firmName, setFirmName] = useState(firm?.name || '')
   const [firmEmail, setFirmEmail] = useState(firm?.email || '')
@@ -24,6 +28,36 @@ export default function SettingsForm({
   const [taxNumber, setTaxNumber] = useState(firm?.tax_number || '')
   const [paymentTerms, setPaymentTerms] = useState(firm?.payment_terms || 'Payment due within 30 days')
   const [bankDetails, setBankDetails] = useState(firm?.bank_details || '')
+  const [brandColor, setBrandColor] = useState(firm?.brand_color || '#1C64F2')
+
+  async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setLogoLoading(true)
+    setLogoError('')
+
+    const formData = new FormData()
+    formData.append('logo', file)
+
+    const res = await fetch('/api/settings/logo', {
+      method: 'POST',
+      body: formData
+    })
+    const data = await res.json()
+    if (res.ok) {
+      setLogoUrl(data.logo_url)
+    } else {
+      setLogoError(data.error || 'Upload failed')
+    }
+    setLogoLoading(false)
+  }
+
+  async function handleLogoDelete() {
+    setLogoLoading(true)
+    const res = await fetch('/api/settings/logo', { method: 'DELETE' })
+    if (res.ok) setLogoUrl('')
+    setLogoLoading(false)
+  }
 
   async function handleSave() {
     setLoading(true)
@@ -32,7 +66,8 @@ export default function SettingsForm({
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         firmName, firmEmail, firmPhone, firmAddress,
-        firmCity, firmCountry, taxNumber, paymentTerms, bankDetails
+        firmCity, firmCountry, taxNumber, paymentTerms,
+        bankDetails, brandColor
       })
     })
     if (res.ok) {
@@ -71,6 +106,81 @@ export default function SettingsForm({
           ✅ Settings saved successfully!
         </div>
       )}
+
+      {/* Logo & Branding */}
+      <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0',marginBottom:'20px'}}>
+        <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',marginBottom:'4px'}}>🎨 Logo & branding</h2>
+        <p style={{fontSize:'13px',color:'#64748B',marginBottom:'20px'}}>Your logo appears on invoices, emails, and the client portal</p>
+
+        {/* Logo upload */}
+        <div style={{marginBottom:'20px'}}>
+          <label style={labelStyle}>Firm logo</label>
+          <div style={{display:'flex',alignItems:'flex-start',gap:'20px',flexWrap:'wrap'}}>
+
+            {/* Logo preview */}
+            <div style={{width:'120px',height:'80px',borderRadius:'10px',border:'2px dashed #E2E8F0',display:'flex',alignItems:'center',justifyContent:'center',background:'#F8FAFC',overflow:'hidden',flexShrink:0}}>
+              {logoUrl ? (
+                <img src={logoUrl} alt="Logo" style={{width:'100%',height:'100%',objectFit:'contain',padding:'8px'}} />
+              ) : (
+                <div style={{textAlign:'center'}}>
+                  <p style={{fontSize:'24px',margin:'0 0 4px'}}>🏢</p>
+                  <p style={{fontSize:'10px',color:'#94A3B8',margin:'0'}}>No logo</p>
+                </div>
+              )}
+            </div>
+
+            {/* Upload controls */}
+            <div style={{flex:1}}>
+              <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/jpg,image/svg+xml,image/webp" onChange={handleLogoUpload} style={{display:'none'}} />
+              <div style={{display:'flex',gap:'8px',marginBottom:'8px',flexWrap:'wrap'}}>
+                <button onClick={() => fileInputRef.current?.click()} disabled={logoLoading} style={{padding:'8px 16px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>
+                  {logoLoading ? '⏳ Uploading...' : logoUrl ? '🔄 Replace logo' : '⬆ Upload logo'}
+                </button>
+                {logoUrl && (
+                  <button onClick={handleLogoDelete} disabled={logoLoading} style={{padding:'8px 16px',background:'#FEF2F2',color:'#DC2626',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>
+                    🗑 Remove logo
+                  </button>
+                )}
+              </div>
+              <p style={{fontSize:'12px',color:'#94A3B8',margin:'0'}}>PNG, JPG, SVG or WebP · Max 2MB · Recommended: 300×100px</p>
+              {logoError && <p style={{fontSize:'12px',color:'#DC2626',margin:'4px 0 0'}}>{logoError}</p>}
+            </div>
+          </div>
+        </div>
+
+        {/* Brand color */}
+        <div>
+          <label style={labelStyle}>Brand color</label>
+          <div style={{display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap'}}>
+            <div style={{position:'relative'}}>
+              <input type="color" value={brandColor} onChange={e => setBrandColor(e.target.value)} style={{width:'48px',height:'48px',borderRadius:'8px',border:'1px solid #E2E8F0',cursor:'pointer',padding:'2px'}} />
+            </div>
+            <input value={brandColor} onChange={e => setBrandColor(e.target.value)} placeholder="#1C64F2" style={{...inputStyle, width:'140px'}} />
+            <div style={{display:'flex',gap:'8px',flexWrap:'wrap'}}>
+              {['#1C64F2','#7C3AED','#15803D','#DC2626','#92400E','#0EA5E9','#0F172A','#DB2777'].map(color => (
+                <button key={color} onClick={() => setBrandColor(color)} style={{width:'28px',height:'28px',borderRadius:'50%',background:color,border:brandColor===color?'3px solid #0F172A':'2px solid transparent',cursor:'pointer',flexShrink:0}} />
+              ))}
+            </div>
+          </div>
+          <p style={{fontSize:'12px',color:'#94A3B8',marginTop:'8px'}}>Used as the primary color in your invoices and emails</p>
+
+          {/* Preview */}
+          <div style={{marginTop:'12px',background:'#F8FAFC',borderRadius:'8px',padding:'16px',border:'1px solid #E2E8F0'}}>
+            <p style={{fontSize:'12px',fontWeight:'600',color:'#374151',margin:'0 0 10px'}}>Preview</p>
+            <div style={{display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap'}}>
+              <div style={{padding:'8px 16px',background:brandColor,color:'#fff',borderRadius:'8px',fontSize:'13px',fontWeight:'600'}}>Button</div>
+              <div style={{padding:'4px 12px',background:brandColor + '15',color:brandColor,borderRadius:'20px',fontSize:'12px',fontWeight:'700'}}>Badge</div>
+              <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                {logoUrl ? (
+                  <img src={logoUrl} alt="Logo" style={{height:'32px',objectFit:'contain'}} />
+                ) : (
+                  <span style={{fontSize:'18px',fontWeight:'800',color:brandColor}}>⬡ {firmName || 'FirmFlow'}</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Firm information */}
       <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0',marginBottom:'20px'}}>
@@ -141,7 +251,6 @@ export default function SettingsForm({
             rows={5}
             style={{...inputStyle, resize:'vertical' as const, fontFamily:'system-ui,sans-serif'}}
           />
-          <p style={{fontSize:'11px',color:'#94A3B8',marginTop:'4px'}}>Add your bank details so clients can pay by bank transfer</p>
         </div>
       </div>
 
@@ -189,7 +298,7 @@ export default function SettingsForm({
       <button
         onClick={handleSave}
         disabled={loading}
-        style={{width:'100%',padding:'14px',background:'#1C64F2',color:'#fff',borderRadius:'10px',border:'none',fontSize:'15px',fontWeight:'700',cursor:'pointer',boxShadow:'0 4px 14px rgba(28,100,242,0.3)'}}
+        style={{width:'100%',padding:'14px',background:brandColor,color:'#fff',borderRadius:'10px',border:'none',fontSize:'15px',fontWeight:'700',cursor:'pointer',boxShadow:'0 4px 14px rgba(28,100,242,0.3)'}}
       >
         {loading ? 'Saving...' : '💾 Save settings'}
       </button>
