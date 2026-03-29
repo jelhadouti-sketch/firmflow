@@ -3,6 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 import MobileNav from '@/components/mobile-nav'
+import PushNotifications from "@/components/push-notifications"
 
 export default async function Dashboard() {
   const supabase = await createClient()
@@ -175,6 +176,7 @@ export default async function Dashboard() {
         </main>
       </div>
 
+      <PushNotifications userId={user.id} />
       <MobileNav items={sidebarItems} />
     </div>
   )
