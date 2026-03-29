@@ -90,7 +90,7 @@ export default async function RecurringInvoices() {
             </div>
             <div style={{display:'flex',gap:'10px',flexWrap:'wrap'}}>
               <RecurringActions generateMode />
-              <NewRecurring clients={clientsWithEmail} />
+              <NewRecurring clients={clientsWithEmail} currencySymbol={cur.symbol} />
             </div>
           </div>
 
@@ -130,7 +130,7 @@ export default async function RecurringInvoices() {
                 <p style={{fontSize:'32px',marginBottom:'8px'}}>💰</p>
                 <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No recurring invoices yet</p>
                 <p style={{fontSize:'13px',marginBottom:'20px'}}>Set up automatic invoicing for your retainer clients</p>
-                <NewRecurring clients={clientsWithEmail} />
+                <NewRecurring clients={clientsWithEmail} currencySymbol={cur.symbol} />
               </div>
             ) : (
               <div>
