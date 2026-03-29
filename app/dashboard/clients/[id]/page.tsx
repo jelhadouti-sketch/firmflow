@@ -3,6 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 import MobileNav from '@/components/mobile-nav'
+import { getCurrency } from '@/lib/currencies'
 
 export default async function ClientDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -15,6 +16,7 @@ export default async function ClientDetail({ params }: { params: Promise<{ id: s
 
   const firm = profile.firms as any
   const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'clients')
+  const cur = getCurrency(firm?.currency || 'GBP')
 
   const { data: client } = await supabaseAdmin
     .from('profiles')
@@ -55,6 +57,10 @@ export default async function ClientDetail({ params }: { params: Promise<{ id: s
     .eq('user_id', user.id)
     .eq('read', false)
 
+  const totalInvoiced = (invoices || []).reduce((a, i) => a + (i.amount || 0), 0)
+  const totalPaid = (invoices || []).filter(i => i.status === 'paid').reduce((a, i) => a + (i.amount || 0), 0)
+  const totalPending = (invoices || []).filter(i => i.status === 'pending').reduce((a, i) => a + (i.amount || 0), 0)
+
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
       <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
@@ -93,26 +99,33 @@ export default async function ClientDetail({ params }: { params: Promise<{ id: s
             <div style={{flex:1,minWidth:'200px'}}>
               <h1 style={{fontSize:'22px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>{client.full_name}</h1>
               <p style={{fontSize:'14px',color:'#64748B',margin:'0'}}>{clientEmail}</p>
+              {client.phone && <p style={{fontSize:'13px',color:'#64748B',margin:'2px 0 0'}}>📞 {client.phone}</p>}
               <p style={{fontSize:'12px',color:'#94A3B8',margin:'4px 0 0'}}>Client since {client.created_at ? new Date(client.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : '—'}</p>
             </div>
             <div style={{display:'flex',gap:'8px',flexWrap:'wrap'}}>
-              <a href={`/dashboard/messages`} style={{padding:'9px 16px',background:'#EFF6FF',color:'#1C64F2',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>💬 Message</a>
+              <a href="/dashboard/messages" style={{padding:'9px 16px',background:'#EFF6FF',color:'#1C64F2',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>💬 Message</a>
               <a href="/dashboard/signatures" style={{padding:'9px 16px',background:'#1C64F2',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>✍ Request signature</a>
               <a href="/dashboard/invoices" style={{padding:'9px 16px',background:'#F0FDF4',color:'#15803D',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600'}}>💳 New invoice</a>
             </div>
           </div>
 
           {/* Stats */}
-          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'24px'}}>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(130px,1fr))',gap:'12px',marginBottom:'24px'}}>
             {[
-              { label:'Engagements', value: engagements?.length || 0, color:'#1D4ED8' },
-              { label:'Invoices', value: invoices?.length || 0, color:'#7C3AED' },
-              { label:'Signatures', value: signatures?.length || 0, color:'#15803D' },
-              { label:'Pending sigs', value: signatures?.filter(s=>s.status==='pending').length || 0, color:'#92400E' },
+              { label:'Engagements', value: engagements?.length || 0, color:'#1D4ED8', icon:'📋' },
+              { label:'Invoices', value: invoices?.length || 0, color:'#7C3AED', icon:'💳' },
+              { label:'Total invoiced', value: cur.symbol + totalInvoiced.toLocaleString(), color:'#0F172A', icon:'💰' },
+              { label:'Paid', value: cur.symbol + totalPaid.toLocaleString(), color:'#15803D', icon:'✅' },
+              { label:'Pending', value: cur.symbol + totalPending.toLocaleString(), color:'#92400E', icon:'⏳' },
+              { label:'Signatures', value: signatures?.length || 0, color:'#15803D', icon:'✍' },
+              { label:'Pending sigs', value: signatures?.filter(s=>s.status==='pending').length || 0, color:'#DC2626', icon:'🚨' },
             ].map((stat, i) => (
-              <div key={i} style={{background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0'}}>
-                <p style={{fontSize:'13px',color:'#64748B',marginBottom:'8px'}}>{stat.label}</p>
-                <p style={{fontSize:'32px',fontWeight:'900',color:stat.color,letterSpacing:'-0.04em'}}>{stat.value}</p>
+              <div key={i} style={{background:'#fff',borderRadius:'10px',padding:'14px 16px',border:'1px solid #E2E8F0'}}>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'6px'}}>
+                  <span style={{fontSize:'12px',color:'#64748B',fontWeight:'500'}}>{stat.label}</span>
+                  <span style={{fontSize:'14px'}}>{stat.icon}</span>
+                </div>
+                <p style={{fontSize:'22px',fontWeight:'900',color:stat.color,margin:'0',letterSpacing:'-0.03em'}}>{stat.value}</p>
               </div>
             ))}
           </div>
@@ -153,7 +166,7 @@ export default async function ClientDetail({ params }: { params: Promise<{ id: s
               ) : (
                 <div>
                   {engagements.map((eng, i) => (
-                    <div key={i} style={{padding:'12px 20px',borderBottom:'1px solid #F1F5F9',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                    <a key={i} href={'/dashboard/engagements/' + eng.id} style={{textDecoration:'none',padding:'12px 20px',borderBottom:'1px solid #F1F5F9',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                       <div>
                         <p style={{fontSize:'13px',fontWeight:'600',color:'#0F172A',margin:'0 0 2px'}}>{eng.title}</p>
                         <p style={{fontSize:'11px',color:'#94A3B8',margin:'0'}}>{eng.type}</p>
@@ -161,7 +174,7 @@ export default async function ClientDetail({ params }: { params: Promise<{ id: s
                       <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:eng.status==='active'?'#F0FDF4':'#F1F5F9',color:eng.status==='active'?'#15803D':'#64748B'}}>
                         {eng.status}
                       </span>
-                    </div>
+                    </a>
                   ))}
                 </div>
               )}
@@ -179,13 +192,13 @@ export default async function ClientDetail({ params }: { params: Promise<{ id: s
                   {invoices.map((inv, i) => (
                     <div key={i} style={{padding:'12px 20px',borderBottom:'1px solid #F1F5F9',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                       <div>
-                        <p style={{fontSize:'13px',fontWeight:'600',color:'#0F172A',margin:'0 0 2px'}}>{inv.invoice_number || `INV-${String(i+1).padStart(3,'0')}`}</p>
+                        <p style={{fontSize:'13px',fontWeight:'600',color:'#0F172A',margin:'0 0 2px'}}>{inv.invoice_number || 'INV'}</p>
                         <p style={{fontSize:'11px',color:'#94A3B8',margin:'0'}}>{inv.created_at ? new Date(inv.created_at).toLocaleDateString('en-GB') : '—'}</p>
                       </div>
                       <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
-                        <span style={{fontSize:'14px',fontWeight:'700',color:'#0F172A'}}>£{(inv.total || 0).toFixed(2)}</span>
-                        <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:inv.status==='paid'?'#F0FDF4':inv.status==='pending'?'#FEF3C7':'#F1F5F9',color:inv.status==='paid'?'#15803D':inv.status==='pending'?'#92400E':'#64748B'}}>
-                          {inv.status === 'paid' ? '✅ Paid' : inv.status === 'pending' ? '⏳ Pending' : inv.status}
+                        <span style={{fontSize:'14px',fontWeight:'700',color:'#0F172A'}}>{cur.symbol}{(inv.amount || 0).toLocaleString()}</span>
+                        <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:inv.status==='paid'?'#F0FDF4':inv.status==='overdue'?'#FEF2F2':'#FEF3C7',color:inv.status==='paid'?'#15803D':inv.status==='overdue'?'#DC2626':'#92400E'}}>
+                          {inv.status === 'paid' ? '✅ Paid' : inv.status === 'overdue' ? '🚨 Overdue' : '⏳ Pending'}
                         </span>
                       </div>
                     </div>
