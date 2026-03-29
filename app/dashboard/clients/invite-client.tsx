@@ -7,6 +7,7 @@ export default function InviteClient() {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [company, setCompany] = useState('')
+  const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -98,8 +99,8 @@ export default function InviteClient() {
             </div>
 
             <div style={{marginBottom:'16px'}}>
-              <label style={labelStyle}>Email address *</label>
-              <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="john@company.com" style={inputStyle} />
+              <label style={labelStyle}>Phone number <span style={{color:'#94A3B8',fontWeight:'400'}}>(optional)</span></label>
+              <input value={phone} onChange={e => setPhone(e.target.value)} type="tel" placeholder="+31 6 12345678" style={inputStyle} />
             </div>
 
             <div style={{marginBottom:'24px'}}>
