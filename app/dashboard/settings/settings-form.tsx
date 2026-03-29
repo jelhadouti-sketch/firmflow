@@ -1,6 +1,7 @@
 'use client'
 import { useState, useRef } from 'react'
 import { CURRENCIES } from '@/lib/currencies'
+import TwoFactorSetup from '@/components/two-factor-setup'
 
 export default function SettingsForm({
   firm,
@@ -280,6 +281,9 @@ export default function SettingsForm({
           />
         </div>
       </div>
+
+      {/* Two-Factor Authentication */}
+      <TwoFactorSetup />
 
       {/* Profile settings */}
       <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0',marginBottom:'20px'}}>

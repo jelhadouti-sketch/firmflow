@@ -18,19 +18,30 @@ export default function Login() {
     if (error) {
       setError(error.message)
       setLoading(false)
-    } else {
-      // Check role and redirect accordingly
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', data.user.id)
-        .single()
+      return
+    }
 
-      if (profile?.role === 'client') {
-        window.location.href = '/portal/dashboard'
-      } else {
-        window.location.href = '/dashboard'
-      }
+    // Check if user has MFA enabled
+    const { data: factors } = await supabase.auth.mfa.listFactors()
+    const hasVerifiedFactor = factors?.totp?.some(f => f.status === 'verified')
+
+    if (hasVerifiedFactor) {
+      // Redirect to 2FA verification page
+      window.location.href = '/verify-2fa'
+      return
+    }
+
+    // No MFA - redirect based on role
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', data.user.id)
+      .single()
+
+    if (profile?.role === 'client') {
+      window.location.href = '/portal/dashboard'
+    } else {
+      window.location.href = '/dashboard'
     }
   }
 
@@ -50,7 +61,6 @@ export default function Login() {
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'}}>
       <div style={{width:'100%',maxWidth:'420px'}}>
 
-        {/* Logo */}
         <div style={{textAlign:'center',marginBottom:'32px'}}>
           <a href="/" style={{textDecoration:'none'}}>
             <span style={{fontSize:'28px',fontWeight:'900',color:'#1C64F2',letterSpacing:'-0.04em'}}>⬡ FirmFlow</span>
