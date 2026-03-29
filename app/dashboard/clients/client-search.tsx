@@ -6,19 +6,43 @@ interface Client {
   full_name: string
   email: string
   created_at: string
+  invoice_count: number
+  total_invoiced: number
+  total_paid: number
+  engagement_count: number
+  pending_sigs: number
+  currencySymbol: string
 }
 
 export default function ClientSearch({ clients }: { clients: Client[] }) {
   const [search, setSearch] = useState('')
+  const [items, setItems] = useState(clients)
+  const [deleting, setDeleting] = useState<string | null>(null)
 
-  const filtered = clients.filter(c =>
-    c.full_name?.toLowerCase().includes(search.toLowerCase()) ||
-    c.email?.toLowerCase().includes(search.toLowerCase())
+  const filtered = items.filter(c =>
+    (c.full_name || '').toLowerCase().includes(search.toLowerCase()) ||
+    (c.email || '').toLowerCase().includes(search.toLowerCase())
   )
+
+  async function handleDelete(id: string, name: string) {
+    if (!confirm(`Delete client "${name}" and all their conversations? This cannot be undone.`)) return
+    setDeleting(id)
+    const res = await fetch('/api/clients/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clientId: id }),
+    })
+    if (res.ok) {
+      setItems(prev => prev.filter(c => c.id !== id))
+    } else {
+      const data = await res.json()
+      alert(data.error || 'Failed to delete')
+    }
+    setDeleting(null)
+  }
 
   return (
     <div>
-      {/* Search bar */}
       <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0',display:'flex',alignItems:'center',gap:'12px'}}>
         <div style={{flex:1,position:'relative'}}>
           <span style={{position:'absolute',left:'12px',top:'50%',transform:'translateY(-50%)',color:'#94A3B8',fontSize:'16px'}}>🔍</span>
@@ -30,41 +54,65 @@ export default function ClientSearch({ clients }: { clients: Client[] }) {
           />
         </div>
         {search && (
-          <button onClick={() => setSearch('')} style={{fontSize:'13px',color:'#64748B',background:'none',border:'none',cursor:'pointer',fontWeight:'500'}}>
-            Clear
-          </button>
+          <button onClick={() => setSearch('')} style={{fontSize:'13px',color:'#64748B',background:'none',border:'none',cursor:'pointer',fontWeight:'500'}}>Clear</button>
         )}
-        <span style={{fontSize:'13px',color:'#94A3B8',whiteSpace:'nowrap'}}>{filtered.length} of {clients.length}</span>
+        <span style={{fontSize:'13px',color:'#94A3B8',whiteSpace:'nowrap'}}>{filtered.length} of {items.length}</span>
       </div>
 
-      {/* Table header */}
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr auto',padding:'10px 20px',background:'#F8FAFC',borderBottom:'1px solid #E2E8F0'}}>
-        <span style={{fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Name</span>
-        <span style={{fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Email</span>
-        <span style={{fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Added</span>
-      </div>
-
-      {/* Client rows */}
       {filtered.length === 0 ? (
-        <div style={{padding:'32px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>
-          No clients found matching "{search}"
-        </div>
+        <div style={{padding:'32px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>No clients found matching "{search}"</div>
       ) : (
-        filtered.map((client, i) => {
-          const url = '/dashboard/clients/' + client.id
-          return (
-            <a key={i} href={url} style={{textDecoration:'none',display:'grid',gridTemplateColumns:'1fr 1fr auto',padding:'14px 20px',borderBottom:'1px solid #F1F5F9',alignItems:'center',gap:'12px',background:'#fff',cursor:'pointer'}}>
-              <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
-                <div style={{width:'36px',height:'36px',borderRadius:'50%',background:'linear-gradient(135deg,#1C64F2,#7C3AED)',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'14px',fontWeight:'700',flexShrink:0}}>
-                  {client.full_name?.charAt(0)?.toUpperCase() || '?'}
+        <div>
+          {filtered.map((client, i) => {
+            const url = '/dashboard/clients/' + client.id
+            const sym = client.currencySymbol || '£'
+            return (
+              <div key={i} style={{padding:'16px 20px',borderBottom:'1px solid #F1F5F9',display:'flex',alignItems:'center',gap:'14px',flexWrap:'wrap'}}>
+                <a href={url} style={{textDecoration:'none',display:'flex',alignItems:'center',gap:'12px',flex:1,minWidth:'200px'}}>
+                  <div style={{width:'44px',height:'44px',borderRadius:'50%',background:'linear-gradient(135deg,#1C64F2,#7C3AED)',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'16px',fontWeight:'700',flexShrink:0}}>
+                    {client.full_name?.charAt(0)?.toUpperCase() || '?'}
+                  </div>
+                  <div>
+                    <p style={{fontSize:'14px',fontWeight:'700',color:'#0F172A',margin:'0 0 2px'}}>{client.full_name || '—'}</p>
+                    <p style={{fontSize:'12px',color:'#64748B',margin:'0'}}>{client.email}</p>
+                  </div>
+                </a>
+
+                <div style={{display:'flex',gap:'16px',alignItems:'center',flexWrap:'wrap'}}>
+                  <div style={{textAlign:'center',minWidth:'70px'}}>
+                    <p style={{fontSize:'14px',fontWeight:'800',color:'#1D4ED8',margin:'0'}}>{sym}{client.total_invoiced.toLocaleString()}</p>
+                    <p style={{fontSize:'10px',color:'#94A3B8',margin:'0'}}>Invoiced</p>
+                  </div>
+                  <div style={{textAlign:'center',minWidth:'70px'}}>
+                    <p style={{fontSize:'14px',fontWeight:'800',color:'#15803D',margin:'0'}}>{sym}{client.total_paid.toLocaleString()}</p>
+                    <p style={{fontSize:'10px',color:'#94A3B8',margin:'0'}}>Paid</p>
+                  </div>
+                  <div style={{textAlign:'center',minWidth:'50px'}}>
+                    <p style={{fontSize:'14px',fontWeight:'800',color:'#7C3AED',margin:'0'}}>{client.engagement_count}</p>
+                    <p style={{fontSize:'10px',color:'#94A3B8',margin:'0'}}>Engagements</p>
+                  </div>
+                  <div style={{textAlign:'center',minWidth:'50px'}}>
+                    <p style={{fontSize:'14px',fontWeight:'800',color:'#92400E',margin:'0'}}>{client.pending_sigs}</p>
+                    <p style={{fontSize:'10px',color:'#94A3B8',margin:'0'}}>Pending sigs</p>
+                  </div>
+                  <span style={{fontSize:'11px',color:'#94A3B8'}}>{client.created_at ? new Date(client.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—'}</span>
                 </div>
-                <span style={{fontSize:'14px',fontWeight:'600',color:'#0F172A'}}>{client.full_name || '—'}</span>
+
+                <div style={{display:'flex',gap:'6px',flexShrink:0}}>
+                  <a href={url} style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'11px',fontWeight:'600',textDecoration:'none'}}>View →</a>
+                  <a href="/dashboard/messages" style={{padding:'6px 10px',background:'#F0FDF4',color:'#15803D',borderRadius:'6px',fontSize:'11px',fontWeight:'600',textDecoration:'none'}}>💬</a>
+                  <button
+                    onClick={() => handleDelete(client.id, client.full_name)}
+                    disabled={deleting === client.id}
+                    style={{padding:'6px 10px',background:'#FEF2F2',color:'#DC2626',borderRadius:'6px',fontSize:'11px',fontWeight:'600',border:'none',cursor:'pointer'}}
+                  >
+                    {deleting === client.id ? '...' : '🗑'}
+                  </button>
+                </div>
               </div>
-              <span style={{fontSize:'13px',color:'#64748B'}}>{client.email}</span>
-              <span style={{fontSize:'12px',color:'#94A3B8',whiteSpace:'nowrap'}}>{client.created_at ? new Date(client.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—'}</span>
-            </a>
-          )
-        })
+            )
+          })}
+        </div>
       )}
     </div>
   )
