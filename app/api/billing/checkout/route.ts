@@ -3,6 +3,24 @@ import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import Stripe from 'stripe'
 
+const STARTER_PRICES: Record<string, string> = {
+  GBP: 'price_1TExuYKPW594EzgWLoJxSg0O',
+  EUR: 'price_1TGQuUKPW594EzgWaHfaP3OF',
+  USD: 'price_1TGQvTKPW594EzgWkxOsilD5',
+  CHF: 'price_1TGQwZKPW594EzgWCXnA8eqh',
+  CAD: 'price_1TGQxQKPW594EzgWubBECRna',
+  AUD: 'price_1TGQyMKPW594EzgWmQQxcSf7',
+}
+
+const PRO_PRICES: Record<string, string> = {
+  GBP: 'price_1TExw2KPW594EzgWo33lwJGb',
+  EUR: 'price_1TGQuuKPW594EzgWcwhhL62a',
+  USD: 'price_1TGQvxKPW594EzgW2PvpQ3pa',
+  CHF: 'price_1TGQwwKPW594EzgWQrZEecoE',
+  CAD: 'price_1TGQxsKPW594EzgW8v4NRAmq',
+  AUD: 'price_1TGQyoKPW594EzgWsv43FKoH',
+}
+
 export async function POST(req: NextRequest) {
   try {
     const supabase = await createClient()
@@ -17,21 +35,27 @@ export async function POST(req: NextRequest) {
 
     if (!profile) return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
 
+    const { data: firm } = await supabaseAdmin
+      .from('firms')
+      .select('currency')
+      .eq('id', profile.firm_id)
+      .single()
+
     const { plan } = await req.json()
+    const currency = firm?.currency || 'GBP'
 
-    const starterPrice = process.env.STRIPE_STARTER_PRICE_ID
-    const proPrice = process.env.STRIPE_PRO_PRICE_ID
     const stripeKey = process.env.STRIPE_SECRET_KEY
-
     if (!stripeKey) return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 })
 
-    const PRICES: Record<string, string | undefined> = {
-      starter: starterPrice,
-      pro: proPrice,
+    let priceId: string | undefined
+
+    if (plan === 'starter') {
+      priceId = STARTER_PRICES[currency] || STARTER_PRICES['USD']
+    } else if (plan === 'pro') {
+      priceId = PRO_PRICES[currency] || PRO_PRICES['USD']
     }
 
-    const priceId = PRICES[plan]
-    if (!priceId) return NextResponse.json({ error: 'Invalid plan or price not configured. Plan: ' + plan }, { status: 400 })
+    if (!priceId) return NextResponse.json({ error: 'Invalid plan' }, { status: 400 })
 
     const stripe = new Stripe(stripeKey)
 
@@ -43,6 +67,7 @@ export async function POST(req: NextRequest) {
         user_id: user.id,
         firm_id: profile.firm_id,
         plan,
+        currency,
       },
       success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.firmflow.uk'}/dashboard/subscription?upgraded=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.firmflow.uk'}/dashboard/subscription`,
