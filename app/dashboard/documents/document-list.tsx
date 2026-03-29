@@ -66,7 +66,6 @@ export default function DocumentList({ documents }: { documents: Doc[] }) {
 
   return (
     <div>
-      {/* Search + filter */}
       <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0',display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap'}}>
         <div style={{flex:1,minWidth:'200px',position:'relative'}}>
           <span style={{position:'absolute',left:'12px',top:'50%',transform:'translateY(-50%)',color:'#94A3B8',fontSize:'16px'}}>🔍</span>
@@ -95,68 +94,43 @@ export default function DocumentList({ documents }: { documents: Doc[] }) {
         <span style={{fontSize:'12px',color:'#94A3B8'}}>{filtered.length} of {items.length}</span>
       </div>
 
-      {/* Table */}
-      <table style={{width:'100%',borderCollapse:'collapse'}}>
-        <thead>
-          <tr style={{background:'#F8FAFC'}}>
-            <th style={{padding:'10px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Name</th>
-            <th style={{padding:'10px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Engagement</th>
-            <th style={{padding:'10px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Visibility</th>
-            <th style={{padding:'10px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Size</th>
-            <th style={{padding:'10px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Uploaded by</th>
-            <th style={{padding:'10px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Date</th>
-            <th style={{padding:'10px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filtered.length === 0 ? (
-            <tr>
-              <td colSpan={7} style={{padding:'32px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>No documents found</td>
-            </tr>
-          ) : (
-            filtered.map((doc, i) => (
-              <tr key={i} style={{borderTop:'1px solid #F1F5F9'}}>
-                <td style={{padding:'12px 20px'}}>
-                  <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
-                    <span style={{fontSize:'18px'}}>{fileIcon(doc.mime_type)}</span>
-                    <span style={{fontSize:'13px',fontWeight:'600',color:'#0F172A'}}>{doc.name}</span>
-                  </div>
-                </td>
-                <td style={{padding:'12px 20px',fontSize:'12px',color:'#64748B'}}>
-                  {doc.engagement_title ? (
-                    <span style={{padding:'2px 8px',background:'#F5F3FF',color:'#7C3AED',borderRadius:'4px',fontSize:'11px',fontWeight:'600'}}>{doc.engagement_title}</span>
-                  ) : '—'}
-                </td>
-                <td style={{padding:'12px 20px'}}>
-                  <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:doc.visibility==='client'?'#F0FDF4':'#F1F5F9',color:doc.visibility==='client'?'#15803D':'#64748B'}}>
-                    {doc.visibility === 'client' ? '👁 Client' : '🔒 Internal'}
-                  </span>
-                </td>
-                <td style={{padding:'12px 20px',fontSize:'12px',color:'#64748B'}}>{formatSize(doc.file_size)}</td>
-                <td style={{padding:'12px 20px',fontSize:'12px',color:'#64748B'}}>{doc.uploader_name}</td>
-                <td style={{padding:'12px 20px',fontSize:'12px',color:'#64748B'}}>{doc.created_at ? new Date(doc.created_at).toLocaleDateString('en-GB') : '—'}</td>
-                <td style={{padding:'12px 20px'}}>
-                  <div style={{display:'flex',gap:'6px'}}>
-                    
-                      href={'/api/documents/download?id=' + doc.id}
-                      style={{padding:'5px 10px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'11px',fontWeight:'600',textDecoration:'none'}}
-                    >
-                      ⬇ Download
-                    </a>
-                    <button
-                      onClick={() => handleDelete(doc.id)}
-                      disabled={deleting === doc.id}
-                      style={{padding:'5px 10px',background:'#FEF2F2',color:'#DC2626',borderRadius:'6px',fontSize:'11px',fontWeight:'600',border:'none',cursor:'pointer'}}
-                    >
-                      {deleting === doc.id ? '...' : '🗑'}
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+      {filtered.length === 0 ? (
+        <div style={{padding:'32px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>No documents found</div>
+      ) : (
+        <div>
+          {filtered.map((doc, i) => (
+            <div key={i} style={{display:'flex',alignItems:'center',gap:'14px',padding:'14px 20px',borderBottom:'1px solid #F1F5F9',flexWrap:'wrap'}}>
+              <span style={{fontSize:'24px',flexShrink:0}}>{fileIcon(doc.mime_type)}</span>
+              <div style={{flex:1,minWidth:'160px'}}>
+                <p style={{fontSize:'13px',fontWeight:'700',color:'#0F172A',margin:'0 0 3px'}}>{doc.name}</p>
+                <div style={{display:'flex',gap:'8px',alignItems:'center',flexWrap:'wrap'}}>
+                  <span style={{fontSize:'11px',color:'#94A3B8'}}>{formatSize(doc.file_size)}</span>
+                  <span style={{fontSize:'11px',color:'#94A3B8'}}>·</span>
+                  <span style={{fontSize:'11px',color:'#64748B'}}>{doc.uploader_name}</span>
+                  <span style={{fontSize:'11px',color:'#94A3B8'}}>·</span>
+                  <span style={{fontSize:'11px',color:'#94A3B8'}}>{doc.created_at ? new Date(doc.created_at).toLocaleDateString('en-GB') : '—'}</span>
+                </div>
+              </div>
+              {doc.engagement_title && (
+                <span style={{padding:'3px 8px',background:'#F5F3FF',color:'#7C3AED',borderRadius:'4px',fontSize:'11px',fontWeight:'600',flexShrink:0}}>{doc.engagement_title}</span>
+              )}
+              <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:doc.visibility==='client'?'#F0FDF4':'#F1F5F9',color:doc.visibility==='client'?'#15803D':'#64748B',flexShrink:0}}>
+                {doc.visibility === 'client' ? '👁 Client' : '🔒 Internal'}
+              </span>
+              <div style={{display:'flex',gap:'6px',flexShrink:0}}>
+                <a href={'/api/documents/download?id=' + doc.id} style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'11px',fontWeight:'600',textDecoration:'none'}}>⬇ Download</a>
+                <button
+                  onClick={() => handleDelete(doc.id)}
+                  disabled={deleting === doc.id}
+                  style={{padding:'6px 10px',background:'#FEF2F2',color:'#DC2626',borderRadius:'6px',fontSize:'11px',fontWeight:'600',border:'none',cursor:'pointer'}}
+                >
+                  {deleting === doc.id ? '...' : '🗑'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
