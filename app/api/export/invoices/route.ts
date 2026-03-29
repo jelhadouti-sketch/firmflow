@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
   const status = searchParams.get('status') || ''
   const from = searchParams.get('from') || ''
   const to = searchParams.get('to') || ''
+  const ids = searchParams.get('ids') || ''
 
   let query = supabaseAdmin
     .from('invoices')
@@ -32,6 +33,9 @@ export async function GET(req: NextRequest) {
     .eq('firm_id', profile.firm_id)
     .order('created_at', { ascending: false })
 
+  if (ids) {
+    query = query.in('id', ids.split(','))
+  }
   if (status && status !== 'all') {
     query = query.eq('status', status)
   }
@@ -44,7 +48,6 @@ export async function GET(req: NextRequest) {
 
   const { data: invoices } = await query
 
-  // Get client emails
   const clientIds = [...new Set((invoices || []).map(i => i.client_id).filter(Boolean))]
   const emailMap: Record<string, string> = {}
   for (const cid of clientIds) {
@@ -52,7 +55,6 @@ export async function GET(req: NextRequest) {
     emailMap[cid] = authUser?.user?.email || ''
   }
 
-  // Build invoice rows
   const rows = (invoices || []).map(inv => {
     const cur = getCurrency(inv.currency || defaultCurrency)
     const clientName = (inv.profiles as any)?.full_name || '—'
@@ -78,7 +80,6 @@ export async function GET(req: NextRequest) {
     }
   })
 
-  // Summary data
   const totalInvoiced = (invoices || []).reduce((a, i) => a + (i.amount || 0), 0)
   const totalPaid = (invoices || []).filter(i => i.status === 'paid').reduce((a, i) => a + (i.amount || 0), 0)
   const totalPending = (invoices || []).filter(i => i.status === 'pending').reduce((a, i) => a + (i.amount || 0), 0)
@@ -104,7 +105,6 @@ export async function GET(req: NextRequest) {
     const ws = XLSX.utils.json_to_sheet(rows)
     const csv = XLSX.utils.sheet_to_csv(ws)
     const fileName = 'invoices-' + new Date().toISOString().split('T')[0] + '.csv'
-
     return new NextResponse(csv, {
       headers: {
         'Content-Type': 'text/csv',
@@ -113,30 +113,15 @@ export async function GET(req: NextRequest) {
     })
   }
 
-  // Excel with multiple sheets
   const wb = XLSX.utils.book_new()
-
-  // Invoices sheet
   const wsInvoices = XLSX.utils.json_to_sheet(rows)
-  // Set column widths
   wsInvoices['!cols'] = [
-    { wch: 15 }, // Invoice #
-    { wch: 25 }, // Client Name
-    { wch: 30 }, // Client Email
-    { wch: 35 }, // Description
-    { wch: 10 }, // Currency
-    { wch: 12 }, // Subtotal
-    { wch: 12 }, // Tax Rate
-    { wch: 12 }, // Tax Amount
-    { wch: 14 }, // Total
-    { wch: 12 }, // Status
-    { wch: 14 }, // Issue Date
-    { wch: 14 }, // Due Date
-    { wch: 16 }, // Payment Enabled
+    { wch: 15 }, { wch: 25 }, { wch: 30 }, { wch: 35 }, { wch: 10 },
+    { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 14 }, { wch: 12 },
+    { wch: 14 }, { wch: 14 }, { wch: 16 },
   ]
   XLSX.utils.book_append_sheet(wb, wsInvoices, 'Invoices')
 
-  // Summary sheet
   const wsSummary = XLSX.utils.json_to_sheet(summaryRows)
   wsSummary['!cols'] = [{ wch: 20 }, { wch: 30 }]
   XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary')

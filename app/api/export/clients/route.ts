@@ -23,16 +23,21 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = new URL(req.url)
   const format = searchParams.get('format') || 'xlsx'
+  const ids = searchParams.get('ids') || ''
 
-  // Get all clients
-  const { data: clients } = await supabaseAdmin
+  let clientQuery = supabaseAdmin
     .from('profiles')
     .select('*')
     .eq('firm_id', profile.firm_id)
     .eq('role', 'client')
     .order('created_at', { ascending: false })
 
-  // Get emails
+  if (ids) {
+    clientQuery = clientQuery.in('id', ids.split(','))
+  }
+
+  const { data: clients } = await clientQuery
+
   const clientsWithEmail = await Promise.all(
     (clients || []).map(async (client) => {
       const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(client.id)
@@ -40,38 +45,32 @@ export async function GET(req: NextRequest) {
     })
   )
 
-  // Get invoices for stats
   const { data: allInvoices } = await supabaseAdmin
     .from('invoices')
     .select('client_id, amount, status')
     .eq('firm_id', profile.firm_id)
 
-  // Get engagements for stats
   const { data: allEngagements } = await supabaseAdmin
     .from('engagements')
     .select('client_id, status')
     .eq('firm_id', profile.firm_id)
 
-  // Get signatures for stats
   const { data: allSignatures } = await supabaseAdmin
     .from('signature_requests')
     .select('signer_id, status')
     .eq('firm_id', profile.firm_id)
 
-  // Get conversations for stats
   const { data: allConversations } = await supabaseAdmin
     .from('conversations')
     .select('client_id')
     .eq('firm_id', profile.firm_id)
 
-  // Build rows
   const rows = clientsWithEmail.map(client => {
     const clientInvoices = (allInvoices || []).filter(i => i.client_id === client.id)
     const totalInvoiced = clientInvoices.reduce((a, i) => a + (i.amount || 0), 0)
     const totalPaid = clientInvoices.filter(i => i.status === 'paid').reduce((a, i) => a + (i.amount || 0), 0)
     const totalPending = clientInvoices.filter(i => i.status === 'pending').reduce((a, i) => a + (i.amount || 0), 0)
     const totalOverdue = clientInvoices.filter(i => i.status === 'overdue').reduce((a, i) => a + (i.amount || 0), 0)
-
     const clientEngagements = (allEngagements || []).filter(e => e.client_id === client.id)
     const clientSignatures = (allSignatures || []).filter(s => s.signer_id === client.id)
     const clientConversations = (allConversations || []).filter(c => c.client_id === client.id)
@@ -95,7 +94,6 @@ export async function GET(req: NextRequest) {
     }
   })
 
-  // Summary
   const totalClients = clientsWithEmail.length
   const totalRevenue = (allInvoices || []).filter(i => i.status === 'paid').reduce((a, i) => a + (i.amount || 0), 0)
   const avgRevenue = totalClients > 0 ? totalRevenue / totalClients : 0
@@ -116,7 +114,6 @@ export async function GET(req: NextRequest) {
     const ws = XLSX.utils.json_to_sheet(rows)
     const csv = XLSX.utils.sheet_to_csv(ws)
     const fileName = 'clients-' + new Date().toISOString().split('T')[0] + '.csv'
-
     return new NextResponse(csv, {
       headers: {
         'Content-Type': 'text/csv',
@@ -126,24 +123,11 @@ export async function GET(req: NextRequest) {
   }
 
   const wb = XLSX.utils.book_new()
-
   const wsClients = XLSX.utils.json_to_sheet(rows)
   wsClients['!cols'] = [
-    { wch: 25 }, // Name
-    { wch: 30 }, // Email
-    { wch: 14 }, // Total Invoiced
-    { wch: 14 }, // Total Paid
-    { wch: 14 }, // Total Pending
-    { wch: 14 }, // Total Overdue
-    { wch: 14 }, // Collection Rate
-    { wch: 10 }, // Invoices
-    { wch: 14 }, // Engagements
-    { wch: 16 }, // Active Engagements
-    { wch: 12 }, // Signatures
-    { wch: 10 }, // Signed
-    { wch: 16 }, // Pending Sigs
-    { wch: 14 }, // Conversations
-    { wch: 14 }, // Client Since
+    { wch: 25 }, { wch: 30 }, { wch: 14 }, { wch: 14 }, { wch: 14 },
+    { wch: 14 }, { wch: 14 }, { wch: 10 }, { wch: 14 }, { wch: 16 },
+    { wch: 12 }, { wch: 10 }, { wch: 16 }, { wch: 14 }, { wch: 14 },
   ]
   XLSX.utils.book_append_sheet(wb, wsClients, 'Clients')
 
