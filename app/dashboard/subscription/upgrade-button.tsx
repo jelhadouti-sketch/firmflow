@@ -6,16 +6,21 @@ export default function UpgradeButton({ currencySymbol = '£', proPrice = 89 }: 
 
   async function handleUpgrade() {
     setLoading(true)
-    const res = await fetch('/api/billing/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan: 'pro' })
-    })
-    const data = await res.json()
-    if (data.url) {
-      window.location.href = data.url
-    } else {
-      alert(data.error || 'Something went wrong')
+    try {
+      const res = await fetch('/api/billing/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: 'pro' })
+      })
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        alert('Error: ' + JSON.stringify(data))
+        setLoading(false)
+      }
+    } catch (err: any) {
+      alert('Network error: ' + err.message)
       setLoading(false)
     }
   }
