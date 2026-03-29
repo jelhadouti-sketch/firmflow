@@ -20,7 +20,6 @@ const TIMEZONE_CURRENCY_MAP: Record<string, string> = {
   'Europe/Oslo': 'NOK',
   'Europe/Copenhagen': 'DKK',
   'Europe/Warsaw': 'PLN',
-  'Africa/Casablanca': 'MAD',
   'America/New_York': 'USD',
   'America/Chicago': 'USD',
   'America/Denver': 'USD',
@@ -61,8 +60,6 @@ const LOCALE_CURRENCY_MAP: Record<string, string> = {
   'nn-NO': 'NOK',
   'da-DK': 'DKK',
   'pl-PL': 'PLN',
-  'ar-MA': 'MAD',
-  'fr-MA': 'MAD',
 }
 
 function detectCurrency(timezone?: string, locale?: string): string {

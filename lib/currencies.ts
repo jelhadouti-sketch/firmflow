@@ -9,7 +9,6 @@ export const CURRENCIES = [
   { code: 'NOK', symbol: 'kr', name: 'Norwegian Krone', flag: '🇳🇴' },
   { code: 'DKK', symbol: 'kr', name: 'Danish Krone', flag: '🇩🇰' },
   { code: 'PLN', symbol: 'zł', name: 'Polish Zloty', flag: '🇵🇱' },
-  { code: 'MAD', symbol: 'MAD', name: 'Moroccan Dirham', flag: '🇲🇦' },
 ]
 
 export function getCurrency(code: string) {
