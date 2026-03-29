@@ -26,7 +26,7 @@ export default function InviteClient() {
     const res = await fetch('/api/clients/invite', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fullName, email, company, password: password || undefined })
+      body: JSON.stringify({ fullName, email, company, phone, password: password || undefined })
     })
     const data = await res.json()
     if (res.ok) {
@@ -96,6 +96,11 @@ export default function InviteClient() {
                 <label style={labelStyle}>Company <span style={{color:'#94A3B8',fontWeight:'400'}}>(optional)</span></label>
                 <input value={company} onChange={e => setCompany(e.target.value)} placeholder="e.g. TechCorp Inc." style={inputStyle} />
               </div>
+            </div>
+
+            <div style={{marginBottom:'16px'}}>
+              <label style={labelStyle}>Email address *</label>
+              <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="john@company.com" style={inputStyle} />
             </div>
 
             <div style={{marginBottom:'16px'}}>
