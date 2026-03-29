@@ -265,9 +265,9 @@ export default function Home() {
         <div style={{borderTop:'1px solid rgba(255,255,255,0.08)',paddingTop:'24px',display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:'12px'}}>
           <p style={{fontSize:'12px',color:'#64748B',margin:'0'}}>© 2026 FirmFlow Ltd · All rights reserved</p>
           <div style={{display:'flex',gap:'20px'}}>
-            <a href="#" style={{fontSize:'12px',color:'#64748B',textDecoration:'none'}}>Privacy Policy</a>
-            <a href="#" style={{fontSize:'12px',color:'#64748B',textDecoration:'none'}}>Terms of Service</a>
-            <a href="#" style={{fontSize:'12px',color:'#64748B',textDecoration:'none'}}>Cookie Policy</a>
+            <a href="/privacy" style={{fontSize:'12px',color:'#64748B',textDecoration:'none'}}>Privacy Policy</a>
+            <a href="/terms" style={{fontSize:'12px',color:'#64748B',textDecoration:'none'}}>Terms of Service</a>
+            <a href="/cookies" style={{fontSize:'12px',color:'#64748B',textDecoration:'none'}}>Cookie Policy</a>
           </div>
           <p style={{fontSize:'12px',color:'#64748B',margin:'0'}}>GDPR Compliant · Built in the UK 🇬🇧</p>
         </div>
