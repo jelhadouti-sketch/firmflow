@@ -15,17 +15,20 @@ export async function POST(req: NextRequest) {
 
   if (!profile) return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
 
-  const { title, type, budget, due_date } = await req.json()
+  const { title, type, budget, due_date, status, client_id, description } = await req.json()
 
   const { error } = await supabaseAdmin
     .from('engagements')
     .insert({
       firm_id: profile.firm_id,
+      owner_id: user.id,
       title,
-      type,
+      type: type || 'General',
       budget: budget || null,
       due_date: due_date || null,
-      status: 'active'
+      status: status || 'active',
+      client_id: client_id || null,
+      description: description || null,
     })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })

@@ -9,29 +9,49 @@ interface Engagement {
   budget: number
   due_date: string
   created_at: string
+  client_id: string
+  profiles?: { full_name: string }
 }
 
-export default function EngagementSearch({ engagements }: { engagements: Engagement[] }) {
+export default function EngagementSearch({ engagements, currencySymbol = '£' }: { engagements: Engagement[], currencySymbol?: string }) {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
+  const [deleting, setDeleting] = useState<string | null>(null)
+  const [items, setItems] = useState(engagements)
 
-  const filtered = engagements.filter(e => {
+  const filtered = items.filter(e => {
     const matchSearch = e.title?.toLowerCase().includes(search.toLowerCase()) ||
-      e.type?.toLowerCase().includes(search.toLowerCase())
+      e.type?.toLowerCase().includes(search.toLowerCase()) ||
+      (e.profiles as any)?.full_name?.toLowerCase().includes(search.toLowerCase())
     const matchStatus = statusFilter === 'all' || e.status === statusFilter
     return matchSearch && matchStatus
   })
 
+  async function handleDelete(id: string) {
+    if (!confirm('Delete this engagement and all related tasks, documents, and time entries?')) return
+    setDeleting(id)
+    const res = await fetch('/api/engagements/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ engagementId: id }),
+    })
+    if (res.ok) {
+      setItems(prev => prev.filter(e => e.id !== id))
+    } else {
+      alert('Failed to delete')
+    }
+    setDeleting(null)
+  }
+
   return (
     <div>
-      {/* Search + filter bar */}
       <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0',display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap'}}>
         <div style={{flex:1,minWidth:'200px',position:'relative'}}>
           <span style={{position:'absolute',left:'12px',top:'50%',transform:'translateY(-50%)',color:'#94A3B8',fontSize:'16px'}}>🔍</span>
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Search by title or type..."
+            placeholder="Search by title, type, or client..."
             style={{width:'100%',padding:'9px 12px 9px 36px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',color:'#0F172A',outline:'none',boxSizing:'border-box' as const,background:'#F8FAFC'}}
           />
         </div>
@@ -42,17 +62,15 @@ export default function EngagementSearch({ engagements }: { engagements: Engagem
             </button>
           ))}
         </div>
-        <span style={{fontSize:'13px',color:'#94A3B8',whiteSpace:'nowrap'}}>{filtered.length} of {engagements.length}</span>
+        <span style={{fontSize:'13px',color:'#94A3B8',whiteSpace:'nowrap'}}>{filtered.length} of {items.length}</span>
       </div>
 
-      {/* Table header */}
-      <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr 1fr auto',padding:'10px 20px',background:'#F8FAFC',borderBottom:'1px solid #E2E8F0',gap:'12px'}}>
-        {['Title','Type','Status','Due date','Budget',''].map((h, i) => (
+      <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr 1fr 1fr auto',padding:'10px 20px',background:'#F8FAFC',borderBottom:'1px solid #E2E8F0',gap:'12px'}}>
+        {['Title','Type','Client','Status','Due date','Budget',''].map((h, i) => (
           <span key={i} style={{fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>{h}</span>
         ))}
       </div>
 
-      {/* Rows */}
       {filtered.length === 0 ? (
         <div style={{padding:'32px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>
           No engagements found
@@ -60,16 +78,27 @@ export default function EngagementSearch({ engagements }: { engagements: Engagem
       ) : (
         filtered.map((eng, i) => {
           const url = '/dashboard/engagements/' + eng.id
+          const clientName = (eng.profiles as any)?.full_name || '—'
           return (
-            <div key={i} style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr 1fr auto',padding:'14px 20px',borderBottom:'1px solid #F1F5F9',alignItems:'center',gap:'12px',background:'#fff'}}>
+            <div key={i} style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr 1fr 1fr auto',padding:'14px 20px',borderBottom:'1px solid #F1F5F9',alignItems:'center',gap:'12px',background:'#fff'}}>
               <span style={{fontSize:'13px',fontWeight:'600',color:'#0F172A'}}>{eng.title}</span>
               <span style={{padding:'3px 8px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'5px',fontSize:'11px',fontWeight:'600',display:'inline-block'}}>{eng.type}</span>
+              <span style={{fontSize:'12px',color:'#64748B'}}>{clientName}</span>
               <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',display:'inline-block',background:eng.status==='active'?'#F0FDF4':eng.status==='review'?'#FEF3C7':'#F1F5F9',color:eng.status==='active'?'#15803D':eng.status==='review'?'#92400E':'#64748B'}}>
                 {eng.status}
               </span>
               <span style={{fontSize:'13px',color:'#64748B'}}>{eng.due_date ? new Date(eng.due_date).toLocaleDateString('en-GB') : '—'}</span>
-              <span style={{fontSize:'13px',fontWeight:'600',color:'#0F172A'}}>{eng.budget ? '$' + eng.budget.toLocaleString() : '—'}</span>
-              <a href={url} style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none',whiteSpace:'nowrap'}}>View →</a>
+              <span style={{fontSize:'13px',fontWeight:'600',color:'#0F172A'}}>{eng.budget ? currencySymbol + eng.budget.toLocaleString() : '—'}</span>
+              <div style={{display:'flex',gap:'6px'}}>
+                <a href={url} style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none',whiteSpace:'nowrap'}}>View →</a>
+                <button
+                  onClick={() => handleDelete(eng.id)}
+                  disabled={deleting === eng.id}
+                  style={{padding:'6px 10px',background:'#FEF2F2',color:'#DC2626',borderRadius:'6px',fontSize:'12px',fontWeight:'600',border:'none',cursor:'pointer',whiteSpace:'nowrap'}}
+                >
+                  {deleting === eng.id ? '...' : '🗑'}
+                </button>
+              </div>
             </div>
           )
         })

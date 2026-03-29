@@ -1,6 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
+import MobileNav from '@/components/mobile-nav'
+import { getCurrency } from '@/lib/currencies'
+import EngagementActions from './engagement-actions'
 
 export default async function EngagementDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -8,19 +12,16 @@ export default async function EngagementDetail({ params }: { params: Promise<{ i
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('*, firms(*)')
-    .eq('id', user.id)
-    .single()
-
+  const profile = await getProfileWithPermissions(user.id)
   if (!profile) redirect('/login')
 
   const firm = profile.firms as any
+  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'engagements')
+  const cur = getCurrency(firm?.currency || 'GBP')
 
   const { data: engagement } = await supabaseAdmin
     .from('engagements')
-    .select('*')
+    .select('*, profiles!engagements_client_id_fkey(full_name)')
     .eq('id', id)
     .eq('firm_id', profile.firm_id)
     .single()
@@ -46,19 +47,7 @@ export default async function EngagementDetail({ params }: { params: Promise<{ i
     .order('created_at', { ascending: false })
 
   const totalHours = timeEntries?.reduce((a, t) => a + (t.hours || 0), 0) || 0
-
-  const sidebarItems = [
-    { icon:'🏠', label:'Dashboard', href:'/dashboard' },
-    { icon:'📋', label:'Engagements', href:'/dashboard/engagements', active:true },
-    { icon:'📄', label:'Documents', href:'/dashboard/documents' },
-    { icon:'✍', label:'Signatures', href:'/dashboard/signatures' },
-    { icon:'✅', label:'Tasks', href:'/dashboard/tasks' },
-    { icon:'⏱', label:'Time & billing', href:'/dashboard/time' },
-    { icon:'💳', label:'Invoices', href:'/dashboard/invoices' },
-    { icon:'👥', label:'Clients', href:'/dashboard/clients' },
-    { icon:'💰', label:'Subscription', href:'/dashboard/subscription' },
-    { icon:'⚙️', label:'Settings', href:'/dashboard/settings' },
-  ]
+  const clientName = (engagement.profiles as any)?.full_name || null
 
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
@@ -75,7 +64,7 @@ export default async function EngagementDetail({ params }: { params: Promise<{ i
       </header>
 
       <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
-        <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
+        <aside className="hide-mobile" style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
           {sidebarItems.map((item, i) => (
             <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
               <span>{item.icon}</span>
@@ -88,26 +77,35 @@ export default async function EngagementDetail({ params }: { params: Promise<{ i
 
           {/* Header */}
           <div style={{background:'#fff',borderRadius:'16px',padding:'28px',border:'1px solid #E2E8F0',marginBottom:'24px',boxShadow:'0 1px 4px rgba(0,0,0,0.04)'}}>
-            <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'16px'}}>
-              <div>
-                <div style={{display:'flex',alignItems:'center',gap:'10px',marginBottom:'8px'}}>
+            <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'16px',flexWrap:'wrap'}}>
+              <div style={{flex:1}}>
+                <div style={{display:'flex',alignItems:'center',gap:'10px',marginBottom:'8px',flexWrap:'wrap'}}>
                   <span style={{padding:'4px 10px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'12px',fontWeight:'700'}}>{engagement.type}</span>
                   <span style={{padding:'4px 10px',borderRadius:'6px',fontSize:'12px',fontWeight:'700',background:engagement.status==='active'?'#F0FDF4':engagement.status==='review'?'#FEF3C7':'#F1F5F9',color:engagement.status==='active'?'#15803D':engagement.status==='review'?'#92400E':'#64748B'}}>
                     {engagement.status}
                   </span>
+                  {clientName && (
+                    <span style={{padding:'4px 10px',background:'#F5F3FF',color:'#7C3AED',borderRadius:'6px',fontSize:'12px',fontWeight:'700'}}>👤 {clientName}</span>
+                  )}
                 </div>
                 <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'8px',letterSpacing:'-0.03em'}}>{engagement.title}</h1>
+                {engagement.description && (
+                  <p style={{fontSize:'13px',color:'#475569',margin:'0 0 8px'}}>{engagement.description}</p>
+                )}
                 <p style={{fontSize:'13px',color:'#64748B',margin:'0'}}>
                   Created {engagement.created_at ? new Date(engagement.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : '—'}
                   {engagement.due_date && ` · Due ${new Date(engagement.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}`}
                 </p>
               </div>
-              {engagement.budget && (
-                <div style={{textAlign:'right',flexShrink:0}}>
-                  <p style={{fontSize:'12px',color:'#64748B',margin:'0 0 4px'}}>Budget</p>
-                  <p style={{fontSize:'28px',fontWeight:'900',color:'#1C64F2',margin:'0',letterSpacing:'-0.04em'}}>${engagement.budget.toLocaleString()}</p>
-                </div>
-              )}
+              <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:'8px',flexShrink:0}}>
+                {engagement.budget && (
+                  <div style={{textAlign:'right'}}>
+                    <p style={{fontSize:'12px',color:'#64748B',margin:'0 0 4px'}}>Budget</p>
+                    <p style={{fontSize:'28px',fontWeight:'900',color:'#1C64F2',margin:'0',letterSpacing:'-0.04em'}}>{cur.symbol}{engagement.budget.toLocaleString()}</p>
+                  </div>
+                )}
+                <EngagementActions engagementId={engagement.id} />
+              </div>
             </div>
           </div>
 
@@ -215,6 +213,7 @@ export default async function EngagementDetail({ params }: { params: Promise<{ i
           </div>
         </main>
       </div>
+      <MobileNav items={sidebarItems} />
     </div>
   )
 }
