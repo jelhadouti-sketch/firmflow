@@ -1,4 +1,42 @@
+'use client'
+import { useState, useEffect } from 'react'
+
+const CURRENCIES: Record<string, { symbol: string; rate: number }> = {
+  GBP: { symbol: '£', rate: 1 },
+  EUR: { symbol: '€', rate: 1.16 },
+  USD: { symbol: '$', rate: 1.27 },
+  CHF: { symbol: 'CHF ', rate: 1.12 },
+  CAD: { symbol: 'C$', rate: 1.72 },
+  AUD: { symbol: 'A$', rate: 1.95 },
+  SEK: { symbol: 'kr', rate: 13.4 },
+  NOK: { symbol: 'kr', rate: 13.7 },
+  DKK: { symbol: 'kr', rate: 8.65 },
+  PLN: { symbol: 'zł', rate: 5.1 },
+}
+
+function detectCurrency(): string {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+    const lang = navigator.language || ''
+    if (tz.includes('America/New_York') || tz.includes('America/Chicago') || tz.includes('America/Denver') || tz.includes('America/Los_Angeles') || lang.startsWith('en-US')) return 'USD'
+    if (tz.includes('Canada') || lang.startsWith('en-CA') || lang.startsWith('fr-CA')) return 'CAD'
+    if (tz.includes('Australia') || lang.startsWith('en-AU')) return 'AUD'
+    if (tz.includes('Zurich') || lang.includes('CH')) return 'CHF'
+    if (tz.includes('Stockholm') || lang.includes('sv')) return 'SEK'
+    if (tz.includes('Oslo') || lang.includes('nb') || lang.includes('nn')) return 'NOK'
+    if (tz.includes('Copenhagen') || lang.includes('da')) return 'DKK'
+    if (tz.includes('Warsaw') || lang.includes('pl')) return 'PLN'
+    if (tz.includes('London') || lang.startsWith('en-GB')) return 'GBP'
+    if (tz.startsWith('Europe/')) return 'EUR'
+    return 'USD'
+  } catch { return 'USD' }
+}
+
 export default function Home() {
+  const [cur, setCur] = useState({ symbol: '$', rate: 1.27 })
+  useEffect(() => { const code = detectCurrency(); setCur(CURRENCIES[code] || CURRENCIES['USD']) }, [])
+  function p(gbp: number): string { return cur.symbol + Math.round(gbp * cur.rate).toLocaleString() }
+
   return (
     <main style={{fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif',background:'#ffffff',color:'#0F172A',margin:0,padding:0,overflowX:'hidden'}}>
 
@@ -18,12 +56,12 @@ export default function Home() {
         <div style={{display:'inline-flex',alignItems:'center',gap:'6px',background:'#EFF6FF',color:'#1D4ED8',padding:'7px 16px',borderRadius:'20px',fontSize:'13px',fontWeight:'600',marginBottom:'28px',border:'1px solid #BFDBFE'}}>🎉 Free 14-day trial · No credit card required</div>
         <h1 style={{fontSize:'56px',fontWeight:'900',letterSpacing:'-0.05em',lineHeight:'1.08',marginBottom:'24px',color:'#0F172A'}}>The all-in-one platform built for <span style={{background:'linear-gradient(135deg,#1C64F2,#7C3AED)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>professional firms</span></h1>
         <p style={{fontSize:'19px',color:'#475569',maxWidth:'620px',margin:'0 auto 12px',lineHeight:'1.7'}}>Documents, e-signatures, time tracking, invoicing, client portal, messaging, and AI assistant — all in one platform for a flat monthly price.</p>
-        <p style={{fontSize:'15px',color:'#DC2626',fontWeight:'700',marginBottom:'36px'}}>💸 Replace 4+ tools. Save £200+ per month.</p>
+        <p style={{fontSize:'15px',color:'#DC2626',fontWeight:'700',marginBottom:'36px'}}>{'💸 Replace 4+ tools. Save ' + p(200) + '+ per month.'}</p>
         <div style={{display:'flex',gap:'12px',justifyContent:'center',flexWrap:'wrap',marginBottom:'24px'}}>
           <a href="/signup" style={{padding:'16px 40px',background:'#1C64F2',color:'#fff',borderRadius:'10px',textDecoration:'none',fontSize:'17px',fontWeight:'700',boxShadow:'0 4px 20px rgba(28,100,242,0.35)'}}>Start free trial →</a>
           <a href="#how-it-works" style={{padding:'16px 32px',background:'#F8FAFC',color:'#0F172A',borderRadius:'10px',textDecoration:'none',fontSize:'17px',fontWeight:'600',border:'1px solid #E2E8F0'}}>See how it works</a>
         </div>
-        <p style={{color:'#94A3B8',fontSize:'13px',marginBottom:'48px'}}>£29/month after trial · Cancel anytime · No setup fees · GDPR compliant</p>
+        <p style={{color:'#94A3B8',fontSize:'13px',marginBottom:'48px'}}>{p(29) + '/month after trial · Cancel anytime · No setup fees · GDPR compliant'}</p>
         <div style={{maxWidth:'880px',margin:'0 auto',borderRadius:'16px',overflow:'hidden',border:'1px solid #E2E8F0',boxShadow:'0 20px 60px rgba(0,0,0,0.08)',background:'#fff'}}>
           <div style={{background:'#F8FAFC',padding:'10px 16px',display:'flex',alignItems:'center',gap:'8px',borderBottom:'1px solid #E2E8F0'}}>
             <div style={{display:'flex',gap:'6px'}}><div style={{width:'10px',height:'10px',borderRadius:'50%',background:'#FECACA'}}></div><div style={{width:'10px',height:'10px',borderRadius:'50%',background:'#FDE68A'}}></div><div style={{width:'10px',height:'10px',borderRadius:'50%',background:'#BBF7D0'}}></div></div>
@@ -31,7 +69,7 @@ export default function Home() {
           </div>
           <div style={{padding:'32px',background:'#F8FAFC'}}>
             <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'12px',marginBottom:'16px'}}>
-              {[{l:'Total Revenue',v:'£24,580',c:'#1D4ED8',b:'#EFF6FF'},{l:'Collected',v:'£18,240',c:'#15803D',b:'#F0FDF4'},{l:'Pending',v:'£4,120',c:'#92400E',b:'#FEF3C7'},{l:'Collection Rate',v:'74%',c:'#7C3AED',b:'#F5F3FF'}].map((s,i) => (<div key={i} style={{background:s.b,borderRadius:'10px',padding:'16px'}}><p style={{fontSize:'11px',color:'#64748B',margin:'0 0 6px',fontWeight:'500'}}>{s.l}</p><p style={{fontSize:'22px',fontWeight:'900',color:s.c,margin:'0'}}>{s.v}</p></div>))}
+              {[{l:'Total Revenue',v:p(24580),c:'#1D4ED8',b:'#EFF6FF'},{l:'Collected',v:p(18240),c:'#15803D',b:'#F0FDF4'},{l:'Pending',v:p(4120),c:'#92400E',b:'#FEF3C7'},{l:'Collection Rate',v:'74%',c:'#7C3AED',b:'#F5F3FF'}].map((s,i) => (<div key={i} style={{background:s.b,borderRadius:'10px',padding:'16px'}}><p style={{fontSize:'11px',color:'#64748B',margin:'0 0 6px',fontWeight:'500'}}>{s.l}</p><p style={{fontSize:'22px',fontWeight:'900',color:s.c,margin:'0'}}>{s.v}</p></div>))}
             </div>
             <div style={{display:'grid',gridTemplateColumns:'repeat(6,1fr)',gap:'8px'}}>
               {['📋 Engagements','📄 Documents','✍ Signatures','✅ Tasks','👥 Clients','💳 Invoices'].map((l,i) => (<div key={i} style={{background:'#fff',borderRadius:'8px',padding:'12px',textAlign:'center',border:'1px solid #E2E8F0',fontSize:'11px',color:'#475569',fontWeight:'600'}}>{l}</div>))}
@@ -61,10 +99,10 @@ export default function Home() {
           <h2 style={{fontSize:'38px',fontWeight:'800',marginBottom:'12px',color:'#fff'}}>Sound familiar?</h2>
           <p style={{color:'#94A3B8',marginBottom:'48px',fontSize:'17px'}}>Problems firms had before switching to FirmFlow</p>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(250px,1fr))',gap:'16px'}}>
-            {['😩 Chasing clients for signatures over email and WhatsApp','📧 Documents lost in email chains — nobody knows the latest version','💸 Paying £50+ per user for DocuSign AND £30/user for ShareFile','⏰ Manually tracking billable hours in spreadsheets','😤 Clients calling to ask where is my invoice','🔓 Emailing sensitive financial documents with no audit trail'].map((p,i) => (<div key={i} style={{background:'rgba(255,255,255,0.06)',padding:'24px',borderRadius:'12px',border:'1px solid rgba(255,255,255,0.1)',textAlign:'left'}}><div style={{fontSize:'28px',marginBottom:'10px'}}>{p.substring(0,2)}</div><p style={{fontSize:'14px',color:'#CBD5E1',lineHeight:'1.6',margin:'0'}}>{p.substring(3)}</p></div>))}
+            {[{e:'😩',t:'Chasing clients for signatures over email and WhatsApp'},{e:'📧',t:'Documents lost in email chains — nobody knows the latest version'},{e:'💸',t:'Paying ' + p(50) + '+ per user for DocuSign AND ' + p(30) + '/user for ShareFile'},{e:'⏰',t:'Manually tracking billable hours in spreadsheets'},{e:'😤',t:'Clients calling to ask where is my invoice'},{e:'🔓',t:'Emailing sensitive financial documents with no audit trail'}].map((pp,i) => (<div key={i} style={{background:'rgba(255,255,255,0.06)',padding:'24px',borderRadius:'12px',border:'1px solid rgba(255,255,255,0.1)',textAlign:'left'}}><div style={{fontSize:'28px',marginBottom:'10px'}}>{pp.e}</div><p style={{fontSize:'14px',color:'#CBD5E1',lineHeight:'1.6',margin:'0'}}>{pp.t}</p></div>))}
           </div>
           <div style={{marginTop:'40px',padding:'20px 28px',background:'rgba(16,185,129,0.1)',borderRadius:'12px',border:'1px solid rgba(16,185,129,0.2)',display:'inline-block'}}>
-            <p style={{margin:'0',fontSize:'17px',color:'#34D399',fontWeight:'700'}}>✅ FirmFlow solves all of these — in one platform for £29/month</p>
+            <p style={{margin:'0',fontSize:'17px',color:'#34D399',fontWeight:'700'}}>{'✅ FirmFlow solves all of these — in one platform for ' + p(29) + '/month'}</p>
           </div>
         </div>
       </section>
@@ -118,18 +156,18 @@ export default function Home() {
 
       <section style={{background:'#0F172A',padding:'80px 24px'}}>
         <div style={{maxWidth:'900px',margin:'0 auto',textAlign:'center',marginBottom:'48px'}}>
-          <h2 style={{fontSize:'38px',fontWeight:'800',marginBottom:'12px',color:'#fff'}}>Save £200+/month vs. separate tools</h2>
+          <h2 style={{fontSize:'38px',fontWeight:'800',marginBottom:'12px',color:'#fff'}}>{'Save ' + p(200) + '+/month vs. separate tools'}</h2>
           <p style={{color:'#94A3B8',fontSize:'17px'}}>Stop paying per user, per envelope, per feature. FirmFlow is one flat price.</p>
         </div>
         <div style={{maxWidth:'900px',margin:'0 auto',overflowX:'auto',borderRadius:'16px',overflow:'hidden',border:'1px solid rgba(255,255,255,0.1)'}}>
           <table style={{width:'100%',borderCollapse:'collapse',fontSize:'14px'}}>
             <thead><tr>
               <th style={{padding:'16px 24px',textAlign:'left',background:'rgba(255,255,255,0.05)',borderBottom:'1px solid rgba(255,255,255,0.1)',color:'#94A3B8',fontWeight:'600'}}>Feature</th>
-              <th style={{padding:'16px 24px',textAlign:'center',background:'rgba(28,100,242,0.15)',borderBottom:'1px solid rgba(28,100,242,0.3)',color:'#60A5FA',fontWeight:'800'}}>⬡ FirmFlow<br/><span style={{fontSize:'11px',fontWeight:'600',color:'#93C5FD'}}>£29/month flat</span></th>
-              <th style={{padding:'16px 24px',textAlign:'center',background:'rgba(255,255,255,0.03)',borderBottom:'1px solid rgba(255,255,255,0.1)',color:'#64748B',fontWeight:'600'}}>Clio + DocuSign + ShareFile<br/><span style={{fontSize:'11px'}}>£150-400+/month</span></th>
+              <th style={{padding:'16px 24px',textAlign:'center',background:'rgba(28,100,242,0.15)',borderBottom:'1px solid rgba(28,100,242,0.3)',color:'#60A5FA',fontWeight:'800'}}>{'⬡ FirmFlow'}<br/><span style={{fontSize:'11px',fontWeight:'600',color:'#93C5FD'}}>{p(29) + '/month flat'}</span></th>
+              <th style={{padding:'16px 24px',textAlign:'center',background:'rgba(255,255,255,0.03)',borderBottom:'1px solid rgba(255,255,255,0.1)',color:'#64748B',fontWeight:'600'}}>Clio + DocuSign + ShareFile<br/><span style={{fontSize:'11px'}}>{p(150) + '-' + p(400) + '+/month'}</span></th>
             </tr></thead>
             <tbody>
-              {[['Document management','✅ Included','✅ ShareFile £30/user'],['E-signatures','✅ Unlimited','❌ DocuSign £25/envelope'],['Time tracking','✅ Included','✅ Clio £49/user'],['Invoicing and payments','✅ Included','✅ Extra module'],['Client portal','✅ Branded','⚠️ Generic'],['Real-time messaging','✅ Built-in','❌ Not included'],['AI assistant','✅ Included in Pro','❌ Not available'],['Recurring invoices','✅ Automatic','⚠️ Manual'],['Push notifications','✅ Browser + email','⚠️ Email only'],['2FA security','✅ Included','✅ Included'],['Flat monthly pricing','✅ No per-user fees','❌ Per-user pricing'],['Setup time','✅ 20 minutes','❌ Days of training']].map(([f,u,t],i) => (<tr key={i} style={{borderBottom:'1px solid rgba(255,255,255,0.06)'}}><td style={{padding:'14px 24px',color:'#CBD5E1',fontWeight:'500'}}>{f}</td><td style={{padding:'14px 24px',textAlign:'center',background:'rgba(28,100,242,0.08)',color:'#60A5FA',fontWeight:'600'}}>{u}</td><td style={{padding:'14px 24px',textAlign:'center',color:'#64748B'}}>{t}</td></tr>))}
+              {[['Document management','✅ Included','✅ ShareFile ' + p(30) + '/user'],['E-signatures','✅ Unlimited','❌ DocuSign ' + p(25) + '/envelope'],['Time tracking','✅ Included','✅ Clio ' + p(49) + '/user'],['Invoicing and payments','✅ Included','✅ Extra module'],['Client portal','✅ Branded','⚠️ Generic'],['Real-time messaging','✅ Built-in','❌ Not included'],['AI assistant','✅ Included in Pro','❌ Not available'],['Recurring invoices','✅ Automatic','⚠️ Manual'],['Push notifications','✅ Browser + email','⚠️ Email only'],['2FA security','✅ Included','✅ Included'],['Flat monthly pricing','✅ No per-user fees','❌ Per-user pricing'],['Setup time','✅ 20 minutes','❌ Days of training']].map(([f,u,t],i) => (<tr key={i} style={{borderBottom:'1px solid rgba(255,255,255,0.06)'}}><td style={{padding:'14px 24px',color:'#CBD5E1',fontWeight:'500'}}>{f}</td><td style={{padding:'14px 24px',textAlign:'center',background:'rgba(28,100,242,0.08)',color:'#60A5FA',fontWeight:'600'}}>{u}</td><td style={{padding:'14px 24px',textAlign:'center',color:'#64748B'}}>{t}</td></tr>))}
             </tbody>
           </table>
         </div>
@@ -151,7 +189,7 @@ export default function Home() {
           <p style={{color:'#64748B',fontSize:'17px'}}>Real feedback from firms using FirmFlow</p>
         </div>
         <div style={{maxWidth:'960px',margin:'0 auto',display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'24px'}}>
-          {[{q:'We replaced ShareFile and DocuSign with FirmFlow and saved over £220/month. Setup took 20 minutes. Our clients love the portal.',n:'Sarah Mitchell',r:'Partner · Mitchell Associates',c:'Accounting firm · 🇬🇧 London'},{q:'The time tracking alone paid for the subscription in the first week. The client portal and AI assistant make us look much more professional.',n:'James Thompson',r:'Managing Partner · Thompson Legal',c:'Law firm · 🇺🇸 New York'},{q:'We tried Clio, ShareFile, and PandaDoc separately. Combined cost was over £300/month. FirmFlow does everything for £29.',n:'Lisa van der Berg',r:'Director · Nordic Consulting',c:'Consulting firm · 🇳🇱 Amsterdam'}].map((t,i) => (<div key={i} style={{background:'#fff',padding:'28px',borderRadius:'16px',border:'1px solid #E2E8F0',display:'flex',flexDirection:'column'}}><div style={{marginBottom:'16px'}}>⭐⭐⭐⭐⭐</div><p style={{fontSize:'14px',color:'#374151',lineHeight:'1.7',marginBottom:'auto',paddingBottom:'20px'}}>"{t.q}"</p><div style={{borderTop:'1px solid #F1F5F9',paddingTop:'16px'}}><p style={{fontSize:'14px',fontWeight:'700',color:'#0F172A',margin:'0'}}>{t.n}</p><p style={{fontSize:'12px',color:'#64748B',margin:'2px 0 0'}}>{t.r}</p><p style={{fontSize:'12px',color:'#94A3B8',margin:'2px 0 0'}}>{t.c}</p></div></div>))}
+          {[{q:'We replaced ShareFile and DocuSign with FirmFlow and saved over ' + p(220) + '/month. Setup took 20 minutes. Our clients love the portal.',n:'Sarah Mitchell',r:'Partner · Mitchell Associates',c:'Accounting firm · 🇬🇧 London'},{q:'The time tracking alone paid for the subscription in the first week. The client portal and AI assistant make us look much more professional.',n:'James Thompson',r:'Managing Partner · Thompson Legal',c:'Law firm · 🇺🇸 New York'},{q:'We tried Clio, ShareFile, and PandaDoc separately. Combined cost was over ' + p(300) + '/month. FirmFlow does everything for ' + p(29) + '.',n:'Lisa van der Berg',r:'Director · Nordic Consulting',c:'Consulting firm · 🇳🇱 Amsterdam'}].map((t,i) => (<div key={i} style={{background:'#fff',padding:'28px',borderRadius:'16px',border:'1px solid #E2E8F0',display:'flex',flexDirection:'column'}}><div style={{marginBottom:'16px'}}>⭐⭐⭐⭐⭐</div><p style={{fontSize:'14px',color:'#374151',lineHeight:'1.7',marginBottom:'auto',paddingBottom:'20px'}}>"{t.q}"</p><div style={{borderTop:'1px solid #F1F5F9',paddingTop:'16px'}}><p style={{fontSize:'14px',fontWeight:'700',color:'#0F172A',margin:'0'}}>{t.n}</p><p style={{fontSize:'12px',color:'#64748B',margin:'2px 0 0'}}>{t.r}</p><p style={{fontSize:'12px',color:'#94A3B8',margin:'2px 0 0'}}>{t.c}</p></div></div>))}
         </div>
       </section>
 
@@ -162,7 +200,7 @@ export default function Home() {
           <div style={{padding:'40px',borderRadius:'20px',background:'#fff',border:'1px solid #E2E8F0',textAlign:'left'}}>
             <h3 style={{fontSize:'22px',fontWeight:'800',marginBottom:'4px'}}>Starter</h3>
             <p style={{color:'#64748B',fontSize:'14px',marginBottom:'24px'}}>Perfect for solo practitioners and small firms</p>
-            <div style={{marginBottom:'8px'}}><span style={{fontSize:'52px',fontWeight:'900',letterSpacing:'-0.04em'}}>£29</span><span style={{fontSize:'16px',color:'#64748B'}}>/month</span></div>
+            <div style={{marginBottom:'8px'}}><span style={{fontSize:'52px',fontWeight:'900',letterSpacing:'-0.04em'}}>{p(29)}</span><span style={{fontSize:'16px',color:'#64748B'}}>/month</span></div>
             <p style={{color:'#16A34A',fontSize:'13px',fontWeight:'700',marginBottom:'32px'}}>Flat price — not per user!</p>
             <div style={{marginBottom:'32px'}}>
               {['5 team members','50 documents','25 clients','E-signatures included','Time tracking and invoicing','Client portal','Real-time messaging','Push notifications','Email notifications','Multi-currency support'].map((f,i) => (<div key={i} style={{display:'flex',alignItems:'center',gap:'10px',padding:'7px 0'}}><span style={{color:'#16A34A',fontWeight:'700'}}>✓</span><span style={{fontSize:'13px',color:'#374151'}}>{f}</span></div>))}
@@ -174,7 +212,7 @@ export default function Home() {
             <div style={{position:'absolute',top:'-14px',left:'50%',transform:'translateX(-50%)',background:'linear-gradient(135deg,#1C64F2,#7C3AED)',color:'#fff',padding:'6px 18px',borderRadius:'20px',fontSize:'12px',fontWeight:'800',whiteSpace:'nowrap'}}>MOST POPULAR</div>
             <h3 style={{fontSize:'22px',fontWeight:'800',marginBottom:'4px'}}>Pro</h3>
             <p style={{color:'#64748B',fontSize:'14px',marginBottom:'24px'}}>For growing firms that want everything</p>
-            <div style={{marginBottom:'8px'}}><span style={{fontSize:'52px',fontWeight:'900',color:'#1C64F2',letterSpacing:'-0.04em'}}>£89</span><span style={{fontSize:'16px',color:'#64748B'}}>/month</span></div>
+            <div style={{marginBottom:'8px'}}><span style={{fontSize:'52px',fontWeight:'900',color:'#1C64F2',letterSpacing:'-0.04em'}}>{p(89)}</span><span style={{fontSize:'16px',color:'#64748B'}}>/month</span></div>
             <p style={{color:'#16A34A',fontSize:'13px',fontWeight:'700',marginBottom:'32px'}}>Flat price — not per user!</p>
             <div style={{marginBottom:'32px'}}>
               {['20 team members','Unlimited documents','Unlimited clients','Everything in Starter, plus:','🤖 AI assistant (Claude)','📊 Analytics dashboard','🔄 Recurring invoices','📤 Data export (Excel/CSV)','🔐 Two-factor authentication','⭐ Priority email support','🎨 Custom firm branding','📱 Mobile-optimised portal'].map((f,i) => (<div key={i} style={{display:'flex',alignItems:'center',gap:'10px',padding:'7px 0'}}>{f.startsWith('Everything') ? <span style={{fontSize:'13px',color:'#1C64F2',fontWeight:'700'}}>{f}</span> : <><span style={{color:'#1C64F2',fontWeight:'700'}}>✓</span><span style={{fontSize:'13px',color:'#374151'}}>{f}</span></>}</div>))}
@@ -189,7 +227,7 @@ export default function Home() {
       <section id="faq" style={{background:'#F8FAFC',padding:'80px 24px',borderTop:'1px solid #E2E8F0'}}>
         <div style={{maxWidth:'720px',margin:'0 auto'}}>
           <h2 style={{textAlign:'center',fontSize:'38px',fontWeight:'800',marginBottom:'52px'}}>Frequently asked questions</h2>
-          {[{q:'Is FirmFlow really £29/month with no per-user fees?',a:'Yes! Unlike Clio (£49-£149/user/month) or DocuSign (per envelope), FirmFlow charges a flat monthly fee. The Starter plan is £29/month and Pro is £89/month — both include your entire team.'},{q:'Are the e-signatures legally binding?',a:'Yes. FirmFlow uses a draw-to-sign system with comprehensive audit trail including timestamp, IP address, device info, and signer identity. This meets eIDAS (EU/UK), ESIGN Act (US), and equivalent legislation worldwide.'},{q:'What does the client portal include?',a:'Each client gets a branded portal to view documents, sign contracts, pay invoices online, and message your firm securely. They log in with email and password — no app download needed.'},{q:'How does the 14-day trial work?',a:'Sign up with just your email — no credit card required. Full access to all features for 14 days. Choose Starter or Pro at the end, or your account is simply paused — no charge.'},{q:'Is my data secure?',a:'Each firm data is isolated using row-level security. All files encrypted with AES-256. We offer 2FA with recovery codes, full audit logging, and GDPR-compliant data handling.'},{q:'Can I import data from my current tools?',a:'Yes. Bulk-upload documents and invite existing clients in minutes. Most firms are fully running within 20 minutes. Export to Excel/CSV anytime — your data is always yours.'},{q:'What currencies do you support?',a:'10 currencies: GBP, EUR, USD, CHF, CAD, AUD, SEK, NOK, DKK, and PLN. Auto-detected on signup. Firms in 12+ countries use FirmFlow daily.'},{q:'What if I need help?',a:'Pro customers get priority email support within 4 hours. All customers can reach us at hello@firmflow.uk. Plus the AI assistant answers questions about your firm data instantly.'}].map((item,i) => (<div key={i} style={{borderBottom:'1px solid #E2E8F0',padding:'24px 0'}}><h3 style={{fontSize:'15px',fontWeight:'700',marginBottom:'10px'}}>{item.q}</h3><p style={{fontSize:'14px',color:'#64748B',lineHeight:'1.75',margin:'0'}}>{item.a}</p></div>))}
+          {[{q:'Is FirmFlow really ' + p(29) + '/month with no per-user fees?',a:'Yes! Unlike Clio (' + p(49) + '-' + p(149) + '/user/month) or DocuSign (per envelope), FirmFlow charges a flat monthly fee. The Starter plan is ' + p(29) + '/month and Pro is ' + p(89) + '/month — both include your entire team.'},{q:'Are the e-signatures legally binding?',a:'Yes. FirmFlow uses a draw-to-sign system with comprehensive audit trail including timestamp, IP address, device info, and signer identity. This meets eIDAS (EU/UK), ESIGN Act (US), and equivalent legislation worldwide.'},{q:'What does the client portal include?',a:'Each client gets a branded portal to view documents, sign contracts, pay invoices online, and message your firm securely. They log in with email and password — no app download needed.'},{q:'How does the 14-day trial work?',a:'Sign up with just your email — no credit card required. Full access to all features for 14 days. Choose Starter or Pro at the end, or your account is simply paused — no charge.'},{q:'Is my data secure?',a:'Each firm data is isolated using row-level security. All files encrypted with AES-256. We offer 2FA with recovery codes, full audit logging, and GDPR-compliant data handling.'},{q:'Can I import data from my current tools?',a:'Yes. Bulk-upload documents and invite existing clients in minutes. Most firms are fully running within 20 minutes. Export to Excel/CSV anytime — your data is always yours.'},{q:'What currencies do you support?',a:'10 currencies: GBP, EUR, USD, CHF, CAD, AUD, SEK, NOK, DKK, and PLN. Auto-detected on signup. Firms in 12+ countries use FirmFlow daily.'},{q:'What if I need help?',a:'Pro customers get priority email support within 4 hours. All customers can reach us at hello@firmflow.uk. Plus the AI assistant answers questions about your firm data instantly.'}].map((item,i) => (<div key={i} style={{borderBottom:'1px solid #E2E8F0',padding:'24px 0'}}><h3 style={{fontSize:'15px',fontWeight:'700',marginBottom:'10px'}}>{item.q}</h3><p style={{fontSize:'14px',color:'#64748B',lineHeight:'1.75',margin:'0'}}>{item.a}</p></div>))}
         </div>
       </section>
 
@@ -198,7 +236,7 @@ export default function Home() {
         <p style={{color:'rgba(255,255,255,0.85)',fontSize:'18px',maxWidth:'520px',margin:'0 auto 12px'}}>Join 500+ accounting, legal and consulting firms already using FirmFlow.</p>
         <p style={{color:'rgba(255,255,255,0.65)',fontSize:'14px',marginBottom:'40px'}}>Set up in 20 minutes. No training needed. No contracts.</p>
         <a href="/signup" style={{display:'inline-block',padding:'18px 48px',background:'#fff',color:'#1C64F2',borderRadius:'12px',textDecoration:'none',fontSize:'18px',fontWeight:'800',boxShadow:'0 8px 30px rgba(0,0,0,0.2)'}}>Start your free 14-day trial →</a>
-        <p style={{color:'rgba(255,255,255,0.5)',fontSize:'13px',marginTop:'16px'}}>No credit card required · £29/month after trial · Cancel anytime</p>
+        <p style={{color:'rgba(255,255,255,0.5)',fontSize:'13px',marginTop:'16px'}}>{'No credit card required · ' + p(29) + '/month after trial · Cancel anytime'}</p>
       </section>
 
       <footer style={{borderTop:'1px solid #E2E8F0',padding:'48px 40px 32px',background:'#0F172A'}}>
