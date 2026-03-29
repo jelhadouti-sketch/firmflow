@@ -170,6 +170,12 @@ export default function MessagesClient({
       last_message_preview: newMsg.trim().substring(0, 80),
     }).eq('id', activeConvo)
 
+    await fetch('/api/notifications/message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ conversationId: activeConvo, content: newMsg.trim() }),
+    })
+
     setNewMsg('')
     setSending(false)
     inputRef.current?.focus()

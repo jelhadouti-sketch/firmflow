@@ -32,6 +32,7 @@ export default async function Notifications() {
     document_signed: '✍',
     new_client: '👥',
     invoice_paid: '💳',
+    new_message: '💬',
   }
 
   const typeColors: Record<string, string> = {
@@ -42,6 +43,7 @@ export default async function Notifications() {
     document_signed: '#F0FDF4',
     new_client: '#EFF6FF',
     invoice_paid: '#F0FDF4',
+    new_message: '#EFF6FF',
   }
 
   const typeBorderColors: Record<string, string> = {
@@ -52,6 +54,7 @@ export default async function Notifications() {
     document_signed: '#BBF7D0',
     new_client: '#BFDBFE',
     invoice_paid: '#BBF7D0',
+    new_message: '#BFDBFE',
   }
 
   return (
@@ -69,7 +72,7 @@ export default async function Notifications() {
       </header>
 
       <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
-        <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
+        <aside className="hide-mobile" style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
           {sidebarItems.map((item, i) => (
             <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
               <span>{item.icon}</span>

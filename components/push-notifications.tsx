@@ -13,17 +13,14 @@ export default function PushNotifications({ userId }: { userId: string }) {
 
     setPermission(Notification.permission)
 
-    // Show permission banner after 3 seconds if not granted
     if (Notification.permission === 'default' && !hasAskedRef.current) {
       hasAskedRef.current = true
       setTimeout(() => setShowBanner(true), 3000)
     }
 
-    // Create audio element for notification sound
     audioRef.current = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YUoGAACBhYqFbF1fdH2JkYyGe3J1gIuUk4Z6bnF+i5aVh3pscX+Ll5eIe2txf4uXl4h7a3F/i5eXiHtrcX+Ll5eIe2txf4uWloZ5aW98iJOUh3tscX+Ll5aHemxxf4uXl4h7a3F/i5aWhnlpb3yIk5SHe2xxf4uXlod6bHF/i5eXiHtrcX+LlpaGeWlvfIiTlId7bHF/i5eWh3pscX+Ll5eIe2txf4uWloZ5aW98iJOUh3tscX+Ll5aHemxxf4uXl4h7a3F/i5aWhnlpb3yIk5SHe2xxfg==')
     audioRef.current.volume = 0.3
 
-    // Listen for new notifications via Supabase realtime
     const supabase = createClient()
 
     const channel = supabase
@@ -40,7 +37,6 @@ export default function PushNotifications({ userId }: { userId: string }) {
       })
       .subscribe()
 
-    // Also listen for new messages
     const msgChannel = supabase
       .channel('push-messages')
       .on('postgres_changes', {
@@ -51,7 +47,6 @@ export default function PushNotifications({ userId }: { userId: string }) {
         const message = payload.new as any
         if (message.sender_id === userId) return
 
-        // Check if this message is in a conversation the user is part of
         const { data: convo } = await supabase
           .from('conversations')
           .select('client_id, firm_id')
@@ -60,7 +55,6 @@ export default function PushNotifications({ userId }: { userId: string }) {
 
         if (!convo) return
 
-        // Get sender name
         const { data: sender } = await supabase
           .from('profiles')
           .select('full_name')
@@ -83,10 +77,8 @@ export default function PushNotifications({ userId }: { userId: string }) {
       })
       .subscribe()
 
-    // Set initial tab badge
     updateTabBadge()
 
-    // Update tab badge periodically
     const interval = setInterval(updateTabBadge, 30000)
 
     return () => {
@@ -116,6 +108,7 @@ export default function PushNotifications({ userId }: { userId: string }) {
       new_client: { title: '👥 New client', url: '/dashboard/clients' },
       overdue_task: { title: '✅ Task overdue', url: '/dashboard/tasks' },
       overdue_engagement: { title: '📋 Engagement update', url: '/dashboard/engagements' },
+      new_message: { title: '💬 New message', url: '/dashboard/messages' },
     }
 
     const info = typeMap[notification.type] || { title: '🔔 New notification', url: '/dashboard/notifications' }
@@ -146,7 +139,6 @@ export default function PushNotifications({ userId }: { userId: string }) {
       const unread = count || 0
       document.title = unread > 0 ? `(${unread}) FirmFlow` : 'FirmFlow'
 
-      // Update favicon badge if supported
       if ('setAppBadge' in navigator) {
         if (unread > 0) {
           (navigator as any).setAppBadge(unread)
