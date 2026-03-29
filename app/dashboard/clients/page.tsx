@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 import MobileNav from '@/components/mobile-nav'
 import InviteClient from './invite-client'
 import ClientSearch from './client-search'
-import ExportButton from "@/components/export-button"
+import ExportButton from '@/components/export-button'
 import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 
 export default async function Clients() {
@@ -15,7 +15,6 @@ export default async function Clients() {
   const profile = await getProfileWithPermissions(user.id)
   if (!profile) redirect('/login')
 
-  // Check if staff has access to this page
   if (!profile.hasPage('clients')) redirect('/dashboard')
 
   const firm = profile.firms as any
@@ -35,6 +34,12 @@ export default async function Clients() {
     })
   )
 
+  const clientItems = clientsWithEmail.map(c => ({
+    id: c.id,
+    label: c.full_name || '—',
+    sublabel: c.email || '—',
+  }))
+
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
       <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
@@ -50,7 +55,7 @@ export default async function Clients() {
       </header>
 
       <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
-        <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
+        <aside className="hide-mobile" style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
           {sidebarItems.map((item, i) => (
             <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
               <span>{item.icon}</span>
@@ -65,7 +70,10 @@ export default async function Clients() {
               <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Clients</h1>
               <p style={{color:'#64748B',fontSize:'14px'}}>{clientsWithEmail.length} total clients</p>
             </div>
-            <div style={{display:"flex",gap:"8px"}}><ExportButton type="clients" /><InviteClient /></div>
+            <div style={{display:'flex',gap:'8px'}}>
+              <ExportButton type="clients" items={clientItems} />
+              <InviteClient />
+            </div>
           </div>
 
           {!clientsWithEmail.length ? (
@@ -73,7 +81,7 @@ export default async function Clients() {
               <p style={{fontSize:'32px',marginBottom:'8px'}}>👥</p>
               <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No clients yet</p>
               <p style={{fontSize:'13px',marginBottom:'20px'}}>Invite your first client to get started</p>
-              <div style={{display:"flex",gap:"8px"}}><ExportButton type="clients" /><InviteClient /></div>
+              <InviteClient />
             </div>
           ) : (
             <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>

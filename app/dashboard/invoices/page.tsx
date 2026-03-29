@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import MobileNav from '@/components/mobile-nav'
-import ExportButton from "@/components/export-button"
+import ExportButton from '@/components/export-button'
 import NewInvoice from './new-invoice'
 import InvoiceActions from './invoice-actions'
 import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
@@ -45,6 +45,23 @@ export default async function Invoices() {
   const paidAmount = invoices?.filter(i => i.status === 'paid').reduce((a, i) => a + (i.amount || 0), 0) || 0
   const pendingAmount = invoices?.filter(i => i.status === 'pending').reduce((a, i) => a + (i.amount || 0), 0) || 0
 
+  const invoiceItems = (invoices || []).map(inv => {
+    const invCur = getCurrency(inv.currency || defaultCurrency)
+    return {
+      id: inv.id,
+      label: inv.invoice_number || 'INV',
+      sublabel: (inv.profiles as any)?.full_name || '—',
+      amount: inv.amount || 0,
+      status: inv.status,
+    }
+  })
+
+  const clientItems = clientsWithEmail.map(c => ({
+    id: c.id,
+    label: c.full_name || '—',
+    sublabel: c.email || '—',
+  }))
+
   return (
     <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
       <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
@@ -60,7 +77,7 @@ export default async function Invoices() {
       </header>
 
       <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
-        <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
+        <aside className="hide-mobile" style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
           {sidebarItems.map((item, i) => (
             <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
               <span>{item.icon}</span>
@@ -75,7 +92,10 @@ export default async function Invoices() {
               <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Invoices</h1>
               <p style={{color:'#64748B',fontSize:'14px'}}>{invoices?.length || 0} total invoices · Default currency: {defaultCur.flag} {defaultCurrency}</p>
             </div>
-            <div style={{display:"flex",gap:"8px"}}><ExportButton type="invoices" /><NewInvoice clients={clientsWithEmail} defaultCurrency={defaultCurrency} /></div>
+            <div style={{display:'flex',gap:'8px'}}>
+              <ExportButton type="invoices" items={invoiceItems} />
+              <NewInvoice clients={clientsWithEmail} defaultCurrency={defaultCurrency} />
+            </div>
           </div>
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
@@ -101,7 +121,7 @@ export default async function Invoices() {
                 <p style={{fontSize:'32px',marginBottom:'8px'}}>💳</p>
                 <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No invoices yet</p>
                 <p style={{fontSize:'13px',marginBottom:'20px'}}>Create your first invoice to get started</p>
-                <div style={{display:"flex",gap:"8px"}}><ExportButton type="invoices" /><NewInvoice clients={clientsWithEmail} defaultCurrency={defaultCurrency} /></div>
+                <NewInvoice clients={clientsWithEmail} defaultCurrency={defaultCurrency} />
               </div>
             ) : (
               <table style={{width:'100%',borderCollapse:'collapse'}}>
