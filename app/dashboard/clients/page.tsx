@@ -28,7 +28,6 @@ export default async function Clients() {
     .eq('role', 'client')
     .order('created_at', { ascending: false })
 
-  // Get emails
   const clientsWithEmail = await Promise.all(
     (clients || []).map(async (client) => {
       const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(client.id)
@@ -36,7 +35,6 @@ export default async function Clients() {
     })
   )
 
-  // Get invoice stats per client
   const { data: allInvoices } = await supabaseAdmin
     .from('invoices')
     .select('client_id, amount, status')
@@ -64,6 +62,7 @@ export default async function Clients() {
       engagement_count: cEng.length,
       pending_sigs: cSig.filter(s => s.status === 'pending').length,
       currencySymbol: cur.symbol,
+      phone: c.phone || '',
     }
   })
 

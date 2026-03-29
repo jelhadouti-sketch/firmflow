@@ -12,6 +12,7 @@ interface Client {
   engagement_count: number
   pending_sigs: number
   currencySymbol: string
+  phone: string
 }
 
 export default function ClientSearch({ clients }: { clients: Client[] }) {
@@ -21,7 +22,8 @@ export default function ClientSearch({ clients }: { clients: Client[] }) {
 
   const filtered = items.filter(c =>
     (c.full_name || '').toLowerCase().includes(search.toLowerCase()) ||
-    (c.email || '').toLowerCase().includes(search.toLowerCase())
+    (c.email || '').toLowerCase().includes(search.toLowerCase()) ||
+    (c.phone || '').toLowerCase().includes(search.toLowerCase())
   )
 
   async function handleDelete(id: string, name: string) {
@@ -49,7 +51,7 @@ export default function ClientSearch({ clients }: { clients: Client[] }) {
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Search by name or email..."
+            placeholder="Search by name, email, or phone..."
             style={{width:'100%',padding:'9px 12px 9px 36px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',color:'#0F172A',outline:'none',boxSizing:'border-box' as const,background:'#F8FAFC'}}
           />
         </div>
@@ -75,6 +77,7 @@ export default function ClientSearch({ clients }: { clients: Client[] }) {
                   <div>
                     <p style={{fontSize:'14px',fontWeight:'700',color:'#0F172A',margin:'0 0 2px'}}>{client.full_name || '—'}</p>
                     <p style={{fontSize:'12px',color:'#64748B',margin:'0'}}>{client.email}</p>
+                    {client.phone && <p style={{fontSize:'11px',color:'#94A3B8',margin:'0'}}>📞 {client.phone}</p>}
                   </div>
                 </a>
 
