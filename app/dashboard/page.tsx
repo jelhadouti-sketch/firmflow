@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
 import MobileNav from '@/components/mobile-nav'
 import PushNotifications from "@/components/push-notifications"
+import MessageBadge from '@/components/message-badge'
 
 export default async function Dashboard() {
   const supabase = await createClient()
@@ -77,7 +78,8 @@ export default async function Dashboard() {
           {sidebarItems.map((item, i) => (
             <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
               <span>{item.icon}</span>
-              <span>{item.label}</span>
+              <span style={{flex:1}}>{item.label}</span>
+              {item.label === 'Messages' && <MessageBadge userId={user.id} />}
             </a>
           ))}
         </aside>
