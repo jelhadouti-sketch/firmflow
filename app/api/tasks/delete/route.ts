@@ -15,19 +15,13 @@ export async function POST(req: NextRequest) {
 
   if (!profile) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-  const { title, priority, due_date, assignee_id, engagement_id } = await req.json()
+  const { taskId } = await req.json()
 
   const { error } = await supabaseAdmin
     .from('tasks')
-    .insert({
-      firm_id: profile.firm_id,
-      title,
-      priority: priority || 'med',
-      due_date: due_date || null,
-      done: false,
-      assignee_id: assignee_id || user.id,
-      engagement_id: engagement_id || null,
-    })
+    .delete()
+    .eq('id', taskId)
+    .eq('firm_id', profile.firm_id)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
   return NextResponse.json({ success: true })
