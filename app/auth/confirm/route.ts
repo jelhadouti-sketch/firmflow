@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
   const { searchParams, origin } = new URL(req.url)
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as any
-  const next = searchParams.get('next') || '/reset-password'
+  const next = searchParams.get('next') || (type === 'signup' || type === 'email' ? '/dashboard' : '/reset-password')
 
   if (token_hash && type) {
     const supabase = await createClient()

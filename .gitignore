@@ -40,3 +40,28 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 Untitled-1
+.env*.local
+.indexnow/
+
+# Manual backup files
+*.backup
+*.backup-*
+*.PRE-REVERT-*
+
+# One-off shell scripts (kept locally, not in repo)
+fix-*.sh
+build-*.sh
+create-*.sh
+expand-*.sh
+revert-*.sh
+
+# Local zips and screenshots
+betalist-*.png
+firmflow-*.png
+
+# Claude session data
+.claude/
+fix.sh.save
+firmflow.zip
+fix.sh
+.gitignore.bak

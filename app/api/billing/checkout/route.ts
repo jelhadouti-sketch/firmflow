@@ -59,7 +59,18 @@ export async function POST(req: NextRequest) {
 
     const stripe = new Stripe(stripeKey)
 
-    const session = await stripe.checkout.sessions.create({
+    // --- Founding-member coupon: auto-apply if spots remain ---
+    let applyLaunchCoupon = false
+    try {
+      const { count } = await supabaseAdmin
+        .from('launch_coupons')
+        .select('*', { count: 'exact', head: true })
+      if ((count || 0) < 29) applyLaunchCoupon = true
+    } catch (e) {
+      console.error('launch_coupons count error:', e)
+    }
+
+    const sessionParams: Stripe.Checkout.SessionCreateParams = {
       mode: 'subscription',
       line_items: [{ price: priceId, quantity: 1 }],
       customer_email: user.email!,
@@ -68,9 +79,10 @@ export async function POST(req: NextRequest) {
         firm_id: profile.firm_id,
         plan,
         currency,
+        launch_coupon: applyLaunchCoupon ? 'yes' : 'no',
       },
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.firmflow.uk'}/dashboard/subscription?upgraded=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.firmflow.uk'}/dashboard/subscription`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.firmflow.org'}/dashboard/subscription?upgraded=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.firmflow.org'}/dashboard/subscription`,
       subscription_data: {
         trial_period_days: 14,
         metadata: {
@@ -78,11 +90,17 @@ export async function POST(req: NextRequest) {
           plan,
         },
       },
-    })
+    }
+
+    if (applyLaunchCoupon) {
+      sessionParams.discounts = [{ coupon: process.env.STRIPE_LAUNCH_COUPON_ID || 'ajmE61XN' }]
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionParams)
 
     return NextResponse.json({ url: session.url })
   } catch (err: any) {
     console.error('Checkout error:', err)
-    return NextResponse.json({ error: err.message || 'Checkout failed' }, { status: 500 })
+    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 })
   }
 }

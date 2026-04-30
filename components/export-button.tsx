@@ -1,4 +1,5 @@
 'use client'
+import { useI18n } from '@/lib/i18n/context'
 import { useState } from 'react'
 
 interface ExportItem {
@@ -11,6 +12,7 @@ interface ExportItem {
 
 export default function ExportButton({ type, items = [] }: { type: 'invoices' | 'clients', items?: ExportItem[] }) {
   const [open, setOpen] = useState(false)
+  const { t } = useI18n()
   const [loading, setLoading] = useState(false)
   const [format, setFormat] = useState('xlsx')
   const [status, setStatus] = useState('all')
@@ -104,7 +106,7 @@ export default function ExportButton({ type, items = [] }: { type: 'invoices' | 
         onClick={handleOpen}
         style={{padding:'9px 18px',background:'#F1F5F9',color:'#475569',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer',display:'flex',alignItems:'center',gap:'6px'}}
       >
-        📊 Export
+ Export
       </button>
 
       {open && (
@@ -113,10 +115,10 @@ export default function ExportButton({ type, items = [] }: { type: 'invoices' | 
             <div style={{padding:'24px 24px 0',flexShrink:0}}>
               <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'20px'}}>
                 <div>
-                  <h2 style={{fontSize:'18px',fontWeight:'800',color:'#0F172A',margin:'0 0 4px'}}>📊 Export {type}</h2>
+ <h2 style={{fontSize:'18px',fontWeight:'800',color:'#0F172A',margin:'0 0 4px'}}> Export {type}</h2>
                   <p style={{fontSize:'13px',color:'#64748B',margin:'0'}}>Select which {type} to export</p>
                 </div>
-                <button onClick={() => setOpen(false)} style={{background:'none',border:'none',fontSize:'20px',cursor:'pointer',color:'#64748B'}}>✕</button>
+                <button onClick={() => setOpen(false)} style={{background:'none',border:'none',fontSize:'20px',cursor:'pointer',color:'#64748B'}}></button>
               </div>
             </div>
 
@@ -129,7 +131,7 @@ export default function ExportButton({ type, items = [] }: { type: 'invoices' | 
                     onClick={() => setFormat('xlsx')}
                     style={{flex:1,padding:'12px',borderRadius:'10px',border:format === 'xlsx' ? '2px solid #1C64F2' : '1px solid #E2E8F0',background:format === 'xlsx' ? '#EFF6FF' : '#fff',cursor:'pointer',textAlign:'center'}}
                   >
-                    <p style={{fontSize:'20px',margin:'0 0 4px'}}>📗</p>
+                    <p style={{fontSize:'20px',margin:'0 0 4px'}}></p>
                     <p style={{fontSize:'13px',fontWeight:'700',color:format === 'xlsx' ? '#1C64F2' : '#0F172A',margin:'0'}}>Excel (.xlsx)</p>
                     <p style={{fontSize:'11px',color:'#64748B',margin:'2px 0 0'}}>With summary sheet</p>
                   </button>
@@ -137,7 +139,7 @@ export default function ExportButton({ type, items = [] }: { type: 'invoices' | 
                     onClick={() => setFormat('csv')}
                     style={{flex:1,padding:'12px',borderRadius:'10px',border:format === 'csv' ? '2px solid #1C64F2' : '1px solid #E2E8F0',background:format === 'csv' ? '#EFF6FF' : '#fff',cursor:'pointer',textAlign:'center'}}
                   >
-                    <p style={{fontSize:'20px',margin:'0 0 4px'}}>📄</p>
+                    <p style={{fontSize:'20px',margin:'0 0 4px'}}></p>
                     <p style={{fontSize:'13px',fontWeight:'700',color:format === 'csv' ? '#1C64F2' : '#0F172A',margin:'0'}}>CSV (.csv)</p>
                     <p style={{fontSize:'11px',color:'#64748B',margin:'2px 0 0'}}>Simple spreadsheet</p>
                   </button>
@@ -181,7 +183,7 @@ export default function ExportButton({ type, items = [] }: { type: 'invoices' | 
                       onClick={toggleAll}
                       style={{fontSize:'12px',color:'#1C64F2',background:'none',border:'none',cursor:'pointer',fontWeight:'600',padding:'0'}}
                     >
-                      {selectAll ? 'Deselect all' : 'Select all'}
+                      {selectAll ? t('export.deselectAll') : t('export.selectAll')}
                     </button>
                   </div>
 
@@ -190,7 +192,7 @@ export default function ExportButton({ type, items = [] }: { type: 'invoices' | 
                       type="text"
                       value={searchTerm}
                       onChange={e => setSearchTerm(e.target.value)}
-                      placeholder={`🔍 Search ${type}...`}
+                      placeholder={`Search ${type}...`}
                       style={{...inputStyle, marginBottom:'8px'}}
                     />
                   )}
@@ -236,8 +238,8 @@ export default function ExportButton({ type, items = [] }: { type: 'invoices' | 
               <div style={{background:'#F8FAFC',borderRadius:'8px',padding:'14px 16px',marginBottom:'20px',border:'1px solid #E2E8F0'}}>
                 <p style={{fontSize:'12px',color:'#64748B',margin:'0'}}>
                   {format === 'xlsx'
-                    ? `📗 Excel export includes 2 sheets: ${selectedCount} selected ${type} + summary with totals.`
-                    : `📄 CSV export includes ${selectedCount} selected ${type}. Compatible with Google Sheets and Numbers.`
+                    ? `Excel export includes 2 sheets: ${selectedCount} selected ${type} + summary with totals.`
+                    : `CSV export includes ${selectedCount} selected ${type}. Compatible with Google Sheets and Numbers.`
                   }
                 </p>
               </div>
@@ -254,7 +256,7 @@ export default function ExportButton({ type, items = [] }: { type: 'invoices' | 
                   disabled={loading || selectedCount === 0}
                   style={{padding:'10px 20px',background:selectedCount === 0 ? '#94A3B8' : '#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:selectedCount === 0 ? 'not-allowed' : 'pointer'}}
                 >
-                  {loading ? '⏳ Exporting...' : `📥 Export ${selectedCount} ${type}`}
+                  {loading ? 'Exporting...' : `Export ${selectedCount} ${type}`}
                 </button>
               </div>
             </div>

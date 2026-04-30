@@ -1,5 +1,7 @@
+import { isValidUUID, sanitize } from '@/lib/validate'
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
+import { rateLimit, getIP } from '@/lib/rate-limit'
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
@@ -33,7 +35,7 @@ export async function POST(req: NextRequest) {
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+  if (error) return NextResponse.json({ error: 'Something went wrong' }, { status: 400 })
 
   const { data: doc } = await supabaseAdmin
     .from('documents')
@@ -60,7 +62,7 @@ export async function POST(req: NextRequest) {
     const signUrl = process.env.NEXT_PUBLIC_APP_URL + '/sign/' + sigRequest.id
     try {
       await resend.emails.send({
-        from: process.env.RESEND_FROM || 'hello@firmflow.uk',
+        from: process.env.RESEND_FROM || 'hello@firmflow.org',
         to: signerEmail,
         subject: 'Please sign: "' + (doc?.name || 'document') + '" from ' + (firm?.name || 'your firm'),
         html: `
@@ -113,7 +115,7 @@ export async function POST(req: NextRequest) {
 
             <!-- Footer -->
             <p style="text-align:center;color:#94A3B8;font-size:12px;margin-top:20px">
-              Powered by <strong>FirmFlow</strong> · firmflow.uk<br>
+              Powered by <strong>FirmFlow</strong> · firmflow.org<br>
               Secure electronic signatures for professional firms
             </p>
 

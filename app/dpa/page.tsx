@@ -1,3 +1,11 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Data Processing Agreement (DPA)',
+  description: 'FirmFlow\'s Data Processing Agreement. GDPR Article 28 compliant DPA for firms processing client data through FirmFlow.',
+  alternates: { canonical: 'https://www.firmflow.org/dpa' },
+}
+
 export default function DPA() {
   return (
     <main style={{fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',background:'#fff',color:'#0F172A'}}>
@@ -53,7 +61,7 @@ export default function DPA() {
         <p>Upon termination of the subscription, FirmFlow will: (a) Cease processing personal data on behalf of the Controller; (b) At the Controller's choice, delete or return all personal data within 30 days; (c) Delete existing copies unless retention is required by law.</p>
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>12. Contact</h2>
-        <p>FirmFlow Ltd<br/>Email: hello@firmflow.uk<br/>Website: www.firmflow.uk</p>
+        <p>FirmFlow Ltd<br/>Email: hello@firmflow.org<br/>Website: www.firmflow.org</p>
 
         </div>
       </div>

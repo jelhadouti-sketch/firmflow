@@ -91,7 +91,7 @@ export default function ResetPassword() {
   const pwdStrength = strength(password)
 
   return (
-    <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'}}>
+    <div style={{overflowX:'hidden',fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'20px'}}>
       <div style={{width:'100%',maxWidth:'420px'}}>
 
         <div style={{textAlign:'center',marginBottom:'32px'}}>
@@ -226,7 +226,7 @@ export default function ResetPassword() {
         </div>
 
         <p style={{textAlign:'center',color:'#94A3B8',fontSize:'12px',marginTop:'24px'}}>
-          Powered by <strong>FirmFlow</strong> · firmflow.uk
+          Powered by <strong>FirmFlow</strong> · firmflow.org
         </p>
       </div>
     </div>

@@ -1,26 +1,59 @@
 'use client'
 import { useState } from 'react'
+import {
+  Home, Bell, Briefcase, FileText, PenTool, CheckSquare, Clock,
+  CreditCard, Users, MessageSquare, Calendar, BarChart3, Sparkles,
+  UserCog, Repeat, Wallet, LifeBuoy, Settings, MoreHorizontal,
+} from 'lucide-react'
+
+const ICONS: Record<string, any> = {
+  Home, Bell, Briefcase, FileText, PenTool, CheckSquare, Clock,
+  CreditCard, Users, MessageSquare, Calendar, BarChart3, Sparkles,
+  UserCog, Repeat, Wallet, LifeBuoy, Settings,
+}
 
 export default function MobileNav({ items }: { items: any[] }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const mainItems = items.slice(0, 4)
   const moreItems = items.slice(4)
-  const s = (active: boolean) => ({display:'flex' as const,flexDirection:'column' as const,alignItems:'center' as const,gap:'2px',textDecoration:'none',color:active?'#1C64F2':'#64748B',fontSize:'10px',fontWeight:'500' as const,padding:'4px 8px',minWidth:'48px'})
+  const s = (active: boolean) => ({display:'flex' as const,flexDirection:'column' as const,alignItems:'center' as const,gap:'3px',textDecoration:'none',color:active?'#1C64F2':'#64748B',fontSize:'10px',fontWeight:600 as const,padding:'4px 8px',minWidth:'48px'})
+
   return (
     <div>
       <nav className="mobile-nav" style={{display:'none'}}>
-        {mainItems.map((item: any, i: number) => <a key={i} href={item.href} style={s(!!item.active)}><span style={{fontSize:'20px'}}>{item.icon}</span><span>{item.label}</span></a>)}
-        {moreItems.length > 0 && <button onClick={() => setMenuOpen(true)} style={{...s(false),background:'none',border:'none',cursor:'pointer'}}><span style={{fontSize:'20px'}}>⋯</span><span>More</span></button>}
+        {mainItems.map((item: any, i: number) => {
+          const Icon = ICONS[item.icon] || Home
+          return (
+            <a key={i} href={item.href} style={s(!!item.active)}>
+              <Icon size={20} strokeWidth={item.active ? 2.4 : 2} />
+              <span>{item.label}</span>
+            </a>
+          )
+        })}
+        {moreItems.length > 0 && (
+          <button onClick={() => setMenuOpen(true)} style={{...s(false),background:'none',border:'none',cursor:'pointer'}}>
+            <MoreHorizontal size={20} />
+            <span>More</span>
+          </button>
+        )}
       </nav>
       {menuOpen && (
         <div onClick={() => setMenuOpen(false)} style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.5)',zIndex:300,display:'flex',alignItems:'flex-end'}}>
           <div onClick={e => e.stopPropagation()} style={{background:'#fff',width:'100%',borderRadius:'20px 20px 0 0',padding:'20px',maxHeight:'70vh',overflowY:'auto'}}>
             <div style={{width:'40px',height:'4px',background:'#E2E8F0',borderRadius:'2px',margin:'0 auto 20px'}}></div>
-            <p style={{fontSize:'13px',fontWeight:'700',color:'#64748B',marginBottom:'12px'}}>More pages</p>
+            <p style={{fontSize:'13px',fontWeight:700,color:'#64748B',marginBottom:'12px'}}>More pages</p>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px'}}>
-              {moreItems.map((item: any, i: number) => <a key={i} href={item.href} onClick={() => setMenuOpen(false)} style={{display:'flex',alignItems:'center',gap:'10px',padding:'12px',borderRadius:'10px',textDecoration:'none',background:item.active?'#EFF6FF':'#F8FAFC',color:item.active?'#1D4ED8':'#374151',border:'1px solid',borderColor:item.active?'#BFDBFE':'#E2E8F0'}}><span style={{fontSize:'20px'}}>{item.icon}</span><span style={{fontSize:'13px',fontWeight:'600'}}>{item.label}</span></a>)}
+              {moreItems.map((item: any, i: number) => {
+                const Icon = ICONS[item.icon] || Home
+                return (
+                  <a key={i} href={item.href} onClick={() => setMenuOpen(false)} style={{display:'flex',alignItems:'center',gap:'10px',padding:'12px',borderRadius:'10px',textDecoration:'none',background:item.active?'#EFF6FF':'#F8FAFC',color:item.active?'#1D4ED8':'#374151',border:'1px solid',borderColor:item.active?'#BFDBFE':'#E2E8F0'}}>
+                    <Icon size={18} strokeWidth={item.active ? 2.4 : 2} />
+                    <span style={{fontSize:'13px',fontWeight:600}}>{item.label}</span>
+                  </a>
+                )
+              })}
             </div>
-            <button onClick={() => setMenuOpen(false)} style={{width:'100%',marginTop:'16px',padding:'12px',background:'#F1F5F9',borderRadius:'10px',border:'none',fontSize:'14px',fontWeight:'600',color:'#64748B',cursor:'pointer'}}>Close</button>
+            <button onClick={() => setMenuOpen(false)} style={{width:'100%',marginTop:'16px',padding:'12px',background:'#F1F5F9',borderRadius:'10px',border:'none',fontSize:'14px',fontWeight:600,color:'#64748B',cursor:'pointer'}}>Close</button>
           </div>
         </div>
       )}

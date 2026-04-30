@@ -1,4 +1,6 @@
 'use client'
+import Link from 'next/link'
+import { useI18n } from '@/lib/i18n/context'
 import { useState, useRef, useEffect } from 'react'
 
 interface Client {
@@ -9,6 +11,7 @@ interface Client {
 
 export default function NewRecurring({ clients, currencySymbol = '£' }: { clients: Client[], currencySymbol?: string }) {
   const [open, setOpen] = useState(false)
+  const { t } = useI18n()
   const [loading, setLoading] = useState(false)
   const [clientId, setClientId] = useState('')
   const [clientSearch, setClientSearch] = useState('')
@@ -46,7 +49,7 @@ export default function NewRecurring({ clients, currencySymbol = '£' }: { clien
     if (res.ok) {
       window.location.reload()
     } else {
-      alert(data.error || 'Something went wrong')
+      alert(data.error || t('error.somethingWrong'))
       setLoading(false)
     }
   }
@@ -72,15 +75,15 @@ export default function NewRecurring({ clients, currencySymbol = '£' }: { clien
   }
 
   const frequencyOptions = [
-    { value: 'weekly', label: 'Weekly', desc: 'Every 7 days' },
-    { value: 'monthly', label: 'Monthly', desc: 'Every month' },
-    { value: 'quarterly', label: 'Quarterly', desc: 'Every 3 months' },
-    { value: 'yearly', label: 'Yearly', desc: 'Every year' },
+    { value: 'weekly', label: t('recur.weekly'), desc: t('recur.every7days') },
+    { value: 'monthly', label: t('recur.monthly'), desc: t('recur.everyMonth') },
+    { value: 'quarterly', label: t('recur.quarterly'), desc: t('recur.every3months') },
+    { value: 'yearly', label: t('recur.yearly'), desc: t('recur.everyYear') },
   ]
 
   if (!open) return (
     <button onClick={() => setOpen(true)} style={{padding:'9px 18px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>
-      + New recurring invoice
+      {t('recur.newTitle')}
     </button>
   )
 
@@ -89,23 +92,23 @@ export default function NewRecurring({ clients, currencySymbol = '£' }: { clien
       <div onClick={e => e.stopPropagation()} style={{background:'#fff',borderRadius:'16px',padding:'32px',width:'540px',maxWidth:'100%',boxShadow:'0 20px 60px rgba(0,0,0,0.2)',maxHeight:'90vh',overflowY:'auto'}}>
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}}>
           <div>
-            <h2 style={{fontSize:'18px',fontWeight:'800',color:'#0F172A',margin:'0 0 4px'}}>New recurring invoice</h2>
-            <p style={{fontSize:'13px',color:'#64748B',margin:'0'}}>Auto-generate and send invoices on a schedule</p>
+            <h2 style={{fontSize:'18px',fontWeight:'800',color:'#0F172A',margin:'0 0 4px'}}>{t('recur.newTitle') || 'New recurring invoice'}</h2>
+            <p style={{fontSize:'13px',color:'#64748B',margin:'0'}}>{t('recur.subtitle') || 'Auto-generate and send invoices on a schedule'}</p>
           </div>
           <button onClick={() => setOpen(false)} style={{background:'none',border:'none',fontSize:'20px',cursor:'pointer',color:'#64748B'}}>×</button>
         </div>
 
         {!clients.length ? (
           <div style={{background:'#FEF3C7',borderRadius:'10px',padding:'16px',marginBottom:'20px'}}>
-            <p style={{fontSize:'13px',color:'#92400E',margin:'0 0 8px',fontWeight:'600'}}>⚠️ No clients available</p>
-            <p style={{fontSize:'12px',color:'#92400E',margin:'0'}}>Invite a client first before creating a recurring invoice.</p>
-            <a href="/dashboard/clients" style={{display:'inline-block',marginTop:'8px',fontSize:'12px',color:'#1C64F2',fontWeight:'600',textDecoration:'none'}}>Go to Clients →</a>
+            <p style={{fontSize:'13px',color:'#92400E',margin:'0 0 8px',fontWeight:'600'}}>No clients available</p>
+            <p style={{fontSize:'12px',color:'#92400E',margin:'0'}}>{t('recur.inviteFirst') || 'Invite a client first.'}</p>
+            <Link href="/dashboard/clients" style={{display:'inline-block',marginTop:'8px',fontSize:'12px',color:'#1C64F2',fontWeight:'600',textDecoration:'none'}}>{t('recur.goToClients') || 'Go to Clients →'}</Link>
           </div>
         ) : (
           <>
             {/* Client picker */}
             <div style={{marginBottom:'16px',position:'relative'}} ref={clientRef}>
-              <label style={labelStyle}>Client *</label>
+              <label style={labelStyle}>{t('inv.clientLabel')} *</label>
               {selectedClient ? (
                 <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 12px',border:'1px solid #1C64F2',borderRadius:'8px',background:'#EFF6FF'}}>
                   <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
@@ -121,13 +124,13 @@ export default function NewRecurring({ clients, currencySymbol = '£' }: { clien
                     value={clientSearch}
                     onChange={e => { setClientSearch(e.target.value); setShowClientDropdown(true) }}
                     onFocus={() => setShowClientDropdown(true)}
-                    placeholder="🔍 Search client by name or email..."
+                    placeholder="Search client by name or email..."
                     style={inputStyle}
                   />
                   {showClientDropdown && (
                     <div style={{position:'absolute',left:0,right:0,top:'100%',marginTop:'4px',background:'#fff',border:'1px solid #E2E8F0',borderRadius:'8px',boxShadow:'0 8px 24px rgba(0,0,0,0.12)',maxHeight:'180px',overflowY:'auto',zIndex:10}}>
                       {filteredClients.length === 0 ? (
-                        <div style={{padding:'12px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>No clients found</div>
+                        <div style={{padding:'12px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>{t('common.noClientsFound') || 'No clients found'}</div>
                       ) : filteredClients.map(c => (
                         <div key={c.id} onClick={() => { setClientId(c.id); setClientSearch(''); setShowClientDropdown(false) }} style={{padding:'10px 14px',cursor:'pointer',borderBottom:'1px solid #F1F5F9',display:'flex',alignItems:'center',gap:'10px'}} onMouseEnter={e => (e.currentTarget.style.background = '#F8FAFC')} onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
                           <div style={{width:'28px',height:'28px',borderRadius:'50%',background:'linear-gradient(135deg,#1C64F2,#7C3AED)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'11px',fontWeight:'700',color:'#fff'}}>{c.full_name?.[0]?.toUpperCase() || '?'}</div>
@@ -144,12 +147,12 @@ export default function NewRecurring({ clients, currencySymbol = '£' }: { clien
             </div>
 
             <div style={{marginBottom:'16px'}}>
-              <label style={labelStyle}>Description <span style={{color:'#94A3B8',fontWeight:'400'}}>(optional)</span></label>
+              <label style={labelStyle}>{t('time.descLabel').replace('*','')} <span style={{color:'#94A3B8',fontWeight:'400'}}>(optional)</span></label>
               <input value={description} onChange={e => setDescription(e.target.value)} placeholder="e.g. Monthly bookkeeping services" style={inputStyle} />
             </div>
 
             <div style={{marginBottom:'16px'}}>
-              <label style={labelStyle}>Amount ({currencySymbol}) *</label>
+              <label style={labelStyle}>{t('inv.amountLabel')} ({currencySymbol})</label>
               <div style={{position:'relative'}}>
                 <span style={{position:'absolute',left:'12px',top:'50%',transform:'translateY(-50%)',fontSize:'13px',color:'#64748B',fontWeight:'600'}}>{currencySymbol}</span>
                 <input value={amount} onChange={e => setAmount(e.target.value)} type="number" placeholder="500" style={{...inputStyle, paddingLeft:'28px'}} />
@@ -157,7 +160,7 @@ export default function NewRecurring({ clients, currencySymbol = '£' }: { clien
             </div>
 
             <div style={{marginBottom:'16px'}}>
-              <label style={labelStyle}>Frequency *</label>
+              <label style={labelStyle}>{t('recur.frequency') || 'Frequency *'}</label>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px'}}>
                 {frequencyOptions.map(opt => (
                   <button key={opt.value} onClick={() => setFrequency(opt.value)} style={{padding:'12px',borderRadius:'8px',border:'2px solid',borderColor:frequency===opt.value?'#1C64F2':'#E2E8F0',background:frequency===opt.value?'#EFF6FF':'#fff',cursor:'pointer',textAlign:'left' as const}}>
@@ -170,28 +173,28 @@ export default function NewRecurring({ clients, currencySymbol = '£' }: { clien
 
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',marginBottom:'16px'}}>
               <div>
-                <label style={labelStyle}>Start date *</label>
+                <label style={labelStyle}>{t('recur.startDate') || 'Start date *'}</label>
                 <input value={startDate} onChange={e => setStartDate(e.target.value)} type="date" style={inputStyle} />
               </div>
               <div>
-                <label style={labelStyle}>End date <span style={{color:'#94A3B8',fontWeight:'400'}}>(optional)</span></label>
+                <label style={labelStyle}>{t('recur.endDate')} <span style={{color:'#94A3B8',fontWeight:'400'}}>({t('eng.optional')})</span></label>
                 <input value={endDate} onChange={e => setEndDate(e.target.value)} type="date" style={inputStyle} />
               </div>
             </div>
 
             <div style={{background:'#EFF6FF',borderRadius:'8px',padding:'12px',marginBottom:'20px',border:'1px solid #BFDBFE'}}>
               <p style={{fontSize:'12px',color:'#1D4ED8',margin:'0'}}>
-                💡 First invoice will be generated on <strong>{startDate}</strong> and sent to the client automatically by email.
+                {t('recur.firstInvoiceNote', { date: startDate })}
               </p>
             </div>
           </>
         )}
 
         <div style={{display:'flex',gap:'10px',justifyContent:'flex-end'}}>
-          <button onClick={() => setOpen(false)} style={{padding:'10px 20px',background:'#F1F5F9',color:'#475569',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>Cancel</button>
+          <button onClick={() => setOpen(false)} style={{padding:'10px 20px',background:'#F1F5F9',color:'#475569',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>{t('invite.cancel')}</button>
           {clients.length > 0 && (
             <button onClick={handleSubmit} disabled={loading || !clientId || !amount} style={{padding:'10px 20px',background:!clientId||!amount?'#94A3B8':'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:!clientId||!amount?'not-allowed':'pointer'}}>
-              {loading ? '⏳ Creating...' : 'Create recurring invoice →'}
+              {loading ? t('btn.creating') : t('recur.createBtn')}
             </button>
           )}
         </div>

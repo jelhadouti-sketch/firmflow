@@ -1,3 +1,11 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Acceptable Use Policy',
+  description: 'FirmFlow Acceptable Use Policy. Rules and responsibilities when using our practice management platform.',
+  alternates: { canonical: 'https://www.firmflow.org/acceptable-use' },
+}
+
 export default function AcceptableUse() {
   return (
     <main style={{fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',background:'#fff',color:'#0F172A'}}>
@@ -26,13 +34,13 @@ export default function AcceptableUse() {
         <p>Users must not exceed reasonable usage limits. Excessive use that degrades the Platform for other users may result in throttling or account restrictions. Specific limits apply based on your subscription plan (e.g., number of documents, team members, and clients).</p>
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>6. Reporting Violations</h2>
-        <p>If you become aware of any violation of this AUP, please report it to hello@firmflow.uk. We will investigate all reports and take appropriate action.</p>
+        <p>If you become aware of any violation of this AUP, please report it to hello@firmflow.org. We will investigate all reports and take appropriate action.</p>
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>7. Enforcement</h2>
         <p>FirmFlow reserves the right to: (a) Remove any content that violates this AUP; (b) Suspend or terminate accounts that violate this AUP; (c) Report illegal activity to law enforcement; (d) Cooperate with law enforcement investigations. Violations may result in immediate account termination without refund.</p>
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>8. Contact</h2>
-        <p>FirmFlow Ltd<br/>Email: hello@firmflow.uk<br/>Website: www.firmflow.uk</p>
+        <p>FirmFlow Ltd<br/>Email: hello@firmflow.org<br/>Website: www.firmflow.org</p>
 
         </div>
       </div>

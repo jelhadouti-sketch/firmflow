@@ -18,6 +18,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Signature request not found' }, { status: 404 })
   }
 
+  // Prevent re-signing already signed documents
+  if (sigRequest.status === 'signed') {
+    return NextResponse.json({ error: 'Already signed' }, { status: 400 })
+  }
+
   if (sigRequest.status === 'signed') {
     return NextResponse.json({ error: 'Already signed' }, { status: 400 })
   }
@@ -32,7 +37,7 @@ export async function POST(req: NextRequest) {
     .eq('id', signature_id)
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 })
+    return NextResponse.json({ error: 'Something went wrong' }, { status: 400 })
   }
 
   // Log to audit trail

@@ -28,11 +28,11 @@ export default function PortalLogin() {
   }
 
   return (
-    <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh',display:'flex',flexDirection:'column'}}>
+    <div style={{overflowX:'hidden',fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh',display:'flex',flexDirection:'column'}}>
 
       {/* Header */}
       <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-        <span style={{fontSize:'18px',fontWeight:'800',color:'#1C64F2',letterSpacing:'-0.04em'}}>⬡ FirmFlow</span>
+        <img src="/logo/firmflow-logo.svg" alt="FirmFlow" style={{height:'28px',width:'auto'}} />
         <span style={{fontSize:'13px',color:'#64748B'}}>Client portal</span>
       </header>
 
@@ -94,7 +94,7 @@ export default function PortalLogin() {
       </div>
 
       <p style={{textAlign:'center',color:'#94A3B8',fontSize:'12px',padding:'20px'}}>
-        Powered by <strong>FirmFlow</strong> · firmflow.uk
+        Powered by <strong>FirmFlow</strong> · firmflow.org
       </p>
     </div>
   )

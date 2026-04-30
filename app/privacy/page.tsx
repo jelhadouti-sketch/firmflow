@@ -1,3 +1,11 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description: 'FirmFlow\'s privacy policy. How we collect, use, and protect your data. GDPR-compliant, EU-hosted, AES-256 encrypted.',
+  alternates: { canonical: 'https://www.firmflow.org/privacy' },
+}
+
 export default function Privacy() {
   return (
     <main style={{fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',background:'#fff',color:'#0F172A'}}>
@@ -11,12 +19,12 @@ export default function Privacy() {
         <div style={{fontSize:'14px',color:'#374151',lineHeight:'1.8'}}>
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>1. Introduction</h2>
-        <p>FirmFlow Ltd ("FirmFlow", "we", "us", "our") is committed to protecting the privacy of our users. This Privacy Policy explains how we collect, use, store, and protect your personal data when you use our platform at www.firmflow.uk ("Platform").</p>
+        <p>FirmFlow Ltd ("FirmFlow", "we", "us", "our") is committed to protecting the privacy of our users. This Privacy Policy explains how we collect, use, store, and protect your personal data when you use our platform at www.firmflow.org ("Platform").</p>
         <p>We comply with the UK General Data Protection Regulation (UK GDPR), the EU General Data Protection Regulation (EU GDPR), the Data Protection Act 2018, and other applicable data protection laws.</p>
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>2. Data Controller</h2>
         <p>FirmFlow Ltd is the data controller for personal data collected directly through our Platform. For data uploaded by Firm Owners about their Clients, the Firm Owner is the data controller and FirmFlow acts as a data processor on their behalf.</p>
-        <p>Contact: hello@firmflow.uk</p>
+        <p>Contact: hello@firmflow.org</p>
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>3. Data We Collect</h2>
         <p><strong>3.1 Account Data:</strong> Name, email address, password (encrypted), phone number (optional), firm name, role, and billing information.</p>
@@ -67,7 +75,7 @@ export default function Privacy() {
         <p><strong>Right to Data Portability:</strong> Receive your data in a structured, machine-readable format.</p>
         <p><strong>Right to Object:</strong> Object to processing based on legitimate interests.</p>
         <p><strong>Right to Withdraw Consent:</strong> Where processing is based on consent, withdraw at any time.</p>
-        <p>To exercise any of these rights, email us at hello@firmflow.uk. We will respond within 30 days.</p>
+        <p>To exercise any of these rights, email us at hello@firmflow.org. We will respond within 30 days.</p>
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>10. International Data Transfers</h2>
         <p>Some of our service providers may be located outside the UK/EEA. Where this occurs, we ensure appropriate safeguards are in place, including Standard Contractual Clauses (SCCs) approved by the European Commission, or reliance on adequacy decisions.</p>
@@ -82,7 +90,7 @@ export default function Privacy() {
         <p>If you are unhappy with how we handle your data, you have the right to lodge a complaint with the Information Commissioner's Office (ICO) in the UK at ico.org.uk, or your local data protection authority.</p>
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>14. Contact</h2>
-        <p>FirmFlow Ltd<br/>Email: hello@firmflow.uk<br/>Website: www.firmflow.uk</p>
+        <p>FirmFlow Ltd<br/>Email: hello@firmflow.org<br/>Website: www.firmflow.org</p>
 
         </div>
       </div>

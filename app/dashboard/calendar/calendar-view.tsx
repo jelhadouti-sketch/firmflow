@@ -1,4 +1,5 @@
 'use client'
+import { useI18n } from '@/lib/i18n/context'
 import { useState } from 'react'
 
 interface CalendarEvent {
@@ -12,13 +13,14 @@ interface CalendarEvent {
 
 export default function CalendarView({ events }: { events: CalendarEvent[] }) {
   const [currentDate, setCurrentDate] = useState(new Date())
+  const { t, dateLocale } = useI18n()
   const [view, setView] = useState<'month' | 'list'>('month')
 
   const year = currentDate.getFullYear()
   const month = currentDate.getMonth()
 
-  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December']
-  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+  const monthNames = Array.from({length:12}, (_, i) => new Date(2026, i, 1).toLocaleDateString(dateLocale, {month:'long'}))
+  const dayNames = [t('cal.sun'),t('cal.mon'),t('cal.tue'),t('cal.wed'),t('cal.thu'),t('cal.fri'),t('cal.sat')]
 
   const firstDay = new Date(year, month, 1).getDay()
   const daysInMonth = new Date(year, month + 1, 0).getDate()
@@ -46,11 +48,18 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
     signature: '#92400E',
   }
 
+  const typeLabels: Record<string, string> = {
+    engagement: t('cal.engagement'),
+    task: t('cal.task'),
+    invoice: t('cal.invoice'),
+    signature: t('cal.signature'),
+  }
+
   const typeIcons: Record<string, string> = {
-    engagement: '📋',
-    task: '✅',
-    invoice: '💳',
-    signature: '✍',
+    engagement: '',
+    task: '',
+    invoice: '',
+    signature: '',
   }
 
   return (
@@ -61,11 +70,11 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
           <button onClick={prevMonth} style={{padding:'6px 12px',background:'#F1F5F9',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'14px'}}>←</button>
           <h2 style={{fontSize:'16px',fontWeight:'700',color:'#0F172A',margin:'0',minWidth:'160px',textAlign:'center'}}>{monthNames[month]} {year}</h2>
           <button onClick={nextMonth} style={{padding:'6px 12px',background:'#F1F5F9',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'14px'}}>→</button>
-          <button onClick={() => setCurrentDate(new Date())} style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'12px',fontWeight:'600'}}>Today</button>
+          <button onClick={() => setCurrentDate(new Date())} style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',border:'none',borderRadius:'6px',cursor:'pointer',fontSize:'12px',fontWeight:'600'}}>{t('cal.today')}</button>
         </div>
         <div style={{display:'flex',gap:'6px'}}>
-          <button onClick={() => setView('month')} style={{padding:'6px 14px',borderRadius:'6px',border:'none',background:view==='month'?'#1C64F2':'#F1F5F9',color:view==='month'?'#fff':'#64748B',fontSize:'12px',fontWeight:'600',cursor:'pointer'}}>Month</button>
-          <button onClick={() => setView('list')} style={{padding:'6px 14px',borderRadius:'6px',border:'none',background:view==='list'?'#1C64F2':'#F1F5F9',color:view==='list'?'#fff':'#64748B',fontSize:'12px',fontWeight:'600',cursor:'pointer'}}>List</button>
+          <button onClick={() => setView('month')} style={{padding:'6px 14px',borderRadius:'6px',border:'none',background:view==='month'?'#1C64F2':'#F1F5F9',color:view==='month'?'#fff':'#64748B',fontSize:'12px',fontWeight:'600',cursor:'pointer'}}>{t('cal.month')}</button>
+          <button onClick={() => setView('list')} style={{padding:'6px 14px',borderRadius:'6px',border:'none',background:view==='list'?'#1C64F2':'#F1F5F9',color:view==='list'?'#fff':'#64748B',fontSize:'12px',fontWeight:'600',cursor:'pointer'}}>{t('cal.list')}</button>
         </div>
       </div>
 
@@ -113,9 +122,9 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
         <div style={{padding:'20px'}}>
           {!allEvents.length ? (
             <div style={{textAlign:'center',padding:'40px',color:'#94A3B8'}}>
-              <p style={{fontSize:'32px',marginBottom:'8px'}}>📅</p>
-              <p style={{fontSize:'14px',fontWeight:'600',color:'#0F172A',marginBottom:'4px'}}>No deadlines found</p>
-              <p style={{fontSize:'13px'}}>Add due dates to your engagements, tasks and invoices</p>
+              <p style={{fontSize:'32px',marginBottom:'8px'}}></p>
+              <p style={{fontSize:'14px',fontWeight:'600',color:'#0F172A',marginBottom:'4px'}}>{t('cal.noDeadlines')}</p>
+              <p style={{fontSize:'13px'}}>{t('cal.addDueDates')}</p>
             </div>
           ) : (
             <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
@@ -131,14 +140,14 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
                     <div style={{flex:1}}>
                       <p style={{fontSize:'13px',fontWeight:'700',color:'#0F172A',margin:'0 0 2px'}}>{event.title}</p>
                       <p style={{fontSize:'12px',color:'#64748B',margin:'0'}}>
-                        {eventDate.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}
+                        {eventDate.toLocaleDateString(dateLocale,{day:'numeric',month:'long',year:'numeric'})}
                       </p>
                     </div>
                     <div style={{textAlign:'right',flexShrink:0}}>
                       <span style={{padding:'4px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:'700',background:isOverdue?'#FEF2F2':daysUntil===0?'#EFF6FF':daysUntil<=3?'#FEF2F2':daysUntil<=7?'#FEF3C7':'#F0FDF4',color:isOverdue?'#DC2626':daysUntil===0?'#1D4ED8':daysUntil<=3?'#DC2626':daysUntil<=7?'#92400E':'#15803D'}}>
-                        {isOverdue ? Math.abs(daysUntil) + ' days overdue' : daysUntil === 0 ? 'Today!' : daysUntil === 1 ? 'Tomorrow' : daysUntil + ' days left'}
+                        {isOverdue ? Math.abs(daysUntil) + 'days overdue' : daysUntil === 0 ? 'Today!' : daysUntil === 1 ? 'Tomorrow' : daysUntil + 'days left'}
                       </span>
-                      <p style={{fontSize:'11px',color:'#94A3B8',margin:'4px 0 0',textTransform:'capitalize'}}>{event.type}</p>
+                      <p style={{fontSize:'11px',color:'#94A3B8',margin:'4px 0 0',textTransform:'capitalize'}}>{typeLabels[event.type] || event.type}</p>
                     </div>
                   </div>
                 )
@@ -153,7 +162,7 @@ export default function CalendarView({ events }: { events: CalendarEvent[] }) {
         {Object.entries(typeColors).map(([type, color]) => (
           <div key={type} style={{display:'flex',alignItems:'center',gap:'6px'}}>
             <div style={{width:'10px',height:'10px',borderRadius:'2px',background:color}}></div>
-            <span style={{fontSize:'12px',color:'#64748B',textTransform:'capitalize'}}>{type}</span>
+            <span style={{fontSize:'12px',color:'#64748B',textTransform:'capitalize'}}>{typeLabels[type] || type}</span>
           </div>
         ))}
       </div>

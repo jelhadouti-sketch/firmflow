@@ -1,0 +1,63 @@
+# robots.txt for firmflow.org
+# Last updated: April 2026
+
+# ============================================================
+# Default rules — all standard search engines
+# ============================================================
+User-agent: *
+Allow: /
+
+# Block admin / private / functional pages (no SEO value)
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /dashboard/
+Disallow: /portal
+Disallow: /portal/
+Disallow: /login
+Disallow: /verify-email
+Disallow: /verify-2fa
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /feedback
+
+# Block draft / preview pages
+Disallow: /new
+Disallow: /firmflow
+
+# ============================================================
+# AI crawlers — explicitly welcome
+# Helps your content show up in ChatGPT, Claude, Perplexity etc.
+# ============================================================
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# ============================================================
+# Sitemap
+# ============================================================
+Sitemap: https://www.firmflow.org/sitemap.xml

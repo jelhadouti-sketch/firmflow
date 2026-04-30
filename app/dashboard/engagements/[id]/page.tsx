@@ -1,10 +1,11 @@
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
-import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
-import MobileNav from '@/components/mobile-nav'
+import { getProfileWithPermissions } from '@/lib/permissions'
 import { getCurrency } from '@/lib/currencies'
 import EngagementActions from './engagement-actions'
+import { getServerT, getServerDateLocale } from '@/lib/i18n/server'
 
 export default async function EngagementDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -15,8 +16,9 @@ export default async function EngagementDetail({ params }: { params: Promise<{ i
   const profile = await getProfileWithPermissions(user.id)
   if (!profile) redirect('/login')
 
+  const t = await getServerT()
+  const dateLocale = await getServerDateLocale()
   const firm = profile.firms as any
-  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'engagements')
   const cur = getCurrency(firm?.currency || 'GBP')
 
   const { data: engagement } = await supabaseAdmin
@@ -50,32 +52,8 @@ export default async function EngagementDetail({ params }: { params: Promise<{ i
   const clientName = (engagement.profiles as any)?.full_name || null
 
   return (
-    <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
-      <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
-        <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
-          <span style={{fontSize:'18px',fontWeight:'800',color:'#1C64F2'}}>⬡ FirmFlow</span>
-          <span style={{color:'#E2E8F0'}}>|</span>
-          <span style={{fontSize:'14px',fontWeight:'600',color:'#0F172A'}}>{firm?.name}</span>
-        </div>
-        <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
-          <a href="/dashboard/engagements" style={{fontSize:'13px',color:'#64748B',textDecoration:'none'}}>← Back to engagements</a>
-          <a href="/api/auth/logout" style={{padding:'6px 14px',background:'#F1F5F9',color:'#475569',borderRadius:'6px',textDecoration:'none',fontSize:'13px'}}>Sign out</a>
-        </div>
-      </header>
-
-      <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
-        <aside className="hide-mobile" style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
-          {sidebarItems.map((item, i) => (
-            <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
-              <span>{item.icon}</span>
-              <span>{item.label}</span>
-            </a>
-          ))}
-        </aside>
-
-        <main style={{flex:1,padding:'32px',overflow:'auto'}}>
-
-          {/* Header */}
+    <>
+      {/* Header */}
           <div style={{background:'#fff',borderRadius:'16px',padding:'28px',border:'1px solid #E2E8F0',marginBottom:'24px',boxShadow:'0 1px 4px rgba(0,0,0,0.04)'}}>
             <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'16px',flexWrap:'wrap'}}>
               <div style={{flex:1}}>
@@ -85,7 +63,7 @@ export default async function EngagementDetail({ params }: { params: Promise<{ i
                     {engagement.status}
                   </span>
                   {clientName && (
-                    <span style={{padding:'4px 10px',background:'#F5F3FF',color:'#7C3AED',borderRadius:'6px',fontSize:'12px',fontWeight:'700'}}>👤 {clientName}</span>
+ <span style={{padding:'4px 10px',background:'#F5F3FF',color:'#7C3AED',borderRadius:'6px',fontSize:'12px',fontWeight:'700'}}> {clientName}</span>
                   )}
                 </div>
                 <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'8px',letterSpacing:'-0.03em'}}>{engagement.title}</h1>
@@ -93,14 +71,14 @@ export default async function EngagementDetail({ params }: { params: Promise<{ i
                   <p style={{fontSize:'13px',color:'#475569',margin:'0 0 8px'}}>{engagement.description}</p>
                 )}
                 <p style={{fontSize:'13px',color:'#64748B',margin:'0'}}>
-                  Created {engagement.created_at ? new Date(engagement.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : '—'}
-                  {engagement.due_date && ` · Due ${new Date(engagement.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}`}
+                  Created {engagement.created_at ? new Date(engagement.created_at).toLocaleDateString(dateLocale,{day:'numeric',month:'long',year:'numeric'}) : '—'}
+                  {engagement.due_date && ` · Due ${new Date(engagement.due_date).toLocaleDateString(dateLocale,{day:'numeric',month:'long',year:'numeric'})}`}
                 </p>
               </div>
               <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:'8px',flexShrink:0}}>
                 {engagement.budget && (
                   <div style={{textAlign:'right'}}>
-                    <p style={{fontSize:'12px',color:'#64748B',margin:'0 0 4px'}}>Budget</p>
+                    <p style={{fontSize:'12px',color:'#64748B',margin:'0 0 4px'}}>{t('eng.budgetLabel')}</p>
                     <p style={{fontSize:'28px',fontWeight:'900',color:'#1C64F2',margin:'0',letterSpacing:'-0.04em'}}>{cur.symbol}{engagement.budget.toLocaleString()}</p>
                   </div>
                 )}
@@ -112,9 +90,9 @@ export default async function EngagementDetail({ params }: { params: Promise<{ i
           {/* Stats */}
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(150px,1fr))',gap:'16px',marginBottom:'24px'}}>
             {[
-              { label:'Tasks', value: tasks?.length || 0, sub: (tasks?.filter(t=>!t.done).length||0) + ' open', color:'#1D4ED8' },
+              { label:'Tasks', value: tasks?.length || 0, sub: (tasks?.filter(t=>!t.done).length||0) + 'open', color:'#1D4ED8' },
               { label:'Documents', value: documents?.length || 0, sub: 'uploaded', color:'#7C3AED' },
-              { label:'Hours logged', value: totalHours.toFixed(1) + 'h', sub: (timeEntries?.length||0) + ' entries', color:'#92400E' },
+              { label:'Hours logged', value: totalHours.toFixed(1) + 'h', sub: (timeEntries?.length||0) + 'entries', color:'#92400E' },
             ].map((stat, i) => (
               <div key={i} style={{background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0'}}>
                 <p style={{fontSize:'13px',color:'#64748B',marginBottom:'6px'}}>{stat.label}</p>
@@ -124,21 +102,21 @@ export default async function EngagementDetail({ params }: { params: Promise<{ i
             ))}
           </div>
 
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'20px'}}>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:'20px'}}>
 
             {/* Tasks */}
             <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>
               <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                <h2 style={{fontSize:'14px',fontWeight:'700',color:'#0F172A',margin:'0'}}>✅ Tasks</h2>
-                <a href="/dashboard/tasks" style={{fontSize:'12px',color:'#1C64F2',textDecoration:'none',fontWeight:'600'}}>Add task →</a>
+                <h2 style={{fontSize:'14px',fontWeight:'700',color:'#0F172A',margin:'0'}}>Tasks</h2>
+                <Link href="/dashboard/tasks" style={{fontSize:'12px',color:'#1C64F2',textDecoration:'none',fontWeight:'600'}}>{t('eng.addTask') || 'Add task →'}</Link>
               </div>
               {!tasks?.length ? (
-                <div style={{padding:'24px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>No tasks yet</div>
+                <div style={{padding:'24px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>{t('tasks.noTasksTitle')}</div>
               ) : (
                 tasks.map((task, i) => (
                   <div key={i} style={{padding:'12px 20px',borderBottom:'1px solid #F1F5F9',display:'flex',alignItems:'center',gap:'10px'}}>
                     <div style={{width:'18px',height:'18px',borderRadius:'50%',background:task.done?'#16A34A':'#E2E8F0',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                      {task.done && <span style={{color:'#fff',fontSize:'10px'}}>✓</span>}
+                      {task.done && <span style={{color:'#fff',fontSize:'10px'}}></span>}
                     </div>
                     <div style={{flex:1}}>
                       <p style={{fontSize:'13px',fontWeight:'600',color:task.done?'#94A3B8':'#0F172A',margin:'0',textDecoration:task.done?'line-through':'none'}}>{task.title}</p>
@@ -154,18 +132,18 @@ export default async function EngagementDetail({ params }: { params: Promise<{ i
             {/* Documents */}
             <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>
               <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                <h2 style={{fontSize:'14px',fontWeight:'700',color:'#0F172A',margin:'0'}}>📄 Documents</h2>
-                <a href="/dashboard/documents" style={{fontSize:'12px',color:'#1C64F2',textDecoration:'none',fontWeight:'600'}}>Upload →</a>
+                <h2 style={{fontSize:'14px',fontWeight:'700',color:'#0F172A',margin:'0'}}>Documents</h2>
+                <Link href="/dashboard/documents" style={{fontSize:'12px',color:'#1C64F2',textDecoration:'none',fontWeight:'600'}}>{t('eng.upload') || 'Upload →'}</Link>
               </div>
               {!documents?.length ? (
-                <div style={{padding:'24px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>No documents yet</div>
+                <div style={{padding:'24px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>{t('docs.noDocsTitle')}</div>
               ) : (
                 documents.map((doc, i) => (
                   <div key={i} style={{padding:'12px 20px',borderBottom:'1px solid #F1F5F9',display:'flex',alignItems:'center',gap:'10px'}}>
-                    <span style={{fontSize:'20px'}}>📄</span>
+                    <span style={{fontSize:'20px'}}></span>
                     <div style={{flex:1}}>
                       <p style={{fontSize:'13px',fontWeight:'600',color:'#0F172A',margin:'0 0 2px'}}>{doc.name}</p>
-                      <p style={{fontSize:'11px',color:'#94A3B8',margin:'0'}}>{doc.file_size ? Math.round(doc.file_size/1024) + ' KB' : '—'}</p>
+                      <p style={{fontSize:'11px',color:'#94A3B8',margin:'0'}}>{doc.file_size ? Math.round(doc.file_size/1024) + 'KB' : '—'}</p>
                     </div>
                     <span style={{padding:'2px 6px',borderRadius:'4px',fontSize:'10px',fontWeight:'600',background:doc.visibility==='client'?'#EFF6FF':'#F1F5F9',color:doc.visibility==='client'?'#1D4ED8':'#64748B'}}>
                       {doc.visibility || 'internal'}
@@ -178,19 +156,19 @@ export default async function EngagementDetail({ params }: { params: Promise<{ i
             {/* Time entries */}
             <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden',gridColumn:'1 / -1'}}>
               <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                <h2 style={{fontSize:'14px',fontWeight:'700',color:'#0F172A',margin:'0'}}>⏱ Time entries — {totalHours.toFixed(1)}h total</h2>
-                <a href="/dashboard/time" style={{fontSize:'12px',color:'#1C64F2',textDecoration:'none',fontWeight:'600'}}>Log time →</a>
+                <h2 style={{fontSize:'14px',fontWeight:'700',color:'#0F172A',margin:'0'}}>Time entries — {totalHours.toFixed(1)}h total</h2>
+                <Link href="/dashboard/time" style={{fontSize:'12px',color:'#1C64F2',textDecoration:'none',fontWeight:'600'}}>{t('eng.logTime') || 'Log time →'}</Link>
               </div>
               {!timeEntries?.length ? (
-                <div style={{padding:'24px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>No time logged yet</div>
+                <div style={{padding:'24px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>{t('time.noEntriesTitle')}</div>
               ) : (
                 <table style={{width:'100%',borderCollapse:'collapse'}}>
                   <thead>
                     <tr style={{background:'#F8FAFC'}}>
-                      <th style={{padding:'10px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Description</th>
-                      <th style={{padding:'10px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Hours</th>
+                      <th style={{padding:'10px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>{t('eng.descLabel')}</th>
+                      <th style={{padding:'10px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>{t('time.hoursLabel')}</th>
                       <th style={{padding:'10px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Status</th>
-                      <th style={{padding:'10px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>Date</th>
+                      <th style={{padding:'10px 20px',textAlign:'left',fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>{t('time.dateLabel')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -203,7 +181,7 @@ export default async function EngagementDetail({ params }: { params: Promise<{ i
                             {entry.billed ? 'billed' : 'unbilled'}
                           </span>
                         </td>
-                        <td style={{padding:'12px 20px',fontSize:'13px',color:'#64748B'}}>{entry.entry_date ? new Date(entry.entry_date).toLocaleDateString('en-GB') : '—'}</td>
+                        <td style={{padding:'12px 20px',fontSize:'13px',color:'#64748B'}}>{entry.entry_date ? new Date(entry.entry_date).toLocaleDateString(dateLocale) : '—'}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -211,9 +189,6 @@ export default async function EngagementDetail({ params }: { params: Promise<{ i
               )}
             </div>
           </div>
-        </main>
-      </div>
-      <MobileNav items={sidebarItems} />
-    </div>
+    </>
   )
 }

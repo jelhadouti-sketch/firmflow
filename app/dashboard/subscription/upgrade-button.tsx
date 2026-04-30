@@ -1,8 +1,10 @@
 'use client'
+import { useI18n } from '@/lib/i18n/context'
 import { useState } from 'react'
 
 export default function UpgradeButton({ currencySymbol = '£', proPrice = 89 }: { currencySymbol?: string; proPrice?: number }) {
   const [loading, setLoading] = useState(false)
+  const { t } = useI18n()
 
   async function handleUpgrade() {
     setLoading(true)
@@ -31,7 +33,7 @@ export default function UpgradeButton({ currencySymbol = '£', proPrice = 89 }: 
       disabled={loading}
       style={{width:'100%',padding:'14px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'15px',fontWeight:'700',marginTop:'20px',cursor:loading?'not-allowed':'pointer',boxShadow:'0 4px 14px rgba(28,100,242,0.4)'}}
     >
-      {loading ? '⏳ Redirecting to Stripe...' : 'Upgrade to Pro → ' + currencySymbol + proPrice + '/month'}
+      {loading ? t('upgrade.redirect') : t('upgrade.btn', { symbol: currencySymbol, price: String(proPrice) })}
     </button>
   )
 }

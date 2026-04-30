@@ -28,6 +28,6 @@ export async function POST(req: NextRequest) {
       billed: false
     })
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+  if (error) return NextResponse.json({ error: 'Something went wrong' }, { status: 400 })
   return NextResponse.json({ success: true })
 }

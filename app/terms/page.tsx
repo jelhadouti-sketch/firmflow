@@ -1,3 +1,11 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Terms of Service',
+  description: 'FirmFlow\'s terms of service. The contract between you and FirmFlow when using our practice management platform.',
+  alternates: { canonical: 'https://www.firmflow.org/terms' },
+}
+
 export default function Terms() {
   return (
     <main style={{fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',background:'#fff',color:'#0F172A'}}>
@@ -21,7 +29,7 @@ export default function Terms() {
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>3. Account Registration and Eligibility</h2>
         <p>To use FirmFlow, you must: (a) be at least 18 years of age; (b) provide accurate, current, and complete registration information; (c) maintain the security of your account credentials; (d) be legally authorised to enter into binding agreements.</p>
-        <p>You are responsible for all activity that occurs under your account. You must notify us immediately at hello@firmflow.uk if you become aware of any unauthorised access to your account.</p>
+        <p>You are responsible for all activity that occurs under your account. You must notify us immediately at hello@firmflow.org if you become aware of any unauthorised access to your account.</p>
         <p>We reserve the right to refuse, suspend, or terminate accounts at our discretion if we believe Terms are being violated.</p>
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>4. Platform Role and Limitations</h2>
@@ -85,7 +93,7 @@ export default function Terms() {
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>15. Contact</h2>
         <p>For questions about these Terms, contact us at:</p>
-        <p>FirmFlow Ltd<br/>Email: hello@firmflow.uk<br/>Website: www.firmflow.uk</p>
+        <p>FirmFlow Ltd<br/>Email: hello@firmflow.org<br/>Website: www.firmflow.org</p>
 
         </div>
       </div>

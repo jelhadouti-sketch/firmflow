@@ -1,9 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
-import MobileNav from '@/components/mobile-nav'
 import Charts from './charts'
-import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
+import { getCurrency } from '@/lib/currencies'
+import { getProfileWithPermissions } from '@/lib/permissions'
+import { getServerT, getServerDateLocale } from '@/lib/i18n/server'
 
 export default async function Analytics() {
   const supabase = await createClient()
@@ -15,7 +16,8 @@ export default async function Analytics() {
   if (!profile.isAdmin) redirect('/dashboard')
 
   const firm = profile.firms as any
-  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'analytics')
+  const t = await getServerT()
+  const dateLocale = await getServerDateLocale()
 
   // Fetch all data
   const { data: invoices } = await supabaseAdmin.from('invoices').select('*').eq('firm_id', profile.firm_id)
@@ -33,7 +35,7 @@ export default async function Analytics() {
     d.setMonth(d.getMonth() - i)
     months.push({
       key: d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'),
-      label: d.toLocaleDateString('en-GB', { month: 'short' })
+      label: d.toLocaleDateString(dateLocale, { month: 'short' })
     })
   }
 
@@ -95,6 +97,8 @@ export default async function Analytics() {
   const thisMonth = new Date().toISOString().slice(0, 7)
   const newClientsThisMonth = clients?.filter(c => c.created_at?.startsWith(thisMonth)).length || 0
 
+  const cur = getCurrency(firm?.currency || 'GBP')
+
   const analyticsData = {
     monthlyRevenue,
     monthlyHours,
@@ -113,38 +117,13 @@ export default async function Analytics() {
   }
 
   return (
-    <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
-      <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
-        <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
-          <span style={{fontSize:'18px',fontWeight:'800',color:'#1C64F2'}}>⬡ FirmFlow</span>
-          <span style={{color:'#E2E8F0'}}>|</span>
-          <span style={{fontSize:'14px',fontWeight:'600',color:'#0F172A'}}>{firm?.name}</span>
-        </div>
-        <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
-          <a href="/dashboard" style={{fontSize:'13px',color:'#64748B',textDecoration:'none'}}>← Dashboard</a>
-          <a href="/api/auth/logout" style={{padding:'6px 14px',background:'#F1F5F9',color:'#475569',borderRadius:'6px',textDecoration:'none',fontSize:'13px'}}>Sign out</a>
-        </div>
-      </header>
-
-      <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
-        <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
-          {sidebarItems.map((item, i) => (
-            <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
-              <span>{item.icon}</span>
-              <span>{item.label}</span>
-            </a>
-          ))}
-        </aside>
-
-        <main style={{flex:1,padding:'32px',overflow:'auto'}}>
-          <div style={{marginBottom:'24px'}}>
-            <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Analytics</h1>
-            <p style={{color:'#64748B',fontSize:'14px'}}>Revenue, performance and firm overview</p>
+    <>
+      <div style={{marginBottom:'24px'}}>
+            <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>{t('analytics.title')}</h1>
+            <p style={{color:'#64748B',fontSize:'14px'}}>{t('analytics.subtitle')}</p>
           </div>
-          <Charts data={analyticsData} />
-        </main>
-      </div>
-      <MobileNav items={sidebarItems} />
-    </div>
+          <Charts data={analyticsData} currencySymbol={cur.symbol} />
+    </>
   )
 }
+

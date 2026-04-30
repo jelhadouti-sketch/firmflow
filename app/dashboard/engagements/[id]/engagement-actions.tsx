@@ -1,7 +1,9 @@
 'use client'
+import { useI18n } from '@/lib/i18n/context'
 import { useState } from 'react'
 
 export default function EngagementActions({ engagementId }: { engagementId: string }) {
+  const { t } = useI18n()
   const [loading, setLoading] = useState(false)
 
   async function handleDelete() {
@@ -15,7 +17,7 @@ export default function EngagementActions({ engagementId }: { engagementId: stri
     if (res.ok) {
       window.location.href = '/dashboard/engagements'
     } else {
-      alert('Failed to delete')
+      alert(t('alert.failedDelete'))
       setLoading(false)
     }
   }
@@ -26,7 +28,7 @@ export default function EngagementActions({ engagementId }: { engagementId: stri
       disabled={loading}
       style={{padding:'8px 14px',background:'#FEF2F2',color:'#DC2626',borderRadius:'8px',border:'none',fontSize:'12px',fontWeight:'600',cursor:'pointer'}}
     >
-      {loading ? '⏳ Deleting...' : '🗑 Delete engagement'}
+      {loading ? 'Deleting...' : 'Delete engagement'}
     </button>
   )
 }

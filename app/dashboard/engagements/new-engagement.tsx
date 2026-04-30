@@ -1,4 +1,5 @@
 'use client'
+import { useI18n } from '@/lib/i18n/context'
 import { useState, useRef, useEffect } from 'react'
 
 interface Client {
@@ -11,6 +12,7 @@ const DEFAULT_TYPES = ['Accounting', 'Tax', 'Legal', 'Consulting', 'Audit', 'Boo
 
 export default function NewEngagement({ clients = [], currencySymbol = '£' }: { clients?: Client[], currencySymbol?: string }) {
   const [open, setOpen] = useState(false)
+  const { t } = useI18n()
   const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState('')
   const [type, setType] = useState('')
@@ -66,7 +68,7 @@ export default function NewEngagement({ clients = [], currencySymbol = '£' }: {
     if (res.ok) {
       window.location.reload()
     } else {
-      alert(data.error || 'Something went wrong')
+      alert(data.error || t('error.somethingWrong'))
       setLoading(false)
     }
   }
@@ -93,7 +95,7 @@ export default function NewEngagement({ clients = [], currencySymbol = '£' }: {
 
   if (!open) return (
     <button onClick={() => setOpen(true)} style={{padding:'9px 18px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>
-      + New engagement
+      {t('dash.newEngagement')}
     </button>
   )
 
@@ -102,26 +104,26 @@ export default function NewEngagement({ clients = [], currencySymbol = '£' }: {
       <div onClick={e => e.stopPropagation()} style={{background:'#fff',borderRadius:'16px',padding:'32px',width:'560px',maxWidth:'100%',boxShadow:'0 20px 60px rgba(0,0,0,0.2)',maxHeight:'90vh',overflowY:'auto'}}>
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}}>
           <div>
-            <h2 style={{fontSize:'18px',fontWeight:'800',color:'#0F172A',margin:'0 0 4px'}}>New engagement</h2>
-            <p style={{fontSize:'13px',color:'#64748B',margin:'0'}}>Create a new engagement for your firm</p>
+            <h2 style={{fontSize:'18px',fontWeight:'800',color:'#0F172A',margin:'0 0 4px'}}>{t('eng.newTitle')}</h2>
+            <p style={{fontSize:'13px',color:'#64748B',margin:'0'}}>{t('eng.newSubtitle')}</p>
           </div>
           <button onClick={() => setOpen(false)} style={{background:'none',border:'none',fontSize:'20px',cursor:'pointer',color:'#64748B'}}>×</button>
         </div>
 
         {/* Title */}
         <div style={{marginBottom:'16px'}}>
-          <label style={labelStyle}>Title *</label>
+          <label style={labelStyle}>{t('newEng.engTitle')}</label>
           <input
             value={title}
             onChange={e => setTitle(e.target.value)}
-            placeholder="e.g. Annual Tax Return 2025"
+            placeholder={t('eng.titlePlaceholder') || 'e.g. Annual Tax Return 2025'}
             style={inputStyle}
           />
         </div>
 
         {/* Type - searchable with custom option */}
         <div style={{marginBottom:'16px',position:'relative'}} ref={typeRef}>
-          <label style={labelStyle}>Type</label>
+          <label style={labelStyle}>{t('newEng.type')}</label>
           {type ? (
             <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 12px',border:'1px solid #1C64F2',borderRadius:'8px',background:'#EFF6FF'}}>
               <span style={{fontSize:'13px',fontWeight:'600',color:'#1D4ED8'}}>{type}</span>
@@ -133,7 +135,7 @@ export default function NewEngagement({ clients = [], currencySymbol = '£' }: {
                 value={customType}
                 onChange={e => { setCustomType(e.target.value); setShowTypeDropdown(true) }}
                 onFocus={() => setShowTypeDropdown(true)}
-                placeholder="Search or type a custom category..."
+                placeholder={t('placeholder.searchCategory')}
                 style={inputStyle}
               />
               {showTypeDropdown && (
@@ -145,10 +147,10 @@ export default function NewEngagement({ clients = [], currencySymbol = '£' }: {
                       onMouseEnter={e => (e.currentTarget.style.background = '#F8FAFC')}
                       onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                     >
-                      <span style={{fontSize:'14px'}}>✨</span>
+                      <span style={{fontSize:'14px'}}></span>
                       <div>
                         <p style={{fontSize:'13px',fontWeight:'600',color:'#1C64F2',margin:'0'}}>Create "{customType}"</p>
-                        <p style={{fontSize:'11px',color:'#64748B',margin:'0'}}>Use as custom type</p>
+                        <p style={{fontSize:'11px',color:'#64748B',margin:'0'}}>{t('eng.useCustomType') || 'Use as custom type'}</p>
                       </div>
                     </div>
                   )}
@@ -164,7 +166,7 @@ export default function NewEngagement({ clients = [], currencySymbol = '£' }: {
                     </div>
                   ))}
                   {filteredTypes.length === 0 && !customType && (
-                    <div style={{padding:'12px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>Type to search or create</div>
+                    <div style={{padding:'12px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>{t('eng.typeToSearch') || 'Type to search or create'}</div>
                   )}
                 </div>
               )}
@@ -191,13 +193,13 @@ export default function NewEngagement({ clients = [], currencySymbol = '£' }: {
                   value={clientSearch}
                   onChange={e => { setClientSearch(e.target.value); setShowClientDropdown(true) }}
                   onFocus={() => setShowClientDropdown(true)}
-                  placeholder="Search client by name or email..."
+                  placeholder={t('placeholder.searchClient')}
                   style={inputStyle}
                 />
                 {showClientDropdown && (
                   <div style={{position:'absolute',left:0,right:0,top:'100%',marginTop:'4px',background:'#fff',border:'1px solid #E2E8F0',borderRadius:'8px',boxShadow:'0 8px 24px rgba(0,0,0,0.12)',maxHeight:'180px',overflowY:'auto',zIndex:10}}>
                     {filteredClients.length === 0 ? (
-                      <div style={{padding:'12px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>No clients found</div>
+                      <div style={{padding:'12px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>{t('common.noClientsFound') || 'No clients found'}</div>
                     ) : filteredClients.map(c => (
                       <div
                         key={c.id}
@@ -222,12 +224,12 @@ export default function NewEngagement({ clients = [], currencySymbol = '£' }: {
 
         {/* Status */}
         <div style={{marginBottom:'16px'}}>
-          <label style={labelStyle}>Status</label>
+          <label style={labelStyle}>{t('eng.statusLabel')}</label>
           <div style={{display:'flex',gap:'8px'}}>
             {[
-              { value:'active', label:'Active', color:'#15803D', bg:'#F0FDF4' },
-              { value:'review', label:'In review', color:'#92400E', bg:'#FEF3C7' },
-              { value:'closed', label:'Closed', color:'#64748B', bg:'#F1F5F9' },
+              { value:'active', label:t('eng.statusActive'), color:'#15803D', bg:'#F0FDF4' },
+              { value:'review', label:t('eng.statusReview'), color:'#92400E', bg:'#FEF3C7' },
+              { value:'closed', label:t('eng.statusClosed'), color:'#64748B', bg:'#F1F5F9' },
             ].map(s => (
               <button key={s.value} onClick={() => setStatus(s.value)} style={{flex:1,padding:'9px',borderRadius:'8px',border:'2px solid',borderColor:status===s.value?s.color:'#E2E8F0',background:status===s.value?s.bg:'#fff',color:status===s.value?s.color:'#64748B',fontSize:'12px',fontWeight:'600',cursor:'pointer'}}>
                 {s.label}
@@ -252,7 +254,7 @@ export default function NewEngagement({ clients = [], currencySymbol = '£' }: {
             </div>
           </div>
           <div>
-            <label style={labelStyle}>Due date</label>
+            <label style={labelStyle}>{t('newEng.dueDate')}</label>
             <input
               value={dueDate}
               onChange={e => setDueDate(e.target.value)}
@@ -264,11 +266,11 @@ export default function NewEngagement({ clients = [], currencySymbol = '£' }: {
 
         {/* Description */}
         <div style={{marginBottom:'24px'}}>
-          <label style={labelStyle}>Description <span style={{color:'#94A3B8',fontWeight:'400'}}>(optional)</span></label>
+          <label style={labelStyle}>{t('eng.descLabel')}</label>
           <textarea
             value={description}
             onChange={e => setDescription(e.target.value)}
-            placeholder="Add details about this engagement..."
+            placeholder={t('placeholder.engagementDetails')}
             rows={3}
             style={{...inputStyle, resize:'vertical' as const, fontFamily:'system-ui,sans-serif'}}
           />
@@ -276,10 +278,10 @@ export default function NewEngagement({ clients = [], currencySymbol = '£' }: {
 
         <div style={{display:'flex',gap:'10px',justifyContent:'flex-end'}}>
           <button onClick={() => setOpen(false)} style={{padding:'10px 20px',background:'#F1F5F9',color:'#475569',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>
-            Cancel
+            {t('common.cancel')}
           </button>
           <button onClick={handleSubmit} disabled={loading || !title} style={{padding:'10px 20px',background:!title?'#94A3B8':'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:!title?'not-allowed':'pointer'}}>
-            {loading ? '⏳ Creating...' : 'Create engagement'}
+            {loading ? t('btn.creating') : t('btn.createEngagement')}
           </button>
         </div>
       </div>

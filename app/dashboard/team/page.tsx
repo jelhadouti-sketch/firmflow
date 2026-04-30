@@ -1,9 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
-import MobileNav from '@/components/mobile-nav'
 import InviteMember from './invite-member'
-import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
+import { getProfileWithPermissions } from '@/lib/permissions'
+import { getServerT, getServerDateLocale } from '@/lib/i18n/server'
 import EditMember from './edit-member'
 
 export default async function Team() {
@@ -16,7 +16,8 @@ export default async function Team() {
   if (!profile.isAdmin) redirect('/dashboard')
 
   const firm = profile.firms as any
-  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'team')
+  const t = await getServerT()
+  const dateLocale = await getServerDateLocale()
 
   const { data: members } = await supabaseAdmin
     .from('profiles')
@@ -33,43 +34,20 @@ export default async function Team() {
   )
 
   return (
-    <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
-      <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
-        <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
-          <span style={{fontSize:'18px',fontWeight:'800',color:'#1C64F2'}}>⬡ FirmFlow</span>
-          <span style={{color:'#E2E8F0'}}>|</span>
-          <span style={{fontSize:'14px',fontWeight:'600',color:'#0F172A'}}>{firm?.name}</span>
-        </div>
-        <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
-          <a href="/dashboard" style={{fontSize:'13px',color:'#64748B',textDecoration:'none'}}>← Dashboard</a>
-          <a href="/api/auth/logout" style={{padding:'6px 14px',background:'#F1F5F9',color:'#475569',borderRadius:'6px',textDecoration:'none',fontSize:'13px'}}>Sign out</a>
-        </div>
-      </header>
-
-      <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
-        <aside className="hide-mobile" style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
-          {sidebarItems.map((item, i) => (
-            <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
-              <span>{item.icon}</span>
-              <span>{item.label}</span>
-            </a>
-          ))}
-        </aside>
-
-        <main style={{flex:1,padding:'32px',overflow:'auto'}}>
-          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}}>
+    <>
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}}>
             <div>
-              <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Team</h1>
-              <p style={{color:'#64748B',fontSize:'14px'}}>{membersWithEmail.length} team members</p>
+              <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>{t('team.title')}</h1>
+              <p style={{color:'#64748B',fontSize:'14px'}}>{t('team.count', { count: String(membersWithEmail.length) })}</p>
             </div>
             {profile.isAdmin && <InviteMember />}
           </div>
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:'16px',marginBottom:'28px'}}>
             {[
-              { label:'Total members', value: membersWithEmail.length, color:'#1D4ED8' },
-              { label:'Admins', value: membersWithEmail.filter(m=>m.role==='admin').length, color:'#7C3AED' },
-              { label:'Staff', value: membersWithEmail.filter(m=>m.role==='staff').length, color:'#15803D' },
+              { label:t('team.totalMembers'), value: membersWithEmail.length, color:'#1D4ED8' },
+              { label:t('team.admins'), value: membersWithEmail.filter(m=>m.role==='admin').length, color:'#7C3AED' },
+              { label:t('team.staff'), value: membersWithEmail.filter(m=>m.role==='staff').length, color:'#15803D' },
             ].map((stat, i) => (
               <div key={i} style={{background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #E2E8F0'}}>
                 <p style={{fontSize:'13px',color:'#64748B',marginBottom:'8px'}}>{stat.label}</p>
@@ -80,14 +58,14 @@ export default async function Team() {
 
           <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>
             <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0'}}>
-              <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',margin:'0'}}>All team members</h2>
+              <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',margin:'0'}}>{t('team.allMembers')}</h2>
             </div>
 
             {!membersWithEmail.length ? (
               <div style={{padding:'48px',textAlign:'center',color:'#94A3B8'}}>
-                <p style={{fontSize:'32px',marginBottom:'8px'}}>👥</p>
-                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No team members yet</p>
-                <p style={{fontSize:'13px',marginBottom:'20px'}}>Invite your first team member to get started</p>
+                <p style={{fontSize:'32px',marginBottom:'8px'}}></p>
+                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>{t('team.noMembersTitle')}</p>
+                <p style={{fontSize:'13px',marginBottom:'20px'}}>{t('team.noMembersDesc')}</p>
                 {profile.isAdmin && <InviteMember />}
               </div>
             ) : (
@@ -118,15 +96,15 @@ export default async function Team() {
                     </div>
                     <div style={{display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap'}}>
                       <span style={{padding:'4px 12px',borderRadius:'20px',fontSize:'12px',fontWeight:'700',background:member.role==='admin'?'#F5F3FF':'#F0FDF4',color:member.role==='admin'?'#7C3AED':'#15803D'}}>
-                        {member.role === 'admin' ? '👑 Admin' : '👤 Staff'}
+                        {member.role === 'admin' ? t('team.admin') : t('team.staffRole')}
                       </span>
                       {member.role === 'staff' && member.permissions?.data_visibility && (
                         <span style={{padding:'4px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:'600',background:'#EFF6FF',color:'#1D4ED8'}}>
-                          {member.permissions.data_visibility === 'own' ? '👤 Own data' : member.permissions.data_visibility === 'all' ? '👥 All data' : '👑 Admin view'}
+                          {member.permissions.data_visibility === 'own' ? t('team.ownData') : member.permissions.data_visibility === 'all' ? t('team.allData') : t('team.adminView')}
                         </span>
                       )}
                       <span style={{fontSize:'12px',color:'#94A3B8'}}>
-                        Joined {member.created_at ? new Date(member.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—'}
+                        Joined {member.created_at ? new Date(member.created_at).toLocaleDateString(dateLocale,{day:'numeric',month:'short',year:'numeric'}) : '—'}
                       </span>
                       {profile.isAdmin && (
                         <EditMember member={member} currentUserId={user.id} />
@@ -137,9 +115,7 @@ export default async function Team() {
               </div>
             )}
           </div>
-        </main>
-      </div>
-      <MobileNav items={sidebarItems} />
-    </div>
+    </>
   )
 }
+

@@ -1,4 +1,6 @@
 'use client'
+import { Trash2 } from 'lucide-react'
+import { useI18n } from '@/lib/i18n/context'
 import { useState } from 'react'
 
 interface Doc {
@@ -14,6 +16,7 @@ interface Doc {
 
 export default function DocumentList({ documents }: { documents: Doc[] }) {
   const [search, setSearch] = useState('')
+  const { t, dateLocale } = useI18n()
   const [filter, setFilter] = useState('all')
   const [items, setItems] = useState(documents)
   const [deleting, setDeleting] = useState<string | null>(null)
@@ -31,25 +34,25 @@ export default function DocumentList({ documents }: { documents: Doc[] }) {
   })
 
   function fileIcon(type: string) {
-    if (!type) return '📄'
-    if (type.includes('pdf')) return '📕'
-    if (type.includes('word') || type.includes('doc')) return '📘'
-    if (type.includes('sheet') || type.includes('excel') || type.includes('csv')) return '📗'
-    if (type.includes('image')) return '🖼'
-    if (type.includes('zip') || type.includes('rar')) return '📦'
-    if (type.includes('text')) return '📝'
-    return '📄'
+    if (!type) return ''
+    if (type.includes('pdf')) return ''
+    if (type.includes('word') || type.includes('doc')) return ''
+    if (type.includes('sheet') || type.includes('excel') || type.includes('csv')) return ''
+    if (type.includes('image')) return ''
+    if (type.includes('zip') || type.includes('rar')) return ''
+    if (type.includes('text')) return ''
+    return ''
   }
 
   function formatSize(bytes: number) {
     if (!bytes) return '—'
-    if (bytes < 1024) return bytes + ' B'
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
-    return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
+    if (bytes < 1024) return bytes + 'B'
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + 'KB'
+    return (bytes / (1024 * 1024)).toFixed(1) + 'MB'
   }
 
   async function handleDelete(id: string) {
-    if (!confirm('Delete this document permanently?')) return
+    if (!confirm(t('docList.deleteConfirm'))) return
     setDeleting(id)
     const res = await fetch('/api/documents/delete', {
       method: 'POST',
@@ -68,23 +71,23 @@ export default function DocumentList({ documents }: { documents: Doc[] }) {
     <div>
       <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0',display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap'}}>
         <div style={{flex:1,minWidth:'200px',position:'relative'}}>
-          <span style={{position:'absolute',left:'12px',top:'50%',transform:'translateY(-50%)',color:'#94A3B8',fontSize:'16px'}}>🔍</span>
+          <span style={{position:'absolute',left:'12px',top:'50%',transform:'translateY(-50%)',color:'#94A3B8',fontSize:'16px'}}></span>
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Search by name, uploader, or engagement..."
+            placeholder={t('doc.searchPlaceholder') || 'Search by name, uploader, or engagement...'}
             style={{width:'100%',padding:'9px 12px 9px 36px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',color:'#0F172A',outline:'none',boxSizing:'border-box' as const,background:'#F8FAFC'}}
           />
         </div>
         <div style={{display:'flex',gap:'6px',flexWrap:'wrap'}}>
           {[
-            { value:'all', label:'All' },
-            { value:'client', label:'Client' },
-            { value:'internal', label:'Internal' },
-            { value:'pdf', label:'PDF' },
-            { value:'word', label:'Word' },
-            { value:'excel', label:'Excel' },
-            { value:'image', label:'Image' },
+            { value:'all', label:t('docList.all') },
+            { value:'client', label:t('docList.client') },
+            { value:'internal', label:t('docs.internal') },
+            { value:'pdf', label:t('docs.pdfs') },
+            { value:'word', label:t('docs.word') },
+            { value:'excel', label:t('docs.excel') },
+            { value:'image', label:t('docs.images') },
           ].map(f => (
             <button key={f.value} onClick={() => setFilter(f.value)} style={{padding:'6px 12px',borderRadius:'6px',border:'1px solid',borderColor:filter===f.value?'#1C64F2':'#E2E8F0',background:filter===f.value?'#EFF6FF':'#fff',color:filter===f.value?'#1D4ED8':'#64748B',fontSize:'11px',fontWeight:'600',cursor:'pointer'}}>
               {f.label}
@@ -95,7 +98,7 @@ export default function DocumentList({ documents }: { documents: Doc[] }) {
       </div>
 
       {filtered.length === 0 ? (
-        <div style={{padding:'32px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>No documents found</div>
+        <div style={{padding:'32px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>{t('doc.noDocuments') || 'No documents found'}</div>
       ) : (
         <div>
           {filtered.map((doc, i) => (
@@ -108,14 +111,14 @@ export default function DocumentList({ documents }: { documents: Doc[] }) {
                   <span style={{fontSize:'11px',color:'#94A3B8'}}>·</span>
                   <span style={{fontSize:'11px',color:'#64748B'}}>{doc.uploader_name}</span>
                   <span style={{fontSize:'11px',color:'#94A3B8'}}>·</span>
-                  <span style={{fontSize:'11px',color:'#94A3B8'}}>{doc.created_at ? new Date(doc.created_at).toLocaleDateString('en-GB') : '—'}</span>
+                  <span style={{fontSize:'11px',color:'#94A3B8'}}>{doc.created_at ? new Date(doc.created_at).toLocaleDateString(dateLocale) : '—'}</span>
                 </div>
               </div>
               {doc.engagement_title && (
                 <span style={{padding:'3px 8px',background:'#F5F3FF',color:'#7C3AED',borderRadius:'4px',fontSize:'11px',fontWeight:'600',flexShrink:0}}>{doc.engagement_title}</span>
               )}
               <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',background:doc.visibility==='client'?'#F0FDF4':'#F1F5F9',color:doc.visibility==='client'?'#15803D':'#64748B',flexShrink:0}}>
-                {doc.visibility === 'client' ? '👁 Client' : '🔒 Internal'}
+                {doc.visibility === 'client' ? '' + t('doc.clientVisible') : '' + t('doc.internal')}
               </span>
               <div style={{display:'flex',gap:'6px',flexShrink:0}}>
                 <a href={'/api/documents/download?id=' + doc.id} style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'11px',fontWeight:'600',textDecoration:'none'}}>⬇ Download</a>
@@ -124,7 +127,7 @@ export default function DocumentList({ documents }: { documents: Doc[] }) {
                   disabled={deleting === doc.id}
                   style={{padding:'6px 10px',background:'#FEF2F2',color:'#DC2626',borderRadius:'6px',fontSize:'11px',fontWeight:'600',border:'none',cursor:'pointer'}}
                 >
-                  {deleting === doc.id ? '...' : '🗑'}
+                  {deleting === doc.id ? '...' : <Trash2 size={13}/>}
                 </button>
               </div>
             </div>

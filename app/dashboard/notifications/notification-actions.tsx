@@ -1,4 +1,5 @@
 'use client'
+import { useI18n } from '@/lib/i18n/context'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -14,6 +15,7 @@ export default function NotificationActions({
   hasNotifications?: boolean
 }) {
   const [loading, setLoading] = useState(false)
+  const { t } = useI18n()
   const router = useRouter()
 
   async function handleMarkRead() {
@@ -73,7 +75,7 @@ export default function NotificationActions({
   if (markRead) {
     return (
       <button onClick={handleMarkRead} disabled={loading} style={{padding:'6px 12px',background:'#F1F5F9',color:'#64748B',borderRadius:'6px',border:'none',fontSize:'12px',fontWeight:'600',cursor:'pointer'}}>
-        {loading ? '...' : '✓ Mark read'}
+        {loading ? '...' : t('notifAction.markRead')}
       </button>
     )
   }
@@ -82,7 +84,7 @@ export default function NotificationActions({
   if (deleteOne) {
     return (
       <button onClick={handleDelete} disabled={loading} style={{padding:'6px 12px',background:'#FEF2F2',color:'#DC2626',borderRadius:'6px',border:'none',fontSize:'12px',fontWeight:'600',cursor:'pointer'}}>
-        {loading ? '...' : '🗑 Delete'}
+        {loading ? '...' : t('notifAction.delete')}
       </button>
     )
   }
@@ -91,15 +93,15 @@ export default function NotificationActions({
   return (
     <div style={{display:'flex',gap:'8px',flexWrap:'wrap'}}>
       <button onClick={handleGenerate} disabled={loading} style={{padding:'8px 16px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>
-        {loading ? '...' : '🔄 Check for alerts'}
+        {loading ? '...' : t('dash.checkAlerts')}
       </button>
       {hasNotifications && (
         <>
           <button onClick={handleMarkAllRead} disabled={loading} style={{padding:'8px 16px',background:'#F0FDF4',color:'#15803D',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>
-            {loading ? '...' : '✓ Mark all read'}
+            {loading ? '...' : t('notifAction.markAllRead')}
           </button>
           <button onClick={handleDeleteAll} disabled={loading} style={{padding:'8px 16px',background:'#FEF2F2',color:'#DC2626',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>
-            {loading ? '...' : '🗑 Clear all'}
+            {loading ? '...' : t('notifAction.deleteAll')}
           </button>
         </>
       )}

@@ -1,10 +1,12 @@
 'use client'
+import { useI18n } from '@/lib/i18n/context'
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
 export default function TwoFactorSetup() {
   const [step, setStep] = useState<'idle' | 'setup' | 'verify' | 'recovery' | 'done' | 'disable'>('idle')
   const [loading, setLoading] = useState(false)
+  const { t } = useI18n()
   const [error, setError] = useState('')
   const [qrCode, setQrCode] = useState('')
   const [secret, setSecret] = useState('')
@@ -166,30 +168,30 @@ export default function TwoFactorSetup() {
   return (
     <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0',marginBottom:'20px'}}>
       <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'4px'}}>
-        <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',margin:'0'}}>🔐 Two-factor authentication (2FA)</h2>
+        <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',margin:'0'}}>{t('settings.2faTitle')}</h2>
         {mfaEnabled && step === 'idle' && (
-          <span style={{padding:'4px 12px',background:'#F0FDF4',color:'#15803D',borderRadius:'20px',fontSize:'12px',fontWeight:'700'}}>✅ Enabled</span>
+          <span style={{padding:'4px 12px',background:'#F0FDF4',color:'#15803D',borderRadius:'20px',fontSize:'12px',fontWeight:'700'}}>Enabled</span>
         )}
       </div>
-      <p style={{fontSize:'13px',color:'#64748B',marginBottom:'20px'}}>Add an extra layer of security to your account using an authenticator app</p>
+      <p style={{fontSize:'13px',color:'#64748B',marginBottom:'20px'}}>{t('settings.2faDesc')}</p>
 
       {error && (
         <div style={{background:'#FEF2F2',border:'1px solid #FECACA',borderRadius:'8px',padding:'12px 16px',marginBottom:'16px'}}>
-          <p style={{fontSize:'13px',color:'#DC2626',margin:'0'}}>⚠️ {error}</p>
+ <p style={{fontSize:'13px',color:'#DC2626',margin:'0'}}> {error}</p>
         </div>
       )}
 
       {/* IDLE - Show enable/disable buttons */}
       {step === 'idle' && !mfaEnabled && (
         <div style={{background:'#FEF3C7',border:'1px solid #FDE68A',borderRadius:'10px',padding:'16px',marginBottom:'16px'}}>
-          <p style={{fontSize:'13px',fontWeight:'600',color:'#92400E',margin:'0 0 8px'}}>⚠️ 2FA is not enabled</p>
-          <p style={{fontSize:'12px',color:'#92400E',margin:'0 0 12px'}}>We strongly recommend enabling two-factor authentication to protect your account.</p>
+          <p style={{fontSize:'13px',fontWeight:'600',color:'#92400E',margin:'0 0 8px'}}>{t('settings.2faNotEnabled')}</p>
+          <p style={{fontSize:'12px',color:'#92400E',margin:'0 0 12px'}}>{t('settings.2faRecommend')}</p>
           <button
             onClick={startSetup}
             disabled={loading}
             style={{padding:'10px 20px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}
           >
-            {loading ? '⏳ Setting up...' : '🔐 Enable 2FA'}
+            {loading ? '...' : t('settings.enable2faBtn')}
           </button>
         </div>
       )}
@@ -197,7 +199,7 @@ export default function TwoFactorSetup() {
       {step === 'idle' && mfaEnabled && (
         <div>
           <div style={{background:'#F0FDF4',border:'1px solid #BBF7D0',borderRadius:'10px',padding:'16px',marginBottom:'16px'}}>
-            <p style={{fontSize:'13px',fontWeight:'600',color:'#15803D',margin:'0 0 4px'}}>✅ Two-factor authentication is active</p>
+            <p style={{fontSize:'13px',fontWeight:'600',color:'#15803D',margin:'0 0 4px'}}>{t('settings.2faActive') || '2FA is active'}</p>
             <p style={{fontSize:'12px',color:'#166534',margin:'0'}}>Your account is protected with an authenticator app.</p>
           </div>
           <div style={{display:'flex',gap:'8px',flexWrap:'wrap'}}>
@@ -205,13 +207,13 @@ export default function TwoFactorSetup() {
               onClick={() => setStep('disable')}
               style={{padding:'8px 16px',background:'#FEF2F2',color:'#DC2626',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}
             >
-              🗑 Disable 2FA
+ Disable 2FA
             </button>
             <button
               onClick={startSetup}
               style={{padding:'8px 16px',background:'#F1F5F9',color:'#475569',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}
             >
-              🔄 Reset 2FA
+ Reset 2FA
             </button>
           </div>
         </div>
@@ -236,7 +238,7 @@ export default function TwoFactorSetup() {
               onClick={() => setShowSecret(!showSecret)}
               style={{fontSize:'12px',color:'#1C64F2',background:'none',border:'none',cursor:'pointer',fontWeight:'600',marginBottom:'8px'}}
             >
-              {showSecret ? '🙈 Hide' : '👁 Show'} manual entry key
+              {showSecret ? 'Hide' : 'Show'} manual entry key
             </button>
             {showSecret && (
               <div style={{background:'#F8FAFC',borderRadius:'8px',padding:'12px',border:'1px solid #E2E8F0'}}>
@@ -275,12 +277,12 @@ export default function TwoFactorSetup() {
               disabled={loading || verifyCode.length !== 6}
               style={{flex:1,padding:'12px',background:verifyCode.length !== 6 ? '#94A3B8' : '#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'700',cursor:verifyCode.length !== 6 ? 'not-allowed' : 'pointer'}}
             >
-              {loading ? '⏳ Verifying...' : '✅ Verify & enable'}
+              {loading ? 'Verifying...' : 'Verify & enable'}
             </button>
           </div>
 
           <div style={{marginTop:'16px',background:'#F8FAFC',borderRadius:'8px',padding:'12px',border:'1px solid #E2E8F0'}}>
-            <p style={{fontSize:'11px',color:'#64748B',margin:'0'}}>💡 Supported apps: Google Authenticator, Authy, Microsoft Authenticator, 1Password, and any TOTP-compatible app.</p>
+            <p style={{fontSize:'11px',color:'#64748B',margin:'0'}}>Supported apps: Google Authenticator, Authy, Microsoft Authenticator, 1Password, and any TOTP-compatible app.</p>
           </div>
         </div>
       )}
@@ -289,7 +291,7 @@ export default function TwoFactorSetup() {
       {step === 'recovery' && (
         <div>
           <div style={{background:'#FEF3C7',border:'1px solid #FDE68A',borderRadius:'10px',padding:'16px',marginBottom:'20px'}}>
-            <p style={{fontSize:'14px',fontWeight:'700',color:'#92400E',margin:'0 0 8px'}}>⚠️ Save your recovery codes!</p>
+            <p style={{fontSize:'14px',fontWeight:'700',color:'#92400E',margin:'0 0 8px'}}>Save your recovery codes!</p>
             <p style={{fontSize:'12px',color:'#92400E',margin:'0'}}>If you lose access to your authenticator app, you can use these codes to sign in. Each code can only be used once. Store them in a safe place.</p>
           </div>
 
@@ -309,7 +311,7 @@ export default function TwoFactorSetup() {
               onClick={copyRecoveryCodes}
               style={{padding:'8px 16px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}
             >
-              {copied ? '✅ Copied!' : '📋 Copy codes'}
+              {copied ? 'Copied!' : 'Copy codes'}
             </button>
             <button
               onClick={downloadRecoveryCodes}
@@ -323,7 +325,7 @@ export default function TwoFactorSetup() {
             onClick={() => setStep('idle')}
             style={{width:'100%',padding:'12px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'14px',fontWeight:'700',cursor:'pointer'}}
           >
-            ✅ I've saved my recovery codes
+ I've saved my recovery codes
           </button>
         </div>
       )}
@@ -332,7 +334,7 @@ export default function TwoFactorSetup() {
       {step === 'disable' && (
         <div>
           <div style={{background:'#FEF2F2',border:'1px solid #FECACA',borderRadius:'10px',padding:'16px',marginBottom:'16px'}}>
-            <p style={{fontSize:'14px',fontWeight:'700',color:'#DC2626',margin:'0 0 8px'}}>⚠️ Disable two-factor authentication?</p>
+            <p style={{fontSize:'14px',fontWeight:'700',color:'#DC2626',margin:'0 0 8px'}}>Disable two-factor authentication?</p>
             <p style={{fontSize:'12px',color:'#DC2626',margin:'0'}}>This will make your account less secure. Enter your authenticator code to confirm.</p>
           </div>
 
@@ -360,7 +362,7 @@ export default function TwoFactorSetup() {
               disabled={loading || disableCode.length !== 6}
               style={{flex:1,padding:'12px',background:disableCode.length !== 6 ? '#94A3B8' : '#DC2626',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'700',cursor:disableCode.length !== 6 ? 'not-allowed' : 'pointer'}}
             >
-              {loading ? '⏳ Disabling...' : '🗑 Disable 2FA'}
+              {loading ? 'Disabling...' : 'Disable 2FA'}
             </button>
           </div>
         </div>

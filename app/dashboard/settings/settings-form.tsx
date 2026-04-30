@@ -1,6 +1,9 @@
 'use client'
+import Link from 'next/link'
+import { useI18n } from '@/lib/i18n/context'
 import { useState, useRef } from 'react'
 import { CURRENCIES } from '@/lib/currencies'
+import { LANGUAGES } from '@/lib/i18n/detect'
 import TwoFactorSetup from '@/components/two-factor-setup'
 
 export default function SettingsForm({
@@ -15,6 +18,7 @@ export default function SettingsForm({
   userEmail: string
 }) {
   const [loading, setLoading] = useState(false)
+  const { t, locale, setLocale } = useI18n()
   const [saved, setSaved] = useState(false)
   const [logoLoading, setLogoLoading] = useState(false)
   const [logoUrl, setLogoUrl] = useState(firm?.logo_url || '')
@@ -79,7 +83,7 @@ export default function SettingsForm({
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     } else {
-      alert('Something went wrong')
+      alert(t('alert.somethingWrong'))
     }
     setLoading(false)
   }
@@ -108,25 +112,55 @@ export default function SettingsForm({
     <div>
       {saved && (
         <div style={{background:'#F0FDF4',border:'1px solid #BBF7D0',borderRadius:'8px',padding:'12px 16px',marginBottom:'20px',fontSize:'13px',color:'#15803D',fontWeight:'600'}}>
-          ✅ Settings saved successfully!
+          {t('settings.saved') || 'Settings saved!'}
         </div>
       )}
 
       {/* Logo & Branding */}
+
       <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0',marginBottom:'20px'}}>
-        <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',marginBottom:'4px'}}>🎨 Logo & branding</h2>
-        <p style={{fontSize:'13px',color:'#64748B',marginBottom:'20px'}}>Your logo appears on invoices, emails, and the client portal</p>
+ <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',marginBottom:'4px'}}> {t('settings.language') || 'Language'}</h2>
+        <p style={{fontSize:'13px',color:'#64748B',marginBottom:'20px'}}>{t('settings.languageDesc') || 'Choose the language for your dashboard'}</p>
+
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill, minmax(170px, 1fr))',gap:'8px'}}>
+          {LANGUAGES.map(l => (
+            <button
+              key={l.code}
+              onClick={() => setLocale(l.code)}
+              style={{
+                display:'flex',alignItems:'center',gap:'10px',padding:'12px 14px',
+                borderRadius:'10px',border: locale === l.code ? '2px solid #1C64F2' : '1px solid #E2E8F0',
+                background: locale === l.code ? '#EFF6FF' : '#fff',
+                cursor:'pointer',textAlign:'left',transition:'all 0.15s'
+              }}
+            >
+              <span style={{fontSize:'20px'}}>{l.flag}</span>
+              <p style={{fontSize:'13px',fontWeight:'700',color: locale === l.code ? '#1C64F2' : '#0F172A',margin:'0'}}>{l.label}</p>
+              {locale === l.code && <span style={{marginLeft:'auto',fontSize:'14px'}}></span>}
+            </button>
+          ))}
+        </div>
+        <div style={{marginTop:'12px',background:'#F8FAFC',borderRadius:'8px',padding:'14px 16px',border:'1px solid #E2E8F0'}}>
+          <p style={{fontSize:'12px',color:'#64748B',margin:'0'}}>
+            {LANGUAGES.find(l => l.code === locale)?.flag} {t('settings.languageNote') || 'Your dashboard and platform will display in'} <strong>{LANGUAGES.find(l => l.code === locale)?.label}</strong>
+          </p>
+        </div>
+      </div>
+
+      <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0',marginBottom:'20px'}}>
+        <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',marginBottom:'4px'}}>{t('settings.logoTitle')}</h2>
+        <p style={{fontSize:'13px',color:'#64748B',marginBottom:'20px'}}>{t('settings.logoDesc')}</p>
 
         <div style={{marginBottom:'20px'}}>
-          <label style={labelStyle}>Firm logo</label>
+          <label style={labelStyle}>{t('settings.firmLogo') || 'Firm logo'}</label>
           <div style={{display:'flex',alignItems:'flex-start',gap:'20px',flexWrap:'wrap'}}>
             <div style={{width:'120px',height:'80px',borderRadius:'10px',border:'2px dashed #E2E8F0',display:'flex',alignItems:'center',justifyContent:'center',background:'#F8FAFC',overflow:'hidden',flexShrink:0}}>
               {logoUrl ? (
                 <img src={logoUrl} alt="Logo" style={{width:'100%',height:'100%',objectFit:'contain',padding:'8px'}} />
               ) : (
                 <div style={{textAlign:'center'}}>
-                  <p style={{fontSize:'24px',margin:'0 0 4px'}}>🏢</p>
-                  <p style={{fontSize:'10px',color:'#94A3B8',margin:'0'}}>No logo</p>
+                  <p style={{fontSize:'24px',margin:'0 0 4px'}}></p>
+                  <p style={{fontSize:'10px',color:'#94A3B8',margin:'0'}}>{t('settings.noLogo')}</p>
                 </div>
               )}
             </div>
@@ -134,22 +168,22 @@ export default function SettingsForm({
               <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/jpg,image/svg+xml,image/webp" onChange={handleLogoUpload} style={{display:'none'}} />
               <div style={{display:'flex',gap:'8px',marginBottom:'8px',flexWrap:'wrap'}}>
                 <button onClick={() => fileInputRef.current?.click()} disabled={logoLoading} style={{padding:'8px 16px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>
-                  {logoLoading ? '⏳ Uploading...' : logoUrl ? '🔄 Replace logo' : '⬆ Upload logo'}
+                  {logoLoading ? 'Uploading...' : logoUrl ? 'Replace logo' : 'Upload logo'}
                 </button>
                 {logoUrl && (
                   <button onClick={handleLogoDelete} disabled={logoLoading} style={{padding:'8px 16px',background:'#FEF2F2',color:'#DC2626',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>
-                    🗑 Remove logo
+                    {t('settings.removeLogo') || 'Remove logo'}
                   </button>
                 )}
               </div>
-              <p style={{fontSize:'12px',color:'#94A3B8',margin:'0'}}>PNG, JPG, SVG or WebP · Max 2MB · Recommended: 300×100px</p>
+              <p style={{fontSize:'12px',color:'#94A3B8',margin:'0'}}>{t('settings.logoHint')}</p>
               {logoError && <p style={{fontSize:'12px',color:'#DC2626',margin:'4px 0 0'}}>{logoError}</p>}
             </div>
           </div>
         </div>
 
         <div>
-          <label style={labelStyle}>Brand color</label>
+          <label style={labelStyle}>{t('settings.brandColor')}</label>
           <div style={{display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap'}}>
             <div style={{position:'relative'}}>
               <input type="color" value={brandColor} onChange={e => setBrandColor(e.target.value)} style={{width:'48px',height:'48px',borderRadius:'8px',border:'1px solid #E2E8F0',cursor:'pointer',padding:'2px'}} />
@@ -161,13 +195,13 @@ export default function SettingsForm({
               ))}
             </div>
           </div>
-          <p style={{fontSize:'12px',color:'#94A3B8',marginTop:'8px'}}>Used as the primary color in your invoices and emails</p>
+          <p style={{fontSize:'12px',color:'#94A3B8',marginTop:'8px'}}>{t('settings.brandColorDesc')}</p>
 
           <div style={{marginTop:'12px',background:'#F8FAFC',borderRadius:'8px',padding:'16px',border:'1px solid #E2E8F0'}}>
-            <p style={{fontSize:'12px',fontWeight:'600',color:'#374151',margin:'0 0 10px'}}>Preview</p>
+            <p style={{fontSize:'12px',fontWeight:'600',color:'#374151',margin:'0 0 10px'}}>{t('settings.preview') || 'Preview'}</p>
             <div style={{display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap'}}>
-              <div style={{padding:'8px 16px',background:brandColor,color:'#fff',borderRadius:'8px',fontSize:'13px',fontWeight:'600'}}>Button</div>
-              <div style={{padding:'4px 12px',background:brandColor + '15',color:brandColor,borderRadius:'20px',fontSize:'12px',fontWeight:'700'}}>Badge</div>
+              <div style={{padding:'8px 16px',background:brandColor,color:'#fff',borderRadius:'8px',fontSize:'13px',fontWeight:'600'}}>{t('settings.button') || 'Button'}</div>
+              <div style={{padding:'4px 12px',background:brandColor + '15',color:brandColor,borderRadius:'20px',fontSize:'12px',fontWeight:'700'}}>{t('settings.badge') || 'Badge'}</div>
               <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
                 {logoUrl ? (
                   <img src={logoUrl} alt="Logo" style={{height:'32px',objectFit:'contain'}} />
@@ -182,43 +216,43 @@ export default function SettingsForm({
 
       {/* Firm information */}
       <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0',marginBottom:'20px'}}>
-        <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',marginBottom:'4px'}}>🏢 Firm information</h2>
-        <p style={{fontSize:'13px',color:'#64748B',marginBottom:'20px'}}>This information will appear on your invoices and client communications</p>
+        <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',marginBottom:'4px'}}>{t('settings.firmInfo')}</h2>
+        <p style={{fontSize:'13px',color:'#64748B',marginBottom:'20px'}}>{t('settings.firmInfoDesc')}</p>
 
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'16px',marginBottom:'16px'}}>
           <div>
-            <label style={labelStyle}>Firm name *</label>
+            <label style={labelStyle}>{t('settings.firmName')}</label>
             <input value={firmName} onChange={e => setFirmName(e.target.value)} placeholder="e.g. Smith & Associates" style={inputStyle} />
           </div>
           <div>
-            <label style={labelStyle}>Firm email</label>
+            <label style={labelStyle}>{t('settings.firmEmail')}</label>
             <input value={firmEmail} onChange={e => setFirmEmail(e.target.value)} type="email" placeholder="contact@yourfirm.com" style={inputStyle} />
           </div>
         </div>
 
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'16px',marginBottom:'16px'}}>
           <div>
-            <label style={labelStyle}>Phone number</label>
+            <label style={labelStyle}>{t('settings.phone')}</label>
             <input value={firmPhone} onChange={e => setFirmPhone(e.target.value)} placeholder="+1 (555) 000-0000" style={inputStyle} />
           </div>
           <div>
-            <label style={labelStyle}>Tax / VAT number</label>
+            <label style={labelStyle}>{t('settings.taxVat')}</label>
             <input value={taxNumber} onChange={e => setTaxNumber(e.target.value)} placeholder="e.g. GB123456789" style={inputStyle} />
           </div>
         </div>
 
         <div style={{marginBottom:'16px'}}>
-          <label style={labelStyle}>Street address</label>
+          <label style={labelStyle}>{t('settings.address')}</label>
           <input value={firmAddress} onChange={e => setFirmAddress(e.target.value)} placeholder="e.g. 123 Main Street, Suite 100" style={inputStyle} />
         </div>
 
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'16px'}}>
           <div>
-            <label style={labelStyle}>City</label>
+            <label style={labelStyle}>{t('settings.city')}</label>
             <input value={firmCity} onChange={e => setFirmCity(e.target.value)} placeholder="e.g. London" style={inputStyle} />
           </div>
           <div>
-            <label style={labelStyle}>Country</label>
+            <label style={labelStyle}>{t('settings.country')}</label>
             <input value={firmCountry} onChange={e => setFirmCountry(e.target.value)} placeholder="e.g. United Kingdom" style={inputStyle} />
           </div>
         </div>
@@ -226,11 +260,11 @@ export default function SettingsForm({
 
       {/* Currency & Invoice settings */}
       <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0',marginBottom:'20px'}}>
-        <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',marginBottom:'4px'}}>💳 Currency & invoice settings</h2>
-        <p style={{fontSize:'13px',color:'#64748B',marginBottom:'20px'}}>Set your default currency and invoice preferences</p>
+        <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',marginBottom:'4px'}}>{t('settings.currencyTitle')}</h2>
+        <p style={{fontSize:'13px',color:'#64748B',marginBottom:'20px'}}>{t('settings.currencyDesc')}</p>
 
         <div style={{marginBottom:'20px'}}>
-          <label style={labelStyle}>Default currency</label>
+          <label style={labelStyle}>{t('settings.defaultCurrency')}</label>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill, minmax(170px, 1fr))',gap:'8px'}}>
             {CURRENCIES.map(c => (
               <button
@@ -248,30 +282,30 @@ export default function SettingsForm({
                   <p style={{fontSize:'13px',fontWeight:'700',color: currency === c.code ? '#1C64F2' : '#0F172A',margin:'0'}}>{c.code}</p>
                   <p style={{fontSize:'11px',color:'#64748B',margin:'0'}}>{c.symbol} · {c.name}</p>
                 </div>
-                {currency === c.code && <span style={{marginLeft:'auto',fontSize:'14px'}}>✅</span>}
+                {currency === c.code && <span style={{marginLeft:'auto',fontSize:'14px'}}></span>}
               </button>
             ))}
           </div>
           <div style={{marginTop:'12px',background:'#F8FAFC',borderRadius:'8px',padding:'14px 16px',border:'1px solid #E2E8F0'}}>
             <p style={{fontSize:'12px',color:'#64748B',margin:'0'}}>
-              {selectedCurrency.flag} Your invoices will display amounts in <strong>{selectedCurrency.name} ({selectedCurrency.symbol})</strong>. You can override currency per invoice.
+              {selectedCurrency.flag} {t('settings.currencyNote')} <strong>{selectedCurrency.name} ({selectedCurrency.symbol})</strong>.
             </p>
           </div>
         </div>
 
         <div style={{marginBottom:'16px'}}>
-          <label style={labelStyle}>Payment terms</label>
+          <label style={labelStyle}>{t('settings.paymentTerms')}</label>
           <select value={paymentTerms} onChange={e => setPaymentTerms(e.target.value)} style={inputStyle}>
-            <option value="Payment due upon receipt">Payment due upon receipt</option>
-            <option value="Payment due within 7 days">Payment due within 7 days</option>
-            <option value="Payment due within 14 days">Payment due within 14 days</option>
-            <option value="Payment due within 30 days">Payment due within 30 days</option>
-            <option value="Payment due within 60 days">Payment due within 60 days</option>
+            <option value="Payment due upon receipt">{t("payment.onReceipt")}</option>
+            <option value="Payment due within 7 days">{t("payment.7days")}</option>
+            <option value="Payment due within 14 days">{t("payment.14days")}</option>
+            <option value="Payment due within 30 days">{t("payment.30days")}</option>
+            <option value="Payment due within 60 days">{t("payment.60days")}</option>
           </select>
         </div>
 
         <div>
-          <label style={labelStyle}>Bank details <span style={{color:'#94A3B8',fontWeight:'400'}}>(optional — shown on invoices)</span></label>
+          <label style={labelStyle}>{t('settings.bankDetails')}</label>
           <textarea
             value={bankDetails}
             onChange={e => setBankDetails(e.target.value)}
@@ -287,25 +321,25 @@ export default function SettingsForm({
 
       {/* Profile settings */}
       <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #E2E8F0',marginBottom:'20px'}}>
-        <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',marginBottom:'20px'}}>👤 Your profile</h2>
+        <h2 style={{fontSize:'15px',fontWeight:'700',color:'#0F172A',marginBottom:'20px'}}>{t('settings.profileTitle')}</h2>
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'16px'}}>
           <div>
-            <label style={labelStyle}>Full name</label>
+            <label style={labelStyle}>{t('settings.fullName')}</label>
             <div style={{...inputStyle, background:'#F8FAFC', color:'#64748B'}}>{profileName}</div>
           </div>
           <div>
-            <label style={labelStyle}>Email address</label>
+            <label style={labelStyle}>{t('settings.email')}</label>
             <div style={{...inputStyle, background:'#F8FAFC', color:'#64748B'}}>{userEmail}</div>
           </div>
           <div>
-            <label style={labelStyle}>Role</label>
+            <label style={labelStyle}>{t('settings.role')}</label>
             <div style={{...inputStyle, background:'#F8FAFC', color:'#64748B'}}>{profileRole}</div>
           </div>
           <div>
-            <label style={labelStyle}>Plan</label>
+            <label style={labelStyle}>{t('settings.plan')}</label>
             <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
               <span style={{padding:'4px 10px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'20px',fontSize:'12px',fontWeight:'700'}}>{firm?.plan?.toUpperCase()}</span>
-              <a href="/dashboard/subscription" style={{fontSize:'13px',color:'#1C64F2',textDecoration:'none',fontWeight:'600'}}>Manage →</a>
+              <Link href="/dashboard/subscription" style={{fontSize:'13px',color:'#1C64F2',textDecoration:'none',fontWeight:'600'}}>{t('settings.manage')}</Link>
             </div>
           </div>
         </div>
@@ -313,15 +347,35 @@ export default function SettingsForm({
 
       {/* Danger zone */}
       <div style={{background:'#fff',borderRadius:'12px',padding:'24px',border:'1px solid #FEE2E2',marginBottom:'20px'}}>
-        <h2 style={{fontSize:'15px',fontWeight:'700',color:'#DC2626',marginBottom:'16px'}}>⚠️ Danger zone</h2>
-        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'16px',background:'#FEF2F2',borderRadius:'8px',border:'1px solid #FECACA'}}>
-          <div>
-            <p style={{fontSize:'13px',fontWeight:'600',color:'#0F172A',marginBottom:'2px'}}>Sign out of FirmFlow</p>
-            <p style={{fontSize:'12px',color:'#64748B'}}>You will need to sign in again to access your workspace</p>
+        <h2 style={{fontSize:'15px',fontWeight:'700',color:'#DC2626',marginBottom:'16px'}}>{t('settings.dangerZone')}</h2>
+        <div style={{padding:'16px',background:'#FEF2F2',borderRadius:'8px',border:'1px solid #FECACA'}}>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+            <div>
+              <p style={{fontSize:'13px',fontWeight:'600',color:'#0F172A',marginBottom:'2px'}}>{t('settings.deleteAccount')}</p>
+              <p style={{fontSize:'12px',color:'#64748B'}}>{t('settings.deleteDesc')}</p>
+            </div>
+            <button
+              onClick={() => {
+                if (window.confirm('Are you sure you want to permanently delete your account? All data will be lost forever. This cannot be undone.')) {
+                  if (window.confirm('FINAL WARNING: This will delete your firm, all clients, documents, invoices, and team members. Type OK to confirm.')) {
+                    fetch('/api/auth/delete-account', { method: 'DELETE' })
+                      .then(r => r.json())
+                      .then(d => {
+                        if (d.success) {
+                          window.location.href = '/'
+                        } else {
+                          alert(d.error || 'Failed to delete account')
+                        }
+                      })
+                      .catch(() => alert('Network error'))
+                  }
+                }
+              }}
+              style={{padding:'8px 16px',background:'#DC2626',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',whiteSpace:'nowrap',cursor:'pointer',flexShrink:0}}
+            >
+              {t('settings.deleteBtn')}
+            </button>
           </div>
-          <a href="/api/auth/logout" style={{padding:'8px 16px',background:'#DC2626',color:'#fff',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:'600',whiteSpace:'nowrap'}}>
-            Sign out
-          </a>
         </div>
       </div>
 
@@ -330,7 +384,7 @@ export default function SettingsForm({
         disabled={loading}
         style={{width:'100%',padding:'14px',background:brandColor,color:'#fff',borderRadius:'10px',border:'none',fontSize:'15px',fontWeight:'700',cursor:'pointer',boxShadow:'0 4px 14px rgba(28,100,242,0.3)'}}
       >
-        {loading ? 'Saving...' : '💾 Save settings'}
+        {loading ? t('btn.saving') : t('btn.saveSettings')}
       </button>
     </div>
   )

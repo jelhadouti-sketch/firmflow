@@ -1,4 +1,4 @@
-export type Locale = 'en' | 'nl' | 'fr' | 'de' | 'es'
+export type Locale = 'en' | 'nl' | 'fr' | 'de' | 'es' 
 
 export function detectLocale(): Locale {
   if (typeof window === 'undefined') return 'en'
@@ -32,6 +32,14 @@ export function detectLocale(): Locale {
 export function setLocale(locale: Locale) {
   localStorage.setItem('firmflow-lang', locale)
   window.location.reload()
+}
+
+export const DATE_LOCALES: Record<Locale, string> = {
+  en: 'en-GB',
+  nl: 'nl-NL',
+  fr: 'fr-FR',
+  de: 'de-DE',
+  es: 'es-ES',
 }
 
 export const LANGUAGES = [

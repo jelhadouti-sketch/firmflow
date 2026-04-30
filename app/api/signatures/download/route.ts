@@ -6,6 +6,15 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const signatureId = searchParams.get('id')
 
+  // Auth check
+  const { createClient } = await import('@/lib/supabase/server')
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const { data: profile } = await supabaseAdmin.from('profiles').select('firm_id, role').eq('id', user.id).single()
+  if (!profile) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   if (!signatureId) {
     return NextResponse.json({ error: 'Missing id' }, { status: 400 })
   }
@@ -16,7 +25,9 @@ export async function GET(req: NextRequest) {
     .eq('id', signatureId)
     .single()
 
-  if (!sigRequest || sigRequest.status !== 'signed') {
+  // Verify ownership
+  const { data: docOwner } = await supabaseAdmin.from('documents').select('firm_id').eq('id', sigRequest?.document_id).single()
+  if (!sigRequest || sigRequest.status !== 'signed' || docOwner?.firm_id !== profile.firm_id) {
     return NextResponse.json({ error: 'Signed document not found' }, { status: 404 })
   }
 
@@ -93,7 +104,7 @@ export async function GET(req: NextRequest) {
       color: rgb(0.39, 0.45, 0.55),
     })
 
-    lastPage.drawText('Verified by FirmFlow · firmflow.uk', {
+    lastPage.drawText('Verified by FirmFlow · firmflow.org', {
       x: 40,
       y: 112,
       size: 7,
@@ -109,7 +120,7 @@ export async function GET(req: NextRequest) {
       color: rgb(0.11, 0.39, 0.95),
     })
 
-    lastPage.drawText('Electronically signed via FirmFlow · firmflow.uk · ' + signedDate, {
+    lastPage.drawText('Electronically signed via FirmFlow · firmflow.org · ' + signedDate, {
       x: 10,
       y: 7,
       size: 7,

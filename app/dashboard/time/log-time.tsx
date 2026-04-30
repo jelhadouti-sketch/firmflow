@@ -1,8 +1,10 @@
 'use client'
+import { useI18n } from '@/lib/i18n/context'
 import { useState } from 'react'
 
 export default function LogTime() {
   const [open, setOpen] = useState(false)
+  const { t } = useI18n()
   const [loading, setLoading] = useState(false)
   const [description, setDescription] = useState('')
   const [hours, setHours] = useState('')
@@ -20,7 +22,7 @@ export default function LogTime() {
     if (res.ok) {
       window.location.reload()
     } else {
-      alert(data.error || 'Something went wrong')
+      alert(data.error || t('error.somethingWrong'))
       setLoading(false)
     }
   }
@@ -30,7 +32,7 @@ export default function LogTime() {
       onClick={() => setOpen(true)}
       style={{padding:'9px 18px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}
     >
-      + Log time
+      {t('dash.logTime')}
     </button>
   )
 
@@ -38,12 +40,12 @@ export default function LogTime() {
     <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000}}>
       <div style={{background:'#fff',borderRadius:'16px',padding:'32px',width:'480px',maxWidth:'calc(100vw - 32px)',boxShadow:'0 20px 60px rgba(0,0,0,0.2)'}}>
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}}>
-          <h2 style={{fontSize:'18px',fontWeight:'800',color:'#0F172A'}}>Log time</h2>
+          <h2 style={{fontSize:'18px',fontWeight:'800',color:'#0F172A'}}>{t('time.logTitle')}</h2>
           <button onClick={() => setOpen(false)} style={{background:'none',border:'none',fontSize:'20px',cursor:'pointer',color:'#64748B'}}>×</button>
         </div>
 
         <div style={{marginBottom:'16px'}}>
-          <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>Description *</label>
+          <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>{t('time.descLabel')}</label>
           <input
             value={description}
             onChange={e => setDescription(e.target.value)}
@@ -54,7 +56,7 @@ export default function LogTime() {
 
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',marginBottom:'24px'}}>
           <div>
-            <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>Hours *</label>
+            <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>{t('logTime.hours')}</label>
             <input
               value={hours}
               onChange={e => setHours(e.target.value)}
@@ -66,7 +68,7 @@ export default function LogTime() {
             />
           </div>
           <div>
-            <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>Date</label>
+            <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>{t('logTime.date')}</label>
             <input
               value={date}
               onChange={e => setDate(e.target.value)}
@@ -78,10 +80,10 @@ export default function LogTime() {
 
         <div style={{display:'flex',gap:'10px',justifyContent:'flex-end'}}>
           <button onClick={() => setOpen(false)} style={{padding:'10px 20px',background:'#F1F5F9',color:'#475569',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>
-            Cancel
+            {t('common.cancel')}
           </button>
           <button onClick={handleSubmit} disabled={loading} style={{padding:'10px 20px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>
-            {loading ? 'Saving...' : 'Log time'}
+            {loading ? t('logTime.saving') : t('logTime.submit')}
           </button>
         </div>
       </div>

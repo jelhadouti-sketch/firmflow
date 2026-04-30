@@ -1,4 +1,5 @@
 'use client'
+import { useI18n } from '@/lib/i18n/context'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -12,6 +13,7 @@ export default function RecurringActions({
   generateMode?: boolean
 }) {
   const [loading, setLoading] = useState(false)
+  const { t } = useI18n()
   const router = useRouter()
 
   async function handleGenerate() {
@@ -19,9 +21,9 @@ export default function RecurringActions({
     const res = await fetch('/api/recurring/generate', { method: 'POST' })
     const data = await res.json()
     if (data.generated > 0) {
-      alert('✅ ' + data.generated + ' invoice(s) generated and sent to clients!')
+      alert('' + data.generated + 'invoice(s) generated and sent to clients!')
     } else {
-      alert('No invoices due today.')
+      alert(t('recAction.noDue'))
     }
     router.refresh()
     setLoading(false)
@@ -41,7 +43,7 @@ export default function RecurringActions({
   if (generateMode) {
     return (
       <button onClick={handleGenerate} disabled={loading} style={{padding:'9px 18px',background:'#15803D',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}>
-        {loading ? '⏳ Generating...' : '🔄 Generate due invoices'}
+        {loading ? '...' : t('recur.generateBtn')}
       </button>
     )
   }
@@ -50,17 +52,17 @@ export default function RecurringActions({
     <div style={{display:'flex',gap:'6px'}}>
       {status === 'active' && (
         <button onClick={() => handleUpdate('paused')} disabled={loading} style={{padding:'6px 12px',background:'#FEF3C7',color:'#92400E',borderRadius:'6px',border:'none',fontSize:'12px',fontWeight:'600',cursor:'pointer'}}>
-          ⏸ Pause
+          {t('recur.pause') || 'Pause'}
         </button>
       )}
       {status === 'paused' && (
         <button onClick={() => handleUpdate('active')} disabled={loading} style={{padding:'6px 12px',background:'#F0FDF4',color:'#15803D',borderRadius:'6px',border:'none',fontSize:'12px',fontWeight:'600',cursor:'pointer'}}>
-          ▶ Resume
+          {t('recur.resume') || '▶ Resume'}
         </button>
       )}
       {status !== 'cancelled' && (
         <button onClick={() => handleUpdate('cancelled')} disabled={loading} style={{padding:'6px 12px',background:'#FEF2F2',color:'#DC2626',borderRadius:'6px',border:'none',fontSize:'12px',fontWeight:'600',cursor:'pointer'}}>
-          🗑 Cancel
+          {t('common.cancel')}
         </button>
       )}
     </div>

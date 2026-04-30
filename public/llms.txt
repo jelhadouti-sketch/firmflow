@@ -1,0 +1,57 @@
+# FirmFlow
+
+> FirmFlow is an all-in-one practice management platform for accountants, lawyers, consultants and bookkeepers. It replaces DocuSign, ShareFile, Clio, and similar tools with one integrated platform from €29/month flat — no per-user fees.
+
+FirmFlow combines documents, e-signatures, time tracking, invoicing, a client portal, and an AI assistant into a single platform. It is built for UK and EU professional services firms who want to consolidate their tool stack, reduce monthly software costs, and offer clients a branded digital experience.
+
+Key facts:
+- Pricing: Starter €29/month (up to 5 team members), Pro €89/month (unlimited team)
+- No per-user fees, no contracts, 14-day free trial
+- GDPR compliant, EU-hosted, AES-256 encrypted, eIDAS certified e-signatures
+- Multi-currency (10 currencies), multi-language (EN, NL, DE, FR, ES)
+- Built for firms in the UK, Netherlands, Germany, and wider EU
+
+## Product
+
+- [How it works](https://www.firmflow.org/how-it-works): Complete feature walkthrough — dashboard, engagements, documents, signatures, time tracking, invoicing, client portal, and AI assistant
+- [Pricing](https://www.firmflow.org/pricing): Starter €29/month, Pro €89/month, flat pricing with no per-user fees
+- [Book a demo](https://www.firmflow.org/demo): 15-minute personalised walkthrough
+- [Start free trial](https://www.firmflow.org/signup): 14-day free trial, no credit card required
+
+## Who it is for
+
+- [Accounting firms](https://www.firmflow.org/for-accountants): Tax, audit, bookkeeping workflows
+- [Law firms](https://www.firmflow.org/for-lawyers): Contracts, case-based time tracking, client portal
+- [Consulting firms](https://www.firmflow.org/for-consultants): Proposals, project tracking, retainers
+- [Bookkeepers](https://www.firmflow.org/for-bookkeepers): Works alongside Xero and QuickBooks Online
+
+## Comparisons
+
+- [FirmFlow vs TaxDome](https://www.firmflow.org/vs-taxdome): Feature comparison for accounting firms
+- [FirmFlow vs Karbon](https://www.firmflow.org/vs-karbon): Feature comparison for practice management
+- [FirmFlow vs Clio](https://www.firmflow.org/vs-clio): Feature comparison for law firms
+- [DocuSign alternative](https://www.firmflow.org/docusign-alternative): Unlimited e-signatures included
+- [ShareFile alternative](https://www.firmflow.org/sharefile-alternative): Secure document sharing included
+
+## Resources
+
+- [Blog](https://www.firmflow.org/blog): Guides, comparisons, and insights for professional firms
+- [Are e-signatures legally binding?](https://www.firmflow.org/blog/are-electronic-signatures-legally-binding): UK and EU legal guide for e-signatures
+- [How to choose practice management software](https://www.firmflow.org/blog/how-to-choose-practice-management-software): Decision framework for firms
+- [What is a client portal?](https://www.firmflow.org/blog/what-is-a-client-portal): Guide to branded client portals for professional firms
+- [Free invoice template](https://www.firmflow.org/tools/invoice-template): Download a professional invoice template
+- [Free engagement letter template](https://www.firmflow.org/tools/engagement-letter): Accountant engagement letter template
+
+## Company
+
+- [About FirmFlow](https://www.firmflow.org/about)
+- [Security](https://www.firmflow.org/security): AES-256 encryption, 2FA, EU hosting, GDPR compliance
+- [Contact](https://www.firmflow.org/contact): hello@firmflow.org
+- [LinkedIn](https://www.linkedin.com/company/firmflown/)
+
+## Legal
+
+- [Privacy policy](https://www.firmflow.org/privacy)
+- [Terms of service](https://www.firmflow.org/terms)
+- [Data Processing Agreement](https://www.firmflow.org/dpa)
+- [Cookie policy](https://www.firmflow.org/cookies)

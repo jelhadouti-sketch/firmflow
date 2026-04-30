@@ -1,9 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
-import MobileNav from '@/components/mobile-nav'
 import CalendarView from './calendar-view'
-import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
+import { getProfileWithPermissions } from '@/lib/permissions'
+import { getServerT } from '@/lib/i18n/server'
 
 export default async function Calendar() {
   const supabase = await createClient()
@@ -16,7 +16,7 @@ export default async function Calendar() {
 
   const firm = profile.firms as any
   const ownerId = profile.getOwnerId()
-  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'calendar')
+  const t = await getServerT()
 
   const events: any[] = []
 
@@ -44,7 +44,7 @@ export default async function Calendar() {
   if (profile.hasPage('invoices')) {
     const { data: invoices } = await supabaseAdmin.from('invoices').select('id, invoice_number, due_at, status').eq('firm_id', profile.firm_id).neq('status', 'paid')
     invoices?.forEach(inv => {
-      if (inv.due_at) events.push({ id: inv.id, title: 'Invoice ' + (inv.invoice_number || ''), date: inv.due_at, type: 'invoice', status: inv.status, color: '#DC2626' })
+      if (inv.due_at) events.push({ id: inv.id, title: t('cal.invoice') + '' + (inv.invoice_number || ''), date: inv.due_at, type: 'invoice', status: inv.status, color: '#DC2626' })
     })
   }
 
@@ -58,43 +58,18 @@ export default async function Calendar() {
     })
   }
 
+
   return (
-    <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
-      <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
-        <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
-          <span style={{fontSize:'18px',fontWeight:'800',color:'#1C64F2'}}>⬡ FirmFlow</span>
-          <span style={{color:'#E2E8F0'}}>|</span>
-          <span style={{fontSize:'14px',fontWeight:'600',color:'#0F172A'}}>{firm?.name}</span>
-        </div>
-        <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
-          <a href="/dashboard" style={{fontSize:'13px',color:'#64748B',textDecoration:'none'}}>← Dashboard</a>
-          <a href="/api/auth/logout" style={{padding:'6px 14px',background:'#F1F5F9',color:'#475569',borderRadius:'6px',textDecoration:'none',fontSize:'13px'}}>Sign out</a>
-        </div>
-      </header>
-
-      <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
-        <aside style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
-          {sidebarItems.map((item, i) => (
-            <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
-              <span>{item.icon}</span>
-              <span>{item.label}</span>
-            </a>
-          ))}
-        </aside>
-
-        <main style={{flex:1,overflow:'auto'}}>
-          <div style={{padding:'32px 32px 0'}}>
-            <div style={{marginBottom:'24px'}}>
-              <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Calendar</h1>
-              <p style={{color:'#64748B',fontSize:'14px'}}>{events.length} deadlines</p>
-            </div>
-          </div>
-          <div style={{margin:'0 32px 32px',background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>
-            <CalendarView events={events} />
-          </div>
-        </main>
+    <>
+    <div style={{padding:'32px 32px 0'}}>
+      <div style={{marginBottom:'24px'}}>
+        <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>{t('cal.title')}</h1>
+        <p style={{color:'#64748B',fontSize:'14px'}}>{t('cal.deadlines', { count: String(events.length) })}</p>
       </div>
-      <MobileNav items={sidebarItems} />
     </div>
+    <div style={{margin:'0 32px 32px',background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>
+      <CalendarView events={events} />
+    </div>
+    </>
   )
 }

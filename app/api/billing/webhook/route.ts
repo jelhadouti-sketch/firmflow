@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
         if (clientEmail) {
           try {
             await resend.emails.send({
-              from: process.env.RESEND_FROM || 'hello@firmflow.uk',
+              from: process.env.RESEND_FROM || 'hello@firmflow.org',
               to: clientEmail,
               subject: 'Payment receipt — ' + (invoice.invoice_number || 'Invoice') + ' from ' + (firm?.name || 'your firm'),
               html: `
@@ -131,7 +131,7 @@ export async function POST(req: NextRequest) {
           if (adminEmail) {
             try {
               await resend.emails.send({
-                from: process.env.RESEND_FROM || 'hello@firmflow.uk',
+                from: process.env.RESEND_FROM || 'hello@firmflow.org',
                 to: adminEmail,
                 subject: '💰 Invoice paid — ' + (invoice.invoice_number || 'Invoice') + ' ' + cur.symbol + (invoice.amount || 0).toLocaleString(),
                 html: `

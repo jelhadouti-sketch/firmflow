@@ -1,10 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
-import MobileNav from '@/components/mobile-nav'
 import UploadDocument from './upload-document'
 import DocumentList from './document-list'
-import { getProfileWithPermissions, buildSidebar } from '@/lib/permissions'
+import { getProfileWithPermissions } from '@/lib/permissions'
+import { getServerT } from '@/lib/i18n/server'
 
 export default async function Documents() {
   const supabase = await createClient()
@@ -17,7 +17,7 @@ export default async function Documents() {
 
   const firm = profile.firms as any
   const ownerId = profile.getOwnerId()
-  const sidebarItems = buildSidebar(profile.hasPage, profile.isAdmin, 'documents')
+  const t = await getServerT()
 
   let query = supabaseAdmin
     .from('documents')
@@ -30,6 +30,19 @@ export default async function Documents() {
   const { data: documents } = await query
 
   // Get engagements for upload form
+  const { data: clientProfiles } = await supabaseAdmin
+    .from('profiles')
+    .select('id, full_name')
+    .eq('firm_id', profile.firm_id)
+    .eq('role', 'client')
+    .order('full_name')
+
+  const clientsData = []
+  for (const cp of (clientProfiles || [])) {
+    const { data: au } = await supabaseAdmin.auth.admin.getUserById(cp.id)
+    clientsData.push({ id: cp.id, full_name: cp.full_name, email: au?.user?.email || '' })
+  }
+
   const { data: engagements } = await supabaseAdmin
     .from('engagements')
     .select('id, title')
@@ -58,53 +71,30 @@ export default async function Documents() {
   const imageCount = (documents || []).filter(d => d.mime_type?.includes('image')).length
 
   function formatSize(bytes: number) {
-    if (bytes < 1024) return bytes + ' B'
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
-    return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
+    if (bytes < 1024) return bytes + 'B'
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + 'KB'
+    return (bytes / (1024 * 1024)).toFixed(1) + 'MB'
   }
 
   return (
-    <div style={{fontFamily:'system-ui,sans-serif',background:'#F8FAFC',minHeight:'100vh'}}>
-      <header style={{background:'#fff',borderBottom:'1px solid #E2E8F0',padding:'0 32px',height:'60px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
-        <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
-          <span style={{fontSize:'18px',fontWeight:'800',color:'#1C64F2'}}>⬡ FirmFlow</span>
-          <span style={{color:'#E2E8F0'}}>|</span>
-          <span style={{fontSize:'14px',fontWeight:'600',color:'#0F172A'}}>{firm?.name}</span>
-        </div>
-        <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
-          <a href="/dashboard" style={{fontSize:'13px',color:'#64748B',textDecoration:'none'}}>← Dashboard</a>
-          <a href="/api/auth/logout" style={{padding:'6px 14px',background:'#F1F5F9',color:'#475569',borderRadius:'6px',textDecoration:'none',fontSize:'13px'}}>Sign out</a>
-        </div>
-      </header>
-
-      <div style={{display:'flex',minHeight:'calc(100vh - 60px)'}}>
-        <aside className="hide-mobile" style={{width:'220px',background:'#fff',borderRight:'1px solid #E2E8F0',padding:'20px 12px',flexShrink:0}}>
-          {sidebarItems.map((item, i) => (
-            <a key={i} href={item.href} style={{display:'flex',alignItems:'center',gap:'10px',padding:'9px 12px',borderRadius:'8px',textDecoration:'none',marginBottom:'2px',background:item.active?'#EFF6FF':'transparent',color:item.active?'#1D4ED8':'#475569',fontSize:'13px',fontWeight:item.active?'600':'400'}}>
-              <span>{item.icon}</span>
-              <span>{item.label}</span>
-            </a>
-          ))}
-        </aside>
-
-        <main style={{flex:1,padding:'32px',overflow:'auto'}}>
-          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}}>
+    <>
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'24px'}}>
             <div>
-              <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>Documents</h1>
-              <p style={{color:'#64748B',fontSize:'14px'}}>{documents?.length || 0} documents · {formatSize(totalSize)} total</p>
+              <h1 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'4px',letterSpacing:'-0.03em'}}>{t('docs.title')}</h1>
+              <p style={{color:'#64748B',fontSize:'14px'}}>{documents?.length || 0} {t('sidebar.documents').toLowerCase()} · {formatSize(totalSize)} {t('common.total').toLowerCase()}</p>
             </div>
-            <UploadDocument engagements={engagements || []} />
+            <UploadDocument engagements={engagements || []} clients={clientsData || []} />
           </div>
 
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(130px,1fr))',gap:'12px',marginBottom:'24px'}}>
             {[
-              { label:'Total', value: documents?.length || 0, color:'#1D4ED8', icon:'📄' },
-              { label:'Client visible', value: documents?.filter(d=>d.visibility==='client').length || 0, color:'#15803D', icon:'👁' },
-              { label:'Internal', value: documents?.filter(d=>d.visibility==='internal').length || 0, color:'#92400E', icon:'🔒' },
-              { label:'PDFs', value: pdfCount, color:'#DC2626', icon:'📕' },
-              { label:'Word', value: wordCount, color:'#1D4ED8', icon:'📘' },
-              { label:'Excel', value: excelCount, color:'#15803D', icon:'📗' },
-              { label:'Images', value: imageCount, color:'#7C3AED', icon:'🖼' },
+              { label:t('common.total'), value: documents?.length || 0, color:'#1D4ED8', icon:'' },
+              { label:t('docs.clientVisible'), value: documents?.filter(d=>d.visibility==='client').length || 0, color:'#15803D', icon:'' },
+              { label:t('docs.internal'), value: documents?.filter(d=>d.visibility==='internal').length || 0, color:'#92400E', icon:'' },
+              { label:t('docs.pdfs'), value: pdfCount, color:'#DC2626', icon:'' },
+              { label:t('docs.word'), value: wordCount, color:'#1D4ED8', icon:'' },
+              { label:t('docs.excel'), value: excelCount, color:'#15803D', icon:'' },
+              { label:t('docs.images'), value: imageCount, color:'#7C3AED', icon:'' },
             ].map((stat, i) => (
               <div key={i} style={{background:'#fff',borderRadius:'10px',padding:'14px 16px',border:'1px solid #E2E8F0'}}>
                 <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'6px'}}>
@@ -119,18 +109,16 @@ export default async function Documents() {
           <div style={{background:'#fff',borderRadius:'12px',border:'1px solid #E2E8F0',overflow:'hidden'}}>
             {!docsWithUploader.length ? (
               <div style={{padding:'48px',textAlign:'center',color:'#94A3B8'}}>
-                <p style={{fontSize:'32px',marginBottom:'8px'}}>📄</p>
-                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>No documents yet</p>
-                <p style={{fontSize:'13px',marginBottom:'20px'}}>Upload your first document to get started</p>
-                <UploadDocument engagements={engagements || []} />
+                <p style={{fontSize:'32px',marginBottom:'8px'}}></p>
+                <p style={{fontSize:'15px',fontWeight:'600',marginBottom:'4px',color:'#0F172A'}}>{t('docs.noDocsTitle')}</p>
+                <p style={{fontSize:'13px',marginBottom:'20px'}}>{t('docs.noDocsDesc')}</p>
+                <UploadDocument engagements={engagements || []} clients={clientsData || []} />
               </div>
             ) : (
               <DocumentList documents={docsWithUploader} />
             )}
           </div>
-        </main>
-      </div>
-      <MobileNav items={sidebarItems} />
-    </div>
+    </>
   )
 }
+

@@ -1,3 +1,4 @@
+import { isValidUUID, sanitize } from '@/lib/validate'
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { NextRequest, NextResponse } from 'next/server'
@@ -31,6 +32,6 @@ export async function POST(req: NextRequest) {
     .delete()
     .eq('id', signatureId)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+  if (error) return NextResponse.json({ error: 'Something went wrong' }, { status: 400 })
   return NextResponse.json({ success: true })
 }

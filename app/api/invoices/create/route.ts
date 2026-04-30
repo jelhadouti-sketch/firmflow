@@ -1,5 +1,7 @@
+import { isValidUUID, sanitize } from '@/lib/validate'
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
+import { rateLimit, getIP } from '@/lib/rate-limit'
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { getCurrency } from '@/lib/currencies'
@@ -47,7 +49,7 @@ export async function POST(req: NextRequest) {
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+  if (error) return NextResponse.json({ error: 'Something went wrong' }, { status: 400 })
 
   if (send_payment_link && client_id && invoice) {
     const { data: clientAuth } = await supabaseAdmin.auth.admin.getUserById(client_id)
@@ -68,10 +70,10 @@ export async function POST(req: NextRequest) {
     const brandColor = firm?.brand_color || '#1C64F2'
 
     if (clientEmail) {
-      const portalUrl = 'https://firmflow.uk/portal/invoices'
+      const portalUrl = 'https://firmflow.org/portal/invoices'
       try {
         await resend.emails.send({
-          from: process.env.RESEND_FROM || 'hello@firmflow.uk',
+          from: process.env.RESEND_FROM || 'hello@firmflow.org',
           to: clientEmail,
           subject: `New invoice from ${firm?.name || 'your firm'} — ${invoice_number} ${cur.symbol}${(amount || 0).toLocaleString()}`,
           html: `
@@ -117,7 +119,7 @@ export async function POST(req: NextRequest) {
                 ${firm?.bank_details ? `<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:16px;margin-top:16px"><p style="font-size:12px;font-weight:700;color:#374151;margin:0 0 8px">BANK TRANSFER DETAILS</p><pre style="font-size:12px;color:#475569;margin:0;white-space:pre-wrap;font-family:monospace">${firm.bank_details}</pre></div>` : ''}
               </div>
               <p style="text-align:center;color:#94A3B8;font-size:12px;margin-top:20px">
-                Powered by <strong>${firm?.name || 'FirmFlow'}</strong> · firmflow.uk
+                Powered by <strong>${firm?.name || 'FirmFlow'}</strong> · firmflow.org
               </p>
             </div>
           `

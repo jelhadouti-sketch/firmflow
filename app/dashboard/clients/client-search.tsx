@@ -1,5 +1,8 @@
 'use client'
+import Link from 'next/link'
+import { useI18n } from '@/lib/i18n/context'
 import { useState } from 'react'
+import { Phone, MessageSquare, Trash2 } from 'lucide-react'
 
 interface Client {
   id: string
@@ -17,6 +20,7 @@ interface Client {
 
 export default function ClientSearch({ clients }: { clients: Client[] }) {
   const [search, setSearch] = useState('')
+  const { t, dateLocale } = useI18n()
   const [items, setItems] = useState(clients)
   const [deleting, setDeleting] = useState<string | null>(null)
 
@@ -27,7 +31,7 @@ export default function ClientSearch({ clients }: { clients: Client[] }) {
   )
 
   async function handleDelete(id: string, name: string) {
-    if (!confirm(`Delete client "${name}" and all their conversations? This cannot be undone.`)) return
+    if (!confirm(t('clientSearch.deleteConfirm', { name }))) return
     setDeleting(id)
     const res = await fetch('/api/clients/delete', {
       method: 'POST',
@@ -47,22 +51,22 @@ export default function ClientSearch({ clients }: { clients: Client[] }) {
     <div>
       <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0',display:'flex',alignItems:'center',gap:'12px'}}>
         <div style={{flex:1,position:'relative'}}>
-          <span style={{position:'absolute',left:'12px',top:'50%',transform:'translateY(-50%)',color:'#94A3B8',fontSize:'16px'}}>🔍</span>
+          <span style={{position:'absolute',left:'12px',top:'50%',transform:'translateY(-50%)',color:'#94A3B8',fontSize:'16px'}}></span>
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Search by name, email, or phone..."
+            placeholder={t('clientSearch.placeholder')}
             style={{width:'100%',padding:'9px 12px 9px 36px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',color:'#0F172A',outline:'none',boxSizing:'border-box' as const,background:'#F8FAFC'}}
           />
         </div>
         {search && (
-          <button onClick={() => setSearch('')} style={{fontSize:'13px',color:'#64748B',background:'none',border:'none',cursor:'pointer',fontWeight:'500'}}>Clear</button>
+          <button onClick={() => setSearch('')} style={{fontSize:'13px',color:'#64748B',background:'none',border:'none',cursor:'pointer',fontWeight:'500'}}>{t('clientSearch.clear')}</button>
         )}
         <span style={{fontSize:'13px',color:'#94A3B8',whiteSpace:'nowrap'}}>{filtered.length} of {items.length}</span>
       </div>
 
       {filtered.length === 0 ? (
-        <div style={{padding:'32px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>No clients found matching "{search}"</div>
+        <div style={{padding:'32px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>{t('clientSearch.noResults', { query: search })}</div>
       ) : (
         <div>
           {filtered.map((client, i) => {
@@ -77,39 +81,39 @@ export default function ClientSearch({ clients }: { clients: Client[] }) {
                   <div>
                     <p style={{fontSize:'14px',fontWeight:'700',color:'#0F172A',margin:'0 0 2px'}}>{client.full_name || '—'}</p>
                     <p style={{fontSize:'12px',color:'#64748B',margin:'0'}}>{client.email}</p>
-                    {client.phone && <p style={{fontSize:'11px',color:'#94A3B8',margin:'0'}}>📞 {client.phone}</p>}
+ {client.phone && <p style={{fontSize:'11px',color:'#94A3B8',margin:'0',display:'inline-flex',alignItems:'center',gap:'4px'}}><Phone size={11}/> {client.phone}</p>}
                   </div>
                 </a>
 
                 <div style={{display:'flex',gap:'16px',alignItems:'center',flexWrap:'wrap'}}>
                   <div style={{textAlign:'center',minWidth:'70px'}}>
                     <p style={{fontSize:'14px',fontWeight:'800',color:'#1D4ED8',margin:'0'}}>{sym}{client.total_invoiced.toLocaleString()}</p>
-                    <p style={{fontSize:'10px',color:'#94A3B8',margin:'0'}}>Invoiced</p>
+                    <p style={{fontSize:'10px',color:'#94A3B8',margin:'0'}}>{t('clientSearch.invoiced')}</p>
                   </div>
                   <div style={{textAlign:'center',minWidth:'70px'}}>
                     <p style={{fontSize:'14px',fontWeight:'800',color:'#15803D',margin:'0'}}>{sym}{client.total_paid.toLocaleString()}</p>
-                    <p style={{fontSize:'10px',color:'#94A3B8',margin:'0'}}>Paid</p>
+                    <p style={{fontSize:'10px',color:'#94A3B8',margin:'0'}}>{t('common.paid')}</p>
                   </div>
                   <div style={{textAlign:'center',minWidth:'50px'}}>
                     <p style={{fontSize:'14px',fontWeight:'800',color:'#7C3AED',margin:'0'}}>{client.engagement_count}</p>
-                    <p style={{fontSize:'10px',color:'#94A3B8',margin:'0'}}>Engagements</p>
+                    <p style={{fontSize:'10px',color:'#94A3B8',margin:'0'}}>{t('clientSearch.engagements')}</p>
                   </div>
                   <div style={{textAlign:'center',minWidth:'50px'}}>
                     <p style={{fontSize:'14px',fontWeight:'800',color:'#92400E',margin:'0'}}>{client.pending_sigs}</p>
-                    <p style={{fontSize:'10px',color:'#94A3B8',margin:'0'}}>Pending sigs</p>
+                    <p style={{fontSize:'10px',color:'#94A3B8',margin:'0'}}>{t('clientSearch.pendingSigs')}</p>
                   </div>
-                  <span style={{fontSize:'11px',color:'#94A3B8'}}>{client.created_at ? new Date(client.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—'}</span>
+                  <span style={{fontSize:'11px',color:'#94A3B8'}}>{client.created_at ? new Date(client.created_at).toLocaleDateString(dateLocale,{day:'numeric',month:'short',year:'numeric'}) : '—'}</span>
                 </div>
 
                 <div style={{display:'flex',gap:'6px',flexShrink:0}}>
-                  <a href={url} style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'11px',fontWeight:'600',textDecoration:'none'}}>View →</a>
-                  <a href="/dashboard/messages" style={{padding:'6px 10px',background:'#F0FDF4',color:'#15803D',borderRadius:'6px',fontSize:'11px',fontWeight:'600',textDecoration:'none'}}>💬</a>
+                  <a href={url} style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'11px',fontWeight:'600',textDecoration:'none'}}>{t('clientSearch.view')}</a>
+                  <Link href="/dashboard/messages" style={{padding:'6px 10px',background:'#F0FDF4',color:'#15803D',borderRadius:'6px',fontSize:'11px',fontWeight:'600',textDecoration:'none',display:'inline-flex',alignItems:'center'}}><MessageSquare size={13}/></Link>
                   <button
                     onClick={() => handleDelete(client.id, client.full_name)}
                     disabled={deleting === client.id}
                     style={{padding:'6px 10px',background:'#FEF2F2',color:'#DC2626',borderRadius:'6px',fontSize:'11px',fontWeight:'600',border:'none',cursor:'pointer'}}
                   >
-                    {deleting === client.id ? '...' : '🗑'}
+                    {deleting === client.id ? '...' : <Trash2 size={13}/>}
                   </button>
                 </div>
               </div>

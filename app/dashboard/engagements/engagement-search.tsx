@@ -1,4 +1,6 @@
 'use client'
+import { Trash2 } from 'lucide-react'
+import { useI18n } from '@/lib/i18n/context'
 import { useState } from 'react'
 
 interface Engagement {
@@ -15,6 +17,7 @@ interface Engagement {
 
 export default function EngagementSearch({ engagements, currencySymbol = '£' }: { engagements: Engagement[], currencySymbol?: string }) {
   const [search, setSearch] = useState('')
+  const { t, dateLocale } = useI18n()
   const [statusFilter, setStatusFilter] = useState('all')
   const [deleting, setDeleting] = useState<string | null>(null)
   const [items, setItems] = useState(engagements)
@@ -38,7 +41,7 @@ export default function EngagementSearch({ engagements, currencySymbol = '£' }:
     if (res.ok) {
       setItems(prev => prev.filter(e => e.id !== id))
     } else {
-      alert('Failed to delete')
+      alert(t('alert.failedDelete'))
     }
     setDeleting(null)
   }
@@ -47,18 +50,18 @@ export default function EngagementSearch({ engagements, currencySymbol = '£' }:
     <div>
       <div style={{padding:'16px 20px',borderBottom:'1px solid #E2E8F0',display:'flex',alignItems:'center',gap:'12px',flexWrap:'wrap'}}>
         <div style={{flex:1,minWidth:'200px',position:'relative'}}>
-          <span style={{position:'absolute',left:'12px',top:'50%',transform:'translateY(-50%)',color:'#94A3B8',fontSize:'16px'}}>🔍</span>
+          <span style={{position:'absolute',left:'12px',top:'50%',transform:'translateY(-50%)',color:'#94A3B8',fontSize:'16px'}}></span>
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Search by title, type, or client..."
+            placeholder={t('placeholder.searchEngagements')}
             style={{width:'100%',padding:'9px 12px 9px 36px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',color:'#0F172A',outline:'none',boxSizing:'border-box' as const,background:'#F8FAFC'}}
           />
         </div>
         <div style={{display:'flex',gap:'6px'}}>
           {['all','active','review','closed'].map(s => (
             <button key={s} onClick={() => setStatusFilter(s)} style={{padding:'7px 14px',borderRadius:'8px',border:'1px solid',borderColor:statusFilter===s?'#1C64F2':'#E2E8F0',background:statusFilter===s?'#EFF6FF':'#fff',color:statusFilter===s?'#1D4ED8':'#64748B',fontSize:'12px',fontWeight:'600',cursor:'pointer',textTransform:'capitalize'}}>
-              {s === 'all' ? 'All' : s.charAt(0).toUpperCase() + s.slice(1)}
+              {s === 'all' ? t('table.all') : s.charAt(0).toUpperCase() + s.slice(1)}
             </button>
           ))}
         </div>
@@ -66,14 +69,14 @@ export default function EngagementSearch({ engagements, currencySymbol = '£' }:
       </div>
 
       <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr 1fr 1fr auto',padding:'10px 20px',background:'#F8FAFC',borderBottom:'1px solid #E2E8F0',gap:'12px'}}>
-        {['Title','Type','Client','Status','Due date','Budget',''].map((h, i) => (
+        {[t('table.title'),t('table.type'),t('table.client'),t('table.status'),t('table.dueDate'),t('table.budget'),''].map((h, i) => (
           <span key={i} style={{fontSize:'11px',fontWeight:'600',color:'#64748B',textTransform:'uppercase',letterSpacing:'0.07em'}}>{h}</span>
         ))}
       </div>
 
       {filtered.length === 0 ? (
         <div style={{padding:'32px',textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>
-          No engagements found
+          {t('eng.noEngagements') || 'No engagements found'}
         </div>
       ) : (
         filtered.map((eng, i) => {
@@ -87,16 +90,16 @@ export default function EngagementSearch({ engagements, currencySymbol = '£' }:
               <span style={{padding:'3px 8px',borderRadius:'5px',fontSize:'11px',fontWeight:'600',display:'inline-block',background:eng.status==='active'?'#F0FDF4':eng.status==='review'?'#FEF3C7':'#F1F5F9',color:eng.status==='active'?'#15803D':eng.status==='review'?'#92400E':'#64748B'}}>
                 {eng.status}
               </span>
-              <span style={{fontSize:'13px',color:'#64748B'}}>{eng.due_date ? new Date(eng.due_date).toLocaleDateString('en-GB') : '—'}</span>
+              <span style={{fontSize:'13px',color:'#64748B'}}>{eng.due_date ? new Date(eng.due_date).toLocaleDateString(dateLocale) : '—'}</span>
               <span style={{fontSize:'13px',fontWeight:'600',color:'#0F172A'}}>{eng.budget ? currencySymbol + eng.budget.toLocaleString() : '—'}</span>
               <div style={{display:'flex',gap:'6px'}}>
-                <a href={url} style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none',whiteSpace:'nowrap'}}>View →</a>
+                <a href={url} style={{padding:'6px 12px',background:'#EFF6FF',color:'#1D4ED8',borderRadius:'6px',fontSize:'12px',fontWeight:'600',textDecoration:'none',whiteSpace:'nowrap'}}>{t('common.viewArrow') || 'View →'}</a>
                 <button
                   onClick={() => handleDelete(eng.id)}
                   disabled={deleting === eng.id}
                   style={{padding:'6px 10px',background:'#FEF2F2',color:'#DC2626',borderRadius:'6px',fontSize:'12px',fontWeight:'600',border:'none',cursor:'pointer',whiteSpace:'nowrap'}}
                 >
-                  {deleting === eng.id ? '...' : '🗑'}
+                  {deleting === eng.id ? '...' : <Trash2 size={13}/>}
                 </button>
               </div>
             </div>

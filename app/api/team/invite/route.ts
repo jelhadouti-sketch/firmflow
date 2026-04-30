@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
 
   try {
     await resend.emails.send({
-      from: process.env.RESEND_FROM || 'hello@firmflow.uk',
+      from: process.env.RESEND_FROM || 'hello@firmflow.org',
       to: email,
       subject: 'You have been invited to join ' + (firm?.name || 'FirmFlow'),
       html: `
@@ -121,7 +121,7 @@ export async function POST(req: NextRequest) {
             </div>
           </div>
           <p style="text-align:center;color:#94A3B8;font-size:12px;margin-top:20px">
-            Powered by <strong>FirmFlow</strong> · firmflow.uk
+            Powered by <strong>FirmFlow</strong> · firmflow.org
           </p>
         </div>
       `

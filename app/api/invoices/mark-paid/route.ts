@@ -1,3 +1,4 @@
+import { isValidUUID, sanitize } from '@/lib/validate'
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { NextRequest, NextResponse } from 'next/server'
@@ -27,9 +28,10 @@ export async function POST(req: NextRequest) {
     .from('invoices')
     .update({ status: newStatus })
     .eq('id', invoiceId)
+    .neq('status', 'paid')  // Prevent double-marking
     .eq('firm_id', profile.firm_id)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+  if (error) return NextResponse.json({ error: 'Something went wrong' }, { status: 400 })
 
   // If marking as paid send receipt email to client
   if (!overdue && clientId) {
@@ -51,7 +53,7 @@ export async function POST(req: NextRequest) {
     if (clientEmail) {
       try {
         await resend.emails.send({
-          from: process.env.RESEND_FROM || 'hello@firmflow.uk',
+          from: process.env.RESEND_FROM || 'hello@firmflow.org',
           to: clientEmail,
           subject: '✅ Payment receipt — ' + invoiceNumber + ' from ' + (firm?.name || 'your firm'),
           html: `
@@ -81,7 +83,7 @@ export async function POST(req: NextRequest) {
                   <a href="${process.env.NEXT_PUBLIC_APP_URL}/portal/invoices" style="display:inline-block;background:#1C64F2;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">View in portal →</a>
                 </div>
               </div>
-              <p style="text-align:center;color:#94A3B8;font-size:12px;margin-top:20px">Powered by <strong>FirmFlow</strong> · firmflow.uk</p>
+              <p style="text-align:center;color:#94A3B8;font-size:12px;margin-top:20px">Powered by <strong>FirmFlow</strong> · firmflow.org</p>
             </div>
           `
         })

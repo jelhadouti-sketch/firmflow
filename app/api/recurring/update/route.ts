@@ -25,6 +25,6 @@ export async function POST(req: NextRequest) {
     .eq('id', id)
     .eq('firm_id', profile.firm_id)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+  if (error) return NextResponse.json({ error: 'Something went wrong' }, { status: 400 })
   return NextResponse.json({ success: true })
 }

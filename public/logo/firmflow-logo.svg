@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none">
+  <!-- Shield mark -->
+  <path d="M4 12C4 8 14 4 22 4C30 4 40 8 40 12V28C40 38 22 46 22 46C22 46 4 38 4 28V12Z" fill="#1C64F2"/>
+  <path d="M12 18C12 18 17 15.5 22 18C27 15.5 32 18 32 18" stroke="#fff" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+  <path d="M12 25C12 25 17 22.5 22 25C27 22.5 32 25 32 25" stroke="#fff" stroke-width="2.8" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M15 32C15 32 18.5 29.5 22 32C25.5 29.5 29 32 29 32" stroke="#fff" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.4"/>
+  <!-- Wordmark -->
+  <text x="52" y="32" font-family="system-ui,-apple-system,sans-serif" font-size="26" font-weight="700" fill="#1C64F2" letter-spacing="-0.5">Firm</text>
+  <text x="116" y="32" font-family="system-ui,-apple-system,sans-serif" font-size="26" font-weight="400" fill="#0F172A" letter-spacing="-0.5">Flow</text>
+</svg>

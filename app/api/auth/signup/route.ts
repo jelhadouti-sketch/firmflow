@@ -1,5 +1,10 @@
+import { Resend } from 'resend'
+import { sanitize, isValidEmail } from '@/lib/validate'
+import { rateLimit, getIP } from '@/lib/rate-limit'
 import { NextRequest, NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
 import { supabaseAdmin } from '@/lib/supabase/admin'
+import { buildWelcomeVerifyEmail } from '@/lib/emails/welcomeVerify'
 
 const TIMEZONE_CURRENCY_MAP: Record<string, string> = {
   'Europe/London': 'GBP',
@@ -78,17 +83,33 @@ function detectCurrency(timezone?: string, locale?: string): string {
 }
 
 export async function POST(req: NextRequest) {
-  const { email, password, fullName, firmName, timezone, locale } = await req.json()
+  const body = await req.json()
+  const email = sanitize(body.email)
+  const password = body.password
+  const fullName = sanitize(body.fullName)
+  const firmName = sanitize(body.firmName)
+  // Validate
+  if (!isValidEmail(email)) return NextResponse.json({ error: 'Invalid email' }, { status: 400 })
+  if (!password || password.length < 6) return NextResponse.json({ error: 'Password too short' }, { status: 400 })
+  const { phone, taxVat, address, city, country, firmEmail, timezone, browserLocale } = body
 
   if (!email || !password || !fullName || !firmName) {
     return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
   }
 
-  const currency = detectCurrency(timezone, locale)
+  const currency = detectCurrency(timezone, browserLocale)
+
+  // Detect language from cookie (set by i18n), fallback to browserLocale, fallback to 'en'
+  const cookieStore = await cookies()
+  const cookieLang = cookieStore.get('firmflow-lang')?.value || ''
+  const localeLang = String(browserLocale || '').split('-')[0].toLowerCase()
+  const detectedLang = (['en','nl','fr','de','es'].includes(cookieLang) ? cookieLang
+    : ['en','nl','fr','de','es'].includes(localeLang) ? localeLang
+    : 'en')
 
   const { data: firm, error: firmError } = await supabaseAdmin
     .from('firms')
-    .insert({ name: firmName, plan: 'starter', currency })
+    .insert({ name: firmName, plan: 'starter', currency, language: detectedLang, phone: phone || null, tax_number: taxVat || null, address: address || null, city: city || null, country: country || null, email: firmEmail || null, trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString() })
     .select()
     .single()
 
@@ -99,7 +120,7 @@ export async function POST(req: NextRequest) {
   const { data: authData, error: userError } = await supabaseAdmin.auth.admin.createUser({
     email,
     password,
-    email_confirm: true,
+    email_confirm: false,
     user_metadata: {
       full_name: fullName,
       firm_id: firm.id,
@@ -125,6 +146,33 @@ export async function POST(req: NextRequest) {
     await supabaseAdmin.from('firms').delete().eq('id', firm.id)
     return NextResponse.json({ error: profileError.message }, { status: 400 })
   }
+
+  // Generate email confirmation link  
+  const { data: linkData } = await supabaseAdmin.auth.admin.generateLink({
+    type: 'signup',
+    email,
+    password,
+    options: { redirectTo: 'https://www.firmflow.org/dashboard' }
+  })
+  const confirmUrl = linkData?.properties?.action_link || 'https://www.firmflow.org/login'
+
+  // Send welcome/verify email in user's language
+  try {
+    const resend = new Resend(process.env.RESEND_API_KEY)
+    const firstName = (fullName || '').split(' ')[0] || 'there'
+    const { subject, html } = buildWelcomeVerifyEmail({
+      lang: detectedLang,
+      firstName,
+      firmName,
+      confirmUrl,
+    })
+    await resend.emails.send({
+      from: process.env.RESEND_FROM || 'hello@firmflow.org',
+      to: email,
+      subject,
+      html,
+    })
+  } catch (e) { console.error('Welcome email error:', e) }
 
   return NextResponse.json({ success: true })
 }

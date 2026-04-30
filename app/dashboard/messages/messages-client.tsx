@@ -1,4 +1,5 @@
 'use client'
+import { useI18n } from '@/lib/i18n/context'
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -44,6 +45,7 @@ export default function MessagesClient({
   userName: string
 }) {
   const [conversations, setConversations] = useState(initialConvos)
+  const { t } = useI18n()
   const [unreadMap, setUnreadMap] = useState(initialUnread)
   const [activeConvo, setActiveConvo] = useState<string | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
@@ -265,7 +267,7 @@ export default function MessagesClient({
     const d = new Date(ts)
     const now = new Date()
     const diff = now.getTime() - d.getTime()
-    if (diff < 60000) return 'Just now'
+    if (diff < 60000) return t('msg.justNow') || 'Just now'
     if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`
     if (diff < 86400000) return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     if (diff < 604800000) return d.toLocaleDateString([], { weekday: 'short' })
@@ -274,7 +276,7 @@ export default function MessagesClient({
 
   function formatMsgTime(ts: string) {
     const d = new Date(ts)
-    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' · ' + d.toLocaleDateString([], { month: 'short', day: 'numeric' })
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + '· ' + d.toLocaleDateString([], { month: 'short', day: 'numeric' })
   }
 
   const selectedClient = clients.find(c => c.id === newClient)
@@ -301,7 +303,7 @@ export default function MessagesClient({
           <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'16px'}}>
             <div>
               <h2 style={{fontSize:'18px',fontWeight:'800',color:'#0F172A',margin:'0',letterSpacing:'-0.03em'}}>
-                💬 Messages
+ Messages
                 {totalUnread > 0 && <span style={{marginLeft:'8px',background:'#DC2626',color:'#fff',fontSize:'11px',fontWeight:'700',borderRadius:'10px',padding:'2px 8px'}}>{totalUnread}</span>}
               </h2>
             </div>
@@ -309,7 +311,7 @@ export default function MessagesClient({
               onClick={() => setShowNew(true)}
               style={{padding:'8px 14px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer',display:'flex',alignItems:'center',gap:'4px'}}
             >
-              ✏️ New
+              {t('msg.new')}
             </button>
           </div>
 
@@ -317,7 +319,7 @@ export default function MessagesClient({
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="🔍 Search conversations..."
+            placeholder={t('msg.searchConvos') || 'Search conversations...'}
             style={{width:'100%',padding:'10px 14px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'13px',outline:'none',boxSizing:'border-box',background:'#F8FAFC'}}
           />
         </div>
@@ -325,9 +327,9 @@ export default function MessagesClient({
         <div style={{flex:1,overflowY:'auto'}}>
           {filtered.length === 0 ? (
             <div style={{padding:'40px 20px',textAlign:'center'}}>
-              <p style={{fontSize:'32px',margin:'0 0 8px'}}>💬</p>
-              <p style={{fontSize:'14px',color:'#64748B',margin:'0'}}>No conversations yet</p>
-              <p style={{fontSize:'12px',color:'#94A3B8',margin:'4px 0 0'}}>Start a new conversation with a client</p>
+              <p style={{fontSize:'32px',margin:'0 0 8px'}}></p>
+              <p style={{fontSize:'14px',color:'#64748B',margin:'0'}}>{t('msg.noConversations')}</p>
+              <p style={{fontSize:'12px',color:'#94A3B8',margin:'4px 0 0'}}>{t('msg.startNew')}</p>
             </div>
           ) : filtered.map(c => (
             <div
@@ -342,7 +344,7 @@ export default function MessagesClient({
                   </div>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
-                      <span style={{fontSize:'13px',fontWeight:'700',color:'#0F172A',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{c.client?.full_name || c.client?.email || 'Unknown'}</span>
+                      <span style={{fontSize:'13px',fontWeight:'700',color:'#0F172A',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{c.client?.full_name || c.client?.email || t('msg.unknown') || 'Unknown'}</span>
                       {(unreadMap[c.id] || 0) > 0 && (
                         <span style={{background:'#DC2626',color:'#fff',fontSize:'10px',fontWeight:'700',borderRadius:'10px',padding:'1px 6px',flexShrink:0}}>{unreadMap[c.id]}</span>
                       )}
@@ -381,10 +383,10 @@ export default function MessagesClient({
                 <p style={{fontSize:'12px',color:'#64748B',margin:'0'}}>{activeConversation.subject} · {activeConversation.client?.email}</p>
               </div>
               <button
-                onClick={() => { if (confirm('Delete this entire conversation?')) deleteConversation(activeConvo) }}
+                onClick={() => { if (confirm(t('alert.deleteConversation'))) deleteConversation(activeConvo) }}
                 style={{padding:'6px 12px',background:'#FEF2F2',color:'#DC2626',borderRadius:'6px',border:'none',fontSize:'12px',fontWeight:'600',cursor:'pointer'}}
               >
-                🗑️ Delete
+                {t('common.deleteBtn') || 'Delete'}
               </button>
             </div>
 
@@ -392,12 +394,12 @@ export default function MessagesClient({
             <div style={{flex:1,overflowY:'auto',padding:'24px'}}>
               {loading ? (
                 <div style={{textAlign:'center',padding:'40px'}}>
-                  <p style={{fontSize:'14px',color:'#64748B'}}>Loading messages...</p>
+                  <p style={{fontSize:'14px',color:'#64748B'}}>{t('msg.loading') || 'Loading messages...'}</p>
                 </div>
               ) : messages.length === 0 ? (
                 <div style={{textAlign:'center',padding:'40px'}}>
-                  <p style={{fontSize:'32px',margin:'0 0 8px'}}>👋</p>
-                  <p style={{fontSize:'14px',color:'#64748B'}}>Start the conversation!</p>
+                  <p style={{fontSize:'32px',margin:'0 0 8px'}}></p>
+                  <p style={{fontSize:'14px',color:'#64748B'}}>{t('msg.startConvo') || 'Start the conversation!'}</p>
                 </div>
               ) : (
                 <>
@@ -420,15 +422,15 @@ export default function MessagesClient({
                             </div>
                             <div style={{display:'flex',alignItems:'center',gap:'6px',marginTop:'4px',justifyContent:isMe ? 'flex-end' : 'flex-start'}}>
                               <span style={{fontSize:'11px',color:'#94A3B8'}}>{formatMsgTime(msg.created_at)}</span>
-                              {isMe && <span style={{fontSize:'11px',color:msg.read ? '#1C64F2' : '#94A3B8'}}>{msg.read ? '✓✓' : '✓'}</span>}
+                              {isMe && <span style={{fontSize:'11px',color:msg.read ? '#1C64F2' : '#94A3B8'}}>{msg.read ? '' : ''}</span>}
                               {isMe && (
                                 deleteConfirm === msg.id ? (
                                   <span style={{display:'flex',gap:'4px'}}>
-                                    <button onClick={() => deleteMessage(msg.id)} style={{fontSize:'11px',color:'#DC2626',background:'none',border:'none',cursor:'pointer',fontWeight:'600',padding:'0'}}>Delete</button>
-                                    <button onClick={() => setDeleteConfirm(null)} style={{fontSize:'11px',color:'#64748B',background:'none',border:'none',cursor:'pointer',padding:'0'}}>Cancel</button>
+                                    <button onClick={() => deleteMessage(msg.id)} style={{fontSize:'11px',color:'#DC2626',background:'none',border:'none',cursor:'pointer',fontWeight:'600',padding:'0'}}>{t('common.delete') || 'Delete'}</button>
+                                    <button onClick={() => setDeleteConfirm(null)} style={{fontSize:'11px',color:'#64748B',background:'none',border:'none',cursor:'pointer',padding:'0'}}>{t('invite.cancel')}</button>
                                   </span>
                                 ) : (
-                                  <button onClick={() => setDeleteConfirm(msg.id)} style={{fontSize:'11px',color:'#94A3B8',background:'none',border:'none',cursor:'pointer',padding:'0',opacity:0.6}} title="Delete message">🗑️</button>
+                                  <button onClick={() => setDeleteConfirm(msg.id)} style={{fontSize:'11px',color:'#94A3B8',background:'none',border:'none',cursor:'pointer',padding:'0',opacity:0.6}} title="Delete message"></button>
                                 )
                               )}
                             </div>
@@ -450,7 +452,7 @@ export default function MessagesClient({
                   value={newMsg}
                   onChange={e => setNewMsg(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Type a message... (Enter to send)"
+                  placeholder={t('placeholder.typeMessage')}
                   rows={1}
                   style={{flex:1,padding:'12px 16px',border:'1px solid #E2E8F0',borderRadius:'12px',fontSize:'14px',outline:'none',resize:'none',maxHeight:'120px',fontFamily:'inherit',color:'#0F172A',background:'#F8FAFC'}}
                 />
@@ -459,7 +461,7 @@ export default function MessagesClient({
                   disabled={sending || !newMsg.trim()}
                   style={{padding:'12px 20px',background:!newMsg.trim() ? '#94A3B8' : '#1C64F2',color:'#fff',borderRadius:'12px',border:'none',fontSize:'14px',fontWeight:'700',cursor:!newMsg.trim() ? 'not-allowed' : 'pointer',flexShrink:0,boxShadow:'0 2px 8px rgba(28,100,242,0.3)'}}
                 >
-                  {sending ? '⏳' : '📤 Send'}
+                  {sending ? '...' : 'Send'}
                 </button>
               </div>
             </div>
@@ -467,14 +469,14 @@ export default function MessagesClient({
         ) : (
           <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center'}}>
             <div style={{textAlign:'center'}}>
-              <p style={{fontSize:'48px',margin:'0 0 12px'}}>💬</p>
-              <h3 style={{fontSize:'18px',fontWeight:'700',color:'#0F172A',margin:'0 0 8px'}}>Select a conversation</h3>
-              <p style={{fontSize:'14px',color:'#64748B',margin:'0 0 20px'}}>Choose a conversation from the left or start a new one</p>
+              <p style={{fontSize:'48px',margin:'0 0 12px'}}></p>
+              <h3 style={{fontSize:'18px',fontWeight:'700',color:'#0F172A',margin:'0 0 8px'}}>{t('msg.selectConvo')}</h3>
+              <p style={{fontSize:'14px',color:'#64748B',margin:'0 0 20px'}}>{t('msg.selectConvoDesc')}</p>
               <button
                 onClick={() => setShowNew(true)}
                 style={{padding:'10px 20px',background:'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'14px',fontWeight:'600',cursor:'pointer'}}
               >
-                ✏️ New conversation
+                {t('msg.newConversation')}
               </button>
             </div>
           </div>
@@ -487,22 +489,22 @@ export default function MessagesClient({
           <div onClick={e => e.stopPropagation()} style={{background:'#fff',borderRadius:'16px',width:'480px',maxWidth:'100%',boxShadow:'0 20px 60px rgba(0,0,0,0.15)'}}>
             <div style={{padding:'24px 24px 0'}}>
               <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'20px'}}>
-                <h2 style={{fontSize:'18px',fontWeight:'800',color:'#0F172A',margin:'0'}}>✏️ New conversation</h2>
-                <button onClick={() => { setShowNew(false); setClientSearch(''); setNewClient('') }} style={{background:'none',border:'none',fontSize:'20px',cursor:'pointer',color:'#64748B'}}>✕</button>
+                <h2 style={{fontSize:'18px',fontWeight:'800',color:'#0F172A',margin:'0'}}>{t('msg.newConversation')}</h2>
+                <button onClick={() => { setShowNew(false); setClientSearch(''); setNewClient('') }} style={{background:'none',border:'none',fontSize:'20px',cursor:'pointer',color:'#64748B'}}></button>
               </div>
             </div>
 
             <div style={{padding:'0 24px 24px'}}>
               {/* Searchable Client Picker */}
               <div style={{marginBottom:'16px',position:'relative'}} ref={clientDropdownRef}>
-                <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>Client</label>
+                <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>{t('inv.clientLabel')}</label>
                 {selectedClient ? (
                   <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 12px',border:'1px solid #1C64F2',borderRadius:'8px',background:'#EFF6FF'}}>
                     <div>
-                      <span style={{fontSize:'14px',fontWeight:'600',color:'#0F172A'}}>{selectedClient.full_name || 'No name'}</span>
+                      <span style={{fontSize:'14px',fontWeight:'600',color:'#0F172A'}}>{selectedClient.full_name || t('msg.noName') || 'No name'}</span>
                       <span style={{fontSize:'12px',color:'#64748B',marginLeft:'8px'}}>{selectedClient.email}</span>
                     </div>
-                    <button onClick={() => { setNewClient(''); setClientSearch('') }} style={{background:'none',border:'none',fontSize:'16px',cursor:'pointer',color:'#64748B'}}>✕</button>
+                    <button onClick={() => { setNewClient(''); setClientSearch('') }} style={{background:'none',border:'none',fontSize:'16px',cursor:'pointer',color:'#64748B'}}></button>
                   </div>
                 ) : (
                   <div>
@@ -511,7 +513,7 @@ export default function MessagesClient({
                       value={clientSearch}
                       onChange={e => { setClientSearch(e.target.value); setShowClientDropdown(true) }}
                       onFocus={() => setShowClientDropdown(true)}
-                      placeholder="🔍 Search by name or email..."
+                      placeholder={t('placeholder.searchByNameEmail')}
                       style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'14px',outline:'none',boxSizing:'border-box',color:'#0F172A'}}
                     />
                     {showClientDropdown && (
@@ -532,7 +534,7 @@ export default function MessagesClient({
                               {(c.full_name || c.email || '?')[0].toUpperCase()}
                             </div>
                             <div>
-                              <p style={{fontSize:'13px',fontWeight:'600',color:'#0F172A',margin:'0'}}>{c.full_name || 'No name'}</p>
+                              <p style={{fontSize:'13px',fontWeight:'600',color:'#0F172A',margin:'0'}}>{c.full_name || t('msg.noName') || 'No name'}</p>
                               <p style={{fontSize:'12px',color:'#64748B',margin:'0'}}>{c.email}</p>
                             </div>
                           </div>
@@ -544,22 +546,22 @@ export default function MessagesClient({
               </div>
 
               <div style={{marginBottom:'16px'}}>
-                <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>Subject</label>
+                <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>{t('msg.subject') || 'Subject'}</label>
                 <input
                   type="text"
                   value={newSubject}
                   onChange={e => setNewSubject(e.target.value)}
-                  placeholder="e.g. Tax Return 2024, General enquiry..."
+                  placeholder={t('msg.subjectPlaceholder') || 'e.g. Tax Return 2024'}
                   style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'14px',outline:'none',boxSizing:'border-box',color:'#0F172A'}}
                 />
               </div>
 
               <div style={{marginBottom:'20px'}}>
-                <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>Message</label>
+                <label style={{fontSize:'13px',fontWeight:'600',color:'#374151',marginBottom:'6px',display:'block'}}>{t('msg.message') || 'Message'}</label>
                 <textarea
                   value={newFirstMsg}
                   onChange={e => setNewFirstMsg(e.target.value)}
-                  placeholder="Type your first message..."
+                  placeholder={t('placeholder.typeFirstMessage')}
                   rows={4}
                   style={{width:'100%',padding:'10px 12px',border:'1px solid #E2E8F0',borderRadius:'8px',fontSize:'14px',outline:'none',resize:'none',boxSizing:'border-box',fontFamily:'inherit',color:'#0F172A'}}
                 />
@@ -570,14 +572,14 @@ export default function MessagesClient({
                   onClick={() => { setShowNew(false); setClientSearch(''); setNewClient('') }}
                   style={{padding:'10px 20px',background:'#F1F5F9',color:'#475569',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:'pointer'}}
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
                 <button
                   onClick={createConversation}
                   disabled={creating || !newClient || !newSubject.trim() || !newFirstMsg.trim()}
                   style={{padding:'10px 20px',background:!newClient||!newSubject.trim()||!newFirstMsg.trim()?'#94A3B8':'#1C64F2',color:'#fff',borderRadius:'8px',border:'none',fontSize:'13px',fontWeight:'600',cursor:!newClient||!newSubject.trim()||!newFirstMsg.trim()?'not-allowed':'pointer'}}
                 >
-                  {creating ? '⏳ Creating...' : '📤 Send message'}
+                  {creating ? t('btn.creating') : t('msg.sendMessage')}
                 </button>
               </div>
             </div>

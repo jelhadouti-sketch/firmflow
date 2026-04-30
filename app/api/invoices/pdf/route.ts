@@ -19,6 +19,15 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const invoiceId = searchParams.get('id')
 
+  // Auth check - verify user owns this invoice
+  const { createClient } = await import('@/lib/supabase/server')
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const { data: profile } = await supabaseAdmin.from('profiles').select('firm_id, role').eq('id', user.id).single()
+  if (!profile) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   if (!invoiceId) {
     return NextResponse.json({ error: 'Missing id' }, { status: 400 })
   }
@@ -94,7 +103,7 @@ export async function GET(req: NextRequest) {
       })
     }
 
-    page.drawText('Powered by FirmFlow · firmflow.uk', {
+    page.drawText('Powered by FirmFlow · firmflow.org', {
       x: 40,
       y: height - 112,
       size: 9,
@@ -496,7 +505,7 @@ export async function GET(req: NextRequest) {
       color: rgb(0.94, 0.97, 1),
     })
 
-    page.drawText('Pay online: https://firmflow.uk/portal/invoices', {
+    page.drawText('Pay online: https://firmflow.org/portal/invoices', {
       x: 52,
       y: height - 572,
       size: 10,
@@ -537,7 +546,7 @@ export async function GET(req: NextRequest) {
       color: rgb(0.39, 0.45, 0.55),
     })
 
-    page.drawText('Powered by FirmFlow · firmflow.uk', {
+    page.drawText('Powered by FirmFlow · firmflow.org', {
       x: width - 200,
       y: 28,
       size: 9,
