@@ -57,6 +57,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: baseUrl + '/guides/practice-management-software', lastModified: now, changeFrequency: 'weekly' as const, priority: 0.95 },
     { url: baseUrl + '/blog/practice-management-software-for-sole-practitioners', lastModified: now, changeFrequency: 'monthly' as const, priority: 0.7 },
     { url: baseUrl + '/blog/how-to-switch-from-taxdome', lastModified: now, changeFrequency: 'monthly' as const, priority: 0.7 },
+    { url: baseUrl + '/blog/making-tax-digital-small-accountants', lastModified: now, changeFrequency: 'monthly' as const, priority: 0.8 },
+    { url: baseUrl + '/blog/client-onboarding-accounting-firms', lastModified: now, changeFrequency: 'monthly' as const, priority: 0.8 },
     { url: baseUrl + '/blog/aml-compliance-uk-accounting-firms', lastModified: now, changeFrequency: 'monthly' as const, priority: 0.8 },
     { url: baseUrl + '/blog/gdpr-compliant-client-portal-for-accountants', lastModified: now, changeFrequency: 'monthly' as const, priority: 0.7 },
     { url: baseUrl + '/press', lastModified: now, changeFrequency: 'monthly' as const, priority: 0.6 },
