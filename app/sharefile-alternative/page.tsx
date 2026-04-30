@@ -5,7 +5,7 @@ import SiteFooter from '@/components/SiteFooter'
 import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const metadata: Metadata = {
-  title: 'Best ShareFile Alternative for Professional Firms — FirmFlow',
+  title: 'Best ShareFile Alternative for Professional Firms',
   description: 'Stop paying €27/user/month for file sharing. FirmFlow includes document management plus e-signatures, invoicing, and a client portal — from €29/month flat.',
   alternates: { canonical: 'https://firmflow.io/sharefile-alternative' },
 }

@@ -5,7 +5,7 @@ import SiteFooter from '@/components/SiteFooter'
 import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const metadata: Metadata = {
-  title: 'Best Clio Alternative for Small Law Firms — FirmFlow',
+  title: 'Best Clio Alternative for Small Law Firms',
   description: 'Looking for a Clio alternative? FirmFlow offers documents, e-signatures, time tracking, invoicing, and a client portal for €29/month flat — 70% cheaper than Clio.',
   alternates: { canonical: 'https://firmflow.io/clio-alternative' },
 }

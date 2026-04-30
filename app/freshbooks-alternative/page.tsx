@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const metadata: Metadata = {
-  title: 'Best FreshBooks Alternative for Professional Firms — FirmFlow',
+  title: 'Best FreshBooks Alternative for Professional Firms',
   description: 'Looking for a FreshBooks alternative? FirmFlow gives you invoicing plus e-signatures, document management, client portal & AI assistant — from $29/month.',
   alternates: { canonical: 'https://firmflow.io/freshbooks-alternative' },
 }

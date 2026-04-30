@@ -5,11 +5,11 @@ import SiteFooter from '@/components/SiteFooter'
 import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const metadata: Metadata = {
-  title: 'Integrations — FirmFlow',
+  title: 'Integrations',
   description: 'Native integrations and compatible tools for FirmFlow practice management. Stripe, email, accounting software, and more.',
   alternates: { canonical: 'https://firmflow.io/integrations' },
   openGraph: {
-    title: 'Integrations — FirmFlow',
+    title: 'Integrations',
     description: 'Native integrations and compatible tools for FirmFlow practice management.',
     url: 'https://firmflow.io/integrations',
     type: 'website',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Integrations — FirmFlow',
+    title: 'Integrations',
     description: 'Native integrations and compatible tools for FirmFlow.',
     images: ['https://firmflow.io/og-default.png'],
   },

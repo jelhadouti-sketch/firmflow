@@ -4,7 +4,7 @@ import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 
 export const metadata: Metadata = {
-  title: 'Sitemap — FirmFlow',
+  title: 'Sitemap',
   description: 'Browse all pages on the FirmFlow website.',
   alternates: { canonical: 'https://firmflow.io/sitemap-page' },
 }

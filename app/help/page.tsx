@@ -4,7 +4,7 @@ import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 
 export const metadata: Metadata = {
-  title: 'Help Center — FirmFlow',
+  title: 'Help Center',
   description: 'Get help with FirmFlow. Quick answers to common questions about documents, e-signatures, invoicing, client portal, and more.',
   alternates: { canonical: 'https://firmflow.io/help' },
 }

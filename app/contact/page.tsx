@@ -5,7 +5,7 @@ import type { Metadata } from 'next'
 import ContactForm from './contact-form'
 
 export const metadata: Metadata = {
-  title: 'Contact Us — FirmFlow',
+  title: 'Contact Us',
   description: 'Get in touch with the FirmFlow team. We typically respond within 4 hours.',
   alternates: { canonical: 'https://firmflow.io/contact' },
 }

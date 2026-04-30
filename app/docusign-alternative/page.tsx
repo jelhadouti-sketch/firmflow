@@ -5,7 +5,7 @@ import SiteFooter from '@/components/SiteFooter'
 import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const metadata: Metadata = {
-  title: 'Best DocuSign Alternative for Professional Firms — FirmFlow',
+  title: 'Best DocuSign Alternative for Professional Firms',
   description: 'Stop paying per envelope. FirmFlow includes unlimited e-signatures plus documents, time tracking, invoicing, and a client portal — from €29/month flat.',
   alternates: { canonical: 'https://firmflow.io/docusign-alternative' },
 }

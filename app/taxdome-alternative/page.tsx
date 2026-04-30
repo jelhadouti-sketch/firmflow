@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const metadata: Metadata = {
-  title: 'Best TaxDome Alternative for UK & EU Firms — FirmFlow',
+  title: 'Best TaxDome Alternative for UK & EU Firms',
   description: 'Looking for a TaxDome alternative? FirmFlow offers documents, e-signatures, invoicing, and a client portal for €29/month flat. No per-user fees.',
   alternates: { canonical: 'https://firmflow.io/taxdome-alternative' },
 }
