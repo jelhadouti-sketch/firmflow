@@ -3,6 +3,7 @@ import Link from 'next/link'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import Breadcrumbs from '@/components/Breadcrumbs'
+import SchemaMarkup from '@/components/SchemaMarkup'
 
 export const metadata: Metadata = {
   title: 'Best Clio Alternative for Small Law Firms',
@@ -13,6 +14,13 @@ export const metadata: Metadata = {
 export default function ClioAlternative() {
   return (
     <>
+      <SchemaMarkup variant="minimal" faqs={[
+        {question:"Is FirmFlow really an alternative to Clio?", answer:"For small law firms (1-20 lawyers) — yes. FirmFlow covers the core Clio features: client portal, e-signatures, time tracking per matter, invoicing, document management, and secure messaging. We do not have court calendar integration or jurisdiction-specific compliance — if you need those, Clio is still the better fit."},
+        {question:"How much cheaper is FirmFlow compared to Clio?", answer:"Clio charges €49-€89 per user per month. For a 5-person firm that is €245-€445 per month, or €2,940-€5,340 per year. FirmFlow is €29 per month flat for up to 5 users — €348 per year. That is 88-94% cheaper."},
+        {question:"Can I import my Clio data into FirmFlow?", answer:"You can export clients, matters, contacts, time entries, and invoices from Clio as CSV files and import them into FirmFlow. We provide a migration guide. Document files transfer manually via download/upload."},
+        {question:"Are FirmFlow e-signatures as good as Clio Manage signatures?", answer:"Yes. Both are legally binding under eIDAS (EU), ESIGN Act (US), and UETA, with full audit trails (IP, timestamp, signer authentication). FirmFlow includes unlimited e-signatures on every plan; Clio charges separately for high-volume signing."},
+        {question:"How long does it take to switch from Clio?", answer:"Most firms migrate in under 2 hours. Export from Clio (10 minutes), import to FirmFlow (30 minutes), set up your team and clients (60 minutes). Run both side-by-side for the first month if you want a safety net."},
+      ]} />
       <Breadcrumbs schemaOnly items={JSON.parse('[{"name": "Compare", "href": "/blog"}, {"name": "Clio Alternative", "href": "/clio-alternative"}]')} />
       <SiteHeader />
       <div style={{maxWidth:'100%',margin:'0 auto',padding:'60px 24px'}}>
@@ -57,7 +65,24 @@ export default function ClioAlternative() {
           <Link href="/signup" style={{display:'inline-block',padding:'16px 36px',background:'#1C64F2',color:'#fff',borderRadius:'10px',textDecoration:'none',fontWeight:700,fontSize:'16px'}}>Start free trial →</Link>
           <p style={{marginTop:'20px'}}><Link href="/vs-clio" style={{color:'#60A5FA',fontSize:'14px',textDecoration:'underline'}}>See the full feature comparison →</Link></p>
         </div>
-      </div>
+      {/* FAQ section — English only for SEO. Schema lives in page.tsx */}
+        <div style={{maxWidth:'900px',margin:'48px auto 0'}}>
+          <h2 style={{fontSize:'28px',fontWeight:800,textAlign:'center',marginBottom:'32px',color:'#0F172A'}}>Frequently asked questions</h2>
+          {[
+            {q:'Is FirmFlow really an alternative to Clio?', a:'For small law firms (1-20 lawyers) — yes. FirmFlow covers the core Clio features: client portal, e-signatures, time tracking per matter, invoicing, document management, and secure messaging. We do not have court calendar integration or jurisdiction-specific compliance — if you need those, Clio is still the better fit.'},
+            {q:'How much cheaper is FirmFlow compared to Clio?', a:'Clio charges €49-€89 per user per month. For a 5-person firm that is €245-€445 per month, or €2,940-€5,340 per year. FirmFlow is €29 per month flat for up to 5 users — €348 per year. That is 88-94% cheaper.'},
+            {q:'Can I import my Clio data into FirmFlow?', a:'You can export clients, matters, contacts, time entries, and invoices from Clio as CSV files and import them into FirmFlow. We provide a migration guide. Document files transfer manually via download/upload.'},
+            {q:'Are FirmFlow e-signatures as good as Clio Manage signatures?', a:'Yes. Both are legally binding under eIDAS (EU), ESIGN Act (US), and UETA, with full audit trails (IP, timestamp, signer authentication). FirmFlow includes unlimited e-signatures on every plan; Clio charges separately for high-volume signing.'},
+            {q:'How long does it take to switch from Clio?', a:'Most firms migrate in under 2 hours. Export from Clio (10 minutes), import to FirmFlow (30 minutes), set up your team and clients (60 minutes). Run both side-by-side for the first month if you want a safety net.'},
+          ].map((faq, i) => (
+            <div key={i} style={{marginBottom:'16px',padding:'20px',borderRadius:'12px',border:'1px solid #E2E8F0',background:'#fff'}}>
+              <h3 style={{fontSize:'16px',fontWeight:700,marginBottom:'8px',color:'#0F172A'}}>{faq.q}</h3>
+              <p style={{fontSize:'15px',color:'#475569',lineHeight:1.6,margin:0}}>{faq.a}</p>
+            </div>
+          ))}
+        </div>
+
+</div>
       <SiteFooter />
     </>
   )

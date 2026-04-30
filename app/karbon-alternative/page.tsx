@@ -3,6 +3,7 @@ import Link from 'next/link'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import Breadcrumbs from '@/components/Breadcrumbs'
+import SchemaMarkup from '@/components/SchemaMarkup'
 
 export const metadata: Metadata = {
   title: 'Best Karbon Alternative | 80% Cheaper',
@@ -13,6 +14,13 @@ export const metadata: Metadata = {
 export default function KarbonAlternative() {
   return (
     <>
+      <SchemaMarkup variant="minimal" faqs={[
+        {question:"Is FirmFlow a real alternative to Karbon?", answer:"For small accounting and bookkeeping firms — yes. FirmFlow covers the core Karbon use cases: client management, recurring invoicing, time tracking, document sharing, e-signatures, and team messaging. We do not have advanced workflow automation; Karbon has more there."},
+        {question:"How much will I save by switching from Karbon?", answer:"Karbon charges €59-€80 per user per month. A 5-person firm pays €295-€400/month or €3,540-€4,800 per year. FirmFlow is €29/month flat for 5 users — €348 per year. That is 90% savings."},
+        {question:"Can I move my client data from Karbon to FirmFlow?", answer:"Yes. Export contacts, clients, and invoice history from Karbon as CSV files and import to FirmFlow. We provide a step-by-step migration guide. Document files transfer manually."},
+        {question:"Does FirmFlow have email integration like Karbon?", answer:"Not yet — Karbon's email-as-tasks feature is one of its strengths. FirmFlow uses in-platform secure messaging instead. If email triage is critical to your workflow, Karbon may still be a better fit."},
+        {question:"Is FirmFlow built for accounting firms specifically?", answer:"FirmFlow is built for professional service firms — accounting, law, and consulting. Many of our features (client portal, e-signatures, recurring invoicing, time tracking) directly serve accounting firms. Karbon is more accounting-specific in its workflow tooling."},
+      ]} />
       <Breadcrumbs schemaOnly items={JSON.parse('[{"name": "Compare", "href": "/blog"}, {"name": "Karbon Alternative", "href": "/karbon-alternative"}]')} />
       <SiteHeader />
       <div style={{maxWidth:'100%',margin:'0 auto',padding:'60px 24px'}}>
@@ -58,7 +66,24 @@ export default function KarbonAlternative() {
           <p style={{color:'#64748B',fontSize:'13px',marginTop:'12px'}}>14 days free · No credit card · Cancel anytime</p>
           <p style={{marginTop:'20px'}}><Link href="/vs-karbon" style={{color:'#60A5FA',fontSize:'14px',textDecoration:'underline'}}>See the full feature comparison →</Link></p>
         </div>
-      </div>
+      {/* FAQ section — English only for SEO. Schema lives in page.tsx */}
+        <div style={{maxWidth:'900px',margin:'48px auto 0'}}>
+          <h2 style={{fontSize:'28px',fontWeight:800,textAlign:'center',marginBottom:'32px',color:'#0F172A'}}>Frequently asked questions</h2>
+          {[
+            {q:'Is FirmFlow a real alternative to Karbon?', a:'For small accounting and bookkeeping firms — yes. FirmFlow covers the core Karbon use cases: client management, recurring invoicing, time tracking, document sharing, e-signatures, and team messaging. We do not have advanced workflow automation; Karbon has more there.'},
+            {q:'How much will I save by switching from Karbon?', a:'Karbon charges €59-€80 per user per month. A 5-person firm pays €295-€400/month or €3,540-€4,800 per year. FirmFlow is €29/month flat for 5 users — €348 per year. That is 90% savings.'},
+            {q:'Can I move my client data from Karbon to FirmFlow?', a:'Yes. Export contacts, clients, and invoice history from Karbon as CSV files and import to FirmFlow. We provide a step-by-step migration guide. Document files transfer manually.'},
+            {q:'Does FirmFlow have email integration like Karbon?', a:'Not yet — Karbon email-as-tasks feature is one of its strengths. FirmFlow uses in-platform secure messaging instead. If email triage is critical to your workflow, Karbon may still be a better fit.'},
+            {q:'Is FirmFlow built for accounting firms specifically?', a:'FirmFlow is built for professional service firms — accounting, law, and consulting. Many of our features (client portal, e-signatures, recurring invoicing, time tracking) directly serve accounting firms. Karbon is more accounting-specific in its workflow tooling.'},
+          ].map((faq, i) => (
+            <div key={i} style={{marginBottom:'16px',padding:'20px',borderRadius:'12px',border:'1px solid #E2E8F0',background:'#fff'}}>
+              <h3 style={{fontSize:'16px',fontWeight:700,marginBottom:'8px',color:'#0F172A'}}>{faq.q}</h3>
+              <p style={{fontSize:'15px',color:'#475569',lineHeight:1.6,margin:0}}>{faq.a}</p>
+            </div>
+          ))}
+        </div>
+
+</div>
       <SiteFooter />
     </>
   )

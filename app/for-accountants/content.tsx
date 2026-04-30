@@ -73,6 +73,23 @@ export default function ForAccountantsContent() {
           <p style={{color:'#94A3B8',marginBottom:'28px',fontSize:'16px'}}>{t('acc.ctaBox.subtitle')}</p>
           <Link href="/signup" style={{display:'inline-block',padding:'16px 36px',background:'#1C64F2',color:'#fff',borderRadius:'10px',textDecoration:'none',fontWeight:700,fontSize:'16px'}}>{t('acc.cta')} →</Link>
         </div>
+{/* FAQ section — English only for SEO. Schema lives in page.tsx */}
+        <div style={{maxWidth:'900px',margin:'48px auto 0'}}>
+          <h2 style={{fontSize:'28px',fontWeight:800,textAlign:'center',marginBottom:'32px',color:'#0F172A'}}>Frequently asked questions</h2>
+          {[
+            {q:'Is FirmFlow suitable for small accounting firms?', a:'Yes. FirmFlow is built specifically for solo practitioners and accounting firms with 1-20 team members. Setup takes under 10 minutes and there are no per-user fees. The Starter plan at €29/month includes up to 5 team members.'},
+            {q:'Can FirmFlow replace QuickBooks or Xero?', a:'No. FirmFlow is a practice management platform, not a bookkeeping tool. It works alongside QuickBooks, Xero, and other accounting software to handle client management, e-signatures, invoicing for your services, document sharing, and time tracking. Use Xero for client books, FirmFlow for running your firm.'},
+            {q:'Does FirmFlow include unlimited e-signatures?', a:'Yes. Every plan includes unlimited legally binding e-signatures with full audit trails. No per-envelope fees like DocuSign. Compliant with eIDAS in the EU and ESIGN/UETA in the US.'},
+            {q:'Is my client data secure and GDPR compliant?', a:'Yes. FirmFlow uses AES-256 encryption, hosts EU customer data in EU data centres, and offers a Data Processing Agreement (DPA) for all customers. Two-factor authentication is available on every plan.'},
+            {q:'What happens to my data if I cancel?', a:'You can export all your client data, documents, invoices, and time entries at any time as CSV files. After cancellation your account is paused for 30 days so you can come back, then deleted. No vendor lock-in.'},
+          ].map((faq, i) => (
+            <div key={i} style={{marginBottom:'16px',padding:'20px',borderRadius:'12px',border:'1px solid #E2E8F0',background:'#fff'}}>
+              <h3 style={{fontSize:'16px',fontWeight:700,marginBottom:'8px',color:'#0F172A'}}>{faq.q}</h3>
+              <p style={{fontSize:'15px',color:'#475569',lineHeight:1.6,margin:0}}>{faq.a}</p>
+            </div>
+          ))}
+        </div>
+
       </div>
       <SiteFooter />
     </>

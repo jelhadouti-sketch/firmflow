@@ -45,7 +45,24 @@ export default function ForLawyersContent() {
           <p style={{color:'#94A3B8',marginBottom:'28px',fontSize:'16px'}}>{t('law.ctaBox.subtitle')}</p>
           <Link href="/signup" style={{display:'inline-block',padding:'16px 36px',background:'#1C64F2',color:'#fff',borderRadius:'10px',textDecoration:'none',fontWeight:700,fontSize:'16px'}}>{t('law.ctaBox.button')} →</Link>
         </div>
-      </div>
+      {/* FAQ section — English only for SEO. Schema lives in page.tsx */}
+        <div style={{maxWidth:'900px',margin:'48px auto 0'}}>
+          <h2 style={{fontSize:'28px',fontWeight:800,textAlign:'center',marginBottom:'32px',color:'#0F172A'}}>Frequently asked questions</h2>
+          {[
+            {q:'Is FirmFlow suitable for solo lawyers and small law firms?', a:'Yes. FirmFlow is built for solo practitioners and law firms with 1-20 lawyers. Track time per matter, send engagement letters with e-signatures, share case documents securely, and manage client billing — all from one platform starting at €29/month.'},
+            {q:'Can FirmFlow replace Clio or PracticePanther?', a:'For most small firms, yes. FirmFlow handles the core needs: client portal, e-signatures, time tracking per matter, invoicing, secure document sharing, and messaging. We do not include court calendar integration or jurisdiction-specific filing — if you need those, Clio remains a better fit.'},
+            {q:'Are e-signatures legally binding for legal documents?', a:'Yes. FirmFlow e-signatures are compliant with eIDAS (EU), ESIGN Act (US), and UETA. Each signed document includes a full audit trail with IP address, timestamp, and signer authentication — admissible as evidence in court.'},
+            {q:'Is client data confidentiality protected?', a:'Yes. AES-256 encryption at rest and in transit, EU data residency for European customers, two-factor authentication, and full audit logs. We sign Data Processing Agreements (DPA) with every customer for GDPR compliance.'},
+            {q:'Can I track billable hours per case and per client?', a:'Yes. FirmFlow includes one-click time tracking per matter, per client, and per task type. Generate invoices directly from tracked time. See team utilization and matter profitability in the analytics dashboard.'},
+          ].map((faq, i) => (
+            <div key={i} style={{marginBottom:'16px',padding:'20px',borderRadius:'12px',border:'1px solid #E2E8F0',background:'#fff'}}>
+              <h3 style={{fontSize:'16px',fontWeight:700,marginBottom:'8px',color:'#0F172A'}}>{faq.q}</h3>
+              <p style={{fontSize:'15px',color:'#475569',lineHeight:1.6,margin:0}}>{faq.a}</p>
+            </div>
+          ))}
+        </div>
+
+</div>
       <SiteFooter />
     </>
   )

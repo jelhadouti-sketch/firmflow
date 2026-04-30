@@ -41,7 +41,24 @@ export default function ForConsultantsContent() {
           <p style={{color:'#94A3B8',marginBottom:'28px',fontSize:'16px'}}>{t('con.ctaBox.subtitle')}</p>
           <Link href="/signup" style={{display:'inline-block',padding:'16px 36px',background:'#1C64F2',color:'#fff',borderRadius:'10px',textDecoration:'none',fontWeight:700,fontSize:'16px'}}>{t('con.ctaBox.button')} →</Link>
         </div>
-      </div>
+      {/* FAQ section — English only for SEO. Schema lives in page.tsx */}
+        <div style={{maxWidth:'900px',margin:'48px auto 0'}}>
+          <h2 style={{fontSize:'28px',fontWeight:800,textAlign:'center',marginBottom:'32px',color:'#0F172A'}}>Frequently asked questions</h2>
+          {[
+            {q:'Is FirmFlow built for consulting firms?', a:'Yes. FirmFlow handles proposals (with e-signature), project time tracking, client invoicing, secure deliverable sharing, and a branded client portal — the core needs of independent consultants and consulting firms with 1-20 people.'},
+            {q:'Can I send proposals and contracts for e-signature?', a:'Yes. Upload your proposal or contract PDF, add signature fields, send to the client. They sign from any device in under 2 minutes. Unlimited e-signatures included on every plan with full audit trails.'},
+            {q:'Can I track time per project and per client?', a:'Yes. One-click time tracking per project, per client, per task. See which projects are profitable and which are losing money. Generate invoices directly from tracked time.'},
+            {q:'Does FirmFlow handle multi-currency invoicing?', a:'Yes. Bill clients in 10 currencies (USD, EUR, GBP, CHF, CAD, AUD, and more). Useful for consultants with international clients. Stripe handles payment processing in the local currency.'},
+            {q:'Can my clients access deliverables in one place?', a:'Yes. Each client gets a branded portal where they can view documents you have shared, sign agreements, pay invoices, and message you. No more attachments scattered across email threads.'},
+          ].map((faq, i) => (
+            <div key={i} style={{marginBottom:'16px',padding:'20px',borderRadius:'12px',border:'1px solid #E2E8F0',background:'#fff'}}>
+              <h3 style={{fontSize:'16px',fontWeight:700,marginBottom:'8px',color:'#0F172A'}}>{faq.q}</h3>
+              <p style={{fontSize:'15px',color:'#475569',lineHeight:1.6,margin:0}}>{faq.a}</p>
+            </div>
+          ))}
+        </div>
+
+</div>
       <SiteFooter />
     </>
   )

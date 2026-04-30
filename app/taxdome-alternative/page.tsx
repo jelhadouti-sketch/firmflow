@@ -3,6 +3,7 @@ import SiteFooter from '@/components/SiteFooter'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Breadcrumbs from '@/components/Breadcrumbs'
+import SchemaMarkup from '@/components/SchemaMarkup'
 
 export const metadata: Metadata = {
   title: 'Best TaxDome Alternative for UK & EU Firms',
@@ -13,6 +14,13 @@ export const metadata: Metadata = {
 export default function TaxDomeAlternative() {
   return (
     <>
+      <SchemaMarkup variant="minimal" faqs={[
+        {question:"Why would I switch from TaxDome to FirmFlow?", answer:"Three main reasons: pricing (TaxDome charges €330+/year per user; FirmFlow is €29/month flat for 5 users), simplicity (TaxDome is feature-heavy and US-centric, FirmFlow is built for UK and EU firms), and modern UX (FirmFlow uses Next.js with a fast, mobile-first interface)."},
+        {question:"Is FirmFlow GDPR-compliant for EU accountants?", answer:"Yes. FirmFlow hosts EU customer data in EU data centres (Ireland), uses AES-256 encryption, and signs Data Processing Agreements (DPA) with every customer. TaxDome is US-based and only recently added GDPR features."},
+        {question:"Can FirmFlow handle the same client workflows as TaxDome?", answer:"For most small accounting firms — yes. Client portal, e-signatures, document collection, invoicing, recurring billing, time tracking, secure messaging. TaxDome has more advanced workflows for tax season; FirmFlow has the essentials done well."},
+        {question:"How do I migrate my TaxDome clients to FirmFlow?", answer:"Export your client list, contacts, and invoices from TaxDome as CSV and import to FirmFlow. Documents transfer manually via download then upload. Most firms complete the move in a single afternoon."},
+        {question:"Is FirmFlow available in multiple languages and currencies?", answer:"Yes. FirmFlow supports 5 languages (English, Dutch, French, German, Spanish) and 10 currencies (GBP, EUR, USD, CHF, CAD, AUD, and more). TaxDome is primarily English-only and USD-focused."},
+      ]} />
       <Breadcrumbs schemaOnly items={JSON.parse('[{"name": "Compare", "href": "/blog"}, {"name": "TaxDome Alternative", "href": "/taxdome-alternative"}]')} /><style>{`
   @media (max-width: 768px) {
     .mobile-grid { grid-template-columns: 1fr !important; }
@@ -61,6 +69,22 @@ export default function TaxDomeAlternative() {
         <a href="/signup" style={{display:'inline-block',padding:'16px 36px',background:'#1C64F2',color:'#fff',borderRadius:'10px',textDecoration:'none',fontWeight:700,fontSize:'16px'}}>Start free trial →</a>
         <p style={{color:'#64748B',fontSize:'13px',marginTop:'12px'}}>14 days free · No credit card · Cancel anytime</p>
         <p style={{marginTop:'20px'}}><Link href="/vs-taxdome" style={{color:'#60A5FA',fontSize:'14px',textDecoration:'underline'}}>See the full feature-by-feature comparison →</Link></p>
+      </div>
+{/* FAQ section — English only for SEO. Schema lives in page.tsx */}
+      <div style={{maxWidth:'900px',margin:'48px auto 0'}}>
+        <h2 style={{fontSize:'28px',fontWeight:800,textAlign:'center',marginBottom:'32px',color:'#0F172A'}}>Frequently asked questions</h2>
+        {[
+          {q:'Why would I switch from TaxDome to FirmFlow?', a:'Three main reasons: pricing (TaxDome charges €330+/year per user; FirmFlow is €29/month flat for 5 users), simplicity (TaxDome is feature-heavy and US-centric, FirmFlow is built for UK and EU firms), and modern UX (FirmFlow uses Next.js with a fast, mobile-first interface).'},
+          {q:'Is FirmFlow GDPR-compliant for EU accountants?', a:'Yes. FirmFlow hosts EU customer data in EU data centres (Ireland), uses AES-256 encryption, and signs Data Processing Agreements (DPA) with every customer. TaxDome is US-based and only recently added GDPR features.'},
+          {q:'Can FirmFlow handle the same client workflows as TaxDome?', a:'For most small accounting firms — yes. Client portal, e-signatures, document collection, invoicing, recurring billing, time tracking, secure messaging. TaxDome has more advanced workflows for tax season; FirmFlow has the essentials done well.'},
+          {q:'How do I migrate my TaxDome clients to FirmFlow?', a:'Export your client list, contacts, and invoices from TaxDome as CSV and import to FirmFlow. Documents transfer manually via download then upload. Most firms complete the move in a single afternoon.'},
+          {q:'Is FirmFlow available in multiple languages and currencies?', a:'Yes. FirmFlow supports 5 languages (English, Dutch, French, German, Spanish) and 10 currencies (GBP, EUR, USD, CHF, CAD, AUD, and more). TaxDome is primarily English-only and USD-focused.'},
+        ].map((faq, i) => (
+          <div key={i} style={{marginBottom:'16px',padding:'20px',borderRadius:'12px',border:'1px solid #E2E8F0',background:'#fff'}}>
+            <h3 style={{fontSize:'16px',fontWeight:700,marginBottom:'8px',color:'#0F172A'}}>{faq.q}</h3>
+            <p style={{fontSize:'15px',color:'#475569',lineHeight:1.6,margin:0}}>{faq.a}</p>
+          </div>
+        ))}
       </div>
     </div><SiteFooter /></>
   )

@@ -51,7 +51,24 @@ export default function ForBookkeepersContent() {
           <p style={{color:'#94A3B8',marginBottom:'28px',fontSize:'16px'}}>{t('book.ctaBox.subtitle')}</p>
           <Link href="/signup" style={{display:'inline-block',padding:'16px 36px',background:'#1C64F2',color:'#fff',borderRadius:'10px',textDecoration:'none',fontWeight:700,fontSize:'16px'}}>{t('book.ctaBox.button')} →</Link>
         </div>
-      </div>
+      {/* FAQ section — English only for SEO. Schema lives in page.tsx */}
+        <div style={{maxWidth:'900px',margin:'48px auto 0'}}>
+          <h2 style={{fontSize:'28px',fontWeight:800,textAlign:'center',marginBottom:'32px',color:'#0F172A'}}>Frequently asked questions</h2>
+          {[
+            {q:'Does FirmFlow integrate with Xero and QuickBooks?', a:'FirmFlow is designed to work alongside Xero and QuickBooks Online. Use Xero/QBO for the client books, use FirmFlow for client management, document sharing, recurring invoicing for your bookkeeping services, and engagement letter signing. Direct integrations are on our roadmap.'},
+            {q:'Is FirmFlow good for solo bookkeepers?', a:'Yes. The Starter plan at €29/month gives a solo bookkeeper everything: client portal, unlimited e-signatures, document storage, invoicing, time tracking, and messaging. No per-user fees, no enterprise complexity.'},
+            {q:'Can I send recurring monthly invoices to clients?', a:'Yes. Set up recurring invoices for each client (monthly retainer, quarterly fees, etc.) and FirmFlow generates and sends them automatically every cycle. Stripe handles online payment.'},
+            {q:'How do clients send me their documents securely?', a:'Each client gets their own branded portal where they can upload documents (bank statements, receipts, payroll reports) directly to you. No more email attachments lost in threads. All files encrypted at rest.'},
+            {q:'What does FirmFlow cost compared to TaxDome or Karbon?', a:'FirmFlow is €29/month flat for up to 5 team members. TaxDome charges €330/year per user (€1,650/year for 5 users). Karbon charges €265-€400/user/month. For a 5-person firm, FirmFlow saves €4,000-€20,000+ per year.'},
+          ].map((faq, i) => (
+            <div key={i} style={{marginBottom:'16px',padding:'20px',borderRadius:'12px',border:'1px solid #E2E8F0',background:'#fff'}}>
+              <h3 style={{fontSize:'16px',fontWeight:700,marginBottom:'8px',color:'#0F172A'}}>{faq.q}</h3>
+              <p style={{fontSize:'15px',color:'#475569',lineHeight:1.6,margin:0}}>{faq.a}</p>
+            </div>
+          ))}
+        </div>
+
+</div>
       <SiteFooter />
     </>
   )
