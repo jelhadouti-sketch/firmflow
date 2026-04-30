@@ -50,7 +50,7 @@ export default function Pricing() {
 
   return (
     <>
-      <SchemaMarkup variant="full" />
+      <SchemaMarkup variant="full" faqs={[{question:"Is it really 29 EUR per month for the whole team?",answer:"Yes. The Starter plan is 29 EUR per month and includes up to 5 team members. The Pro plan is 89 EUR per month with unlimited members. No per-user fees ever."},{question:"What happens after the 14-day trial?",answer:"Choose Starter or Pro, or your account is simply paused. No charge. No data deleted. You can come back anytime."},{question:"Can I switch plans later?",answer:"Yes. Upgrade or downgrade anytime from your dashboard. Changes take effect immediately."},{question:"Do you offer annual billing?",answer:"Not yet, but it is on our roadmap. Monthly billing means you can cancel anytime with zero commitment."},{question:"What payment methods do you accept?",answer:"All major credit and debit cards via Stripe. Invoices are generated automatically each month."}]} />
       <SiteHeader />
       <div style={{maxWidth:'100%',margin:'0 auto',padding:'60px 24px',overflowX:'hidden'}}>
         <div style={{textAlign:'center',marginBottom:'48px'}}>

@@ -1,19 +1,15 @@
 // Structured data markup for Google/search engines.
 //
-// Two variants:
+// Variants:
 //   • variant="full"    → SoftwareApplication + Organization
-//                         (use on homepage and /pricing only — where
-//                          product offers are the primary content)
+//                         (homepage and /pricing — product offers are primary)
 //   • variant="minimal" → Organization only
-//                         (use everywhere else — login, privacy, blog,
-//                          tools, help, etc. These pages are NOT a
-//                          SoftwareApplication and should not claim to be one)
+//                         (login, privacy, blog, tools, help, etc.)
 //
-// This split fixes Semrush errors about missing aggregateRating/review on
-// SoftwareApplication — pages that aren't product pages don't need that
-// schema at all.
+// Optional: pass `faqs` to add FAQPage schema (any page with a visible FAQ section).
 
 type SchemaVariant = 'full' | 'minimal'
+type FAQ = { question: string; answer: string }
 
 const organizationSchema = {
   '@type': 'Organization',
@@ -66,11 +62,35 @@ const softwareApplicationSchema = {
   ],
 }
 
-export default function SchemaMarkup({ variant = 'minimal' }: { variant?: SchemaVariant }) {
-  const graph =
+function buildFAQSchema(faqs: FAQ[]) {
+  return {
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: f.answer,
+      },
+    })),
+  }
+}
+
+export default function SchemaMarkup({
+  variant = 'minimal',
+  faqs,
+}: {
+  variant?: SchemaVariant
+  faqs?: FAQ[]
+}) {
+  const graph: object[] =
     variant === 'full'
       ? [softwareApplicationSchema, organizationSchema]
       : [organizationSchema]
+
+  if (faqs && faqs.length > 0) {
+    graph.push(buildFAQSchema(faqs))
+  }
 
   const schema = {
     '@context': 'https://schema.org',
