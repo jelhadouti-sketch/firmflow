@@ -7,7 +7,7 @@ import ContactForm from './contact-form'
 export const metadata: Metadata = {
   title: 'Contact Us — FirmFlow',
   description: 'Get in touch with the FirmFlow team. We typically respond within 4 hours.',
-  alternates: { canonical: 'https://www.firmflow.io/contact' },
+  alternates: { canonical: 'https://firmflow.io/contact' },
 }
 
 export default async function Contact() {

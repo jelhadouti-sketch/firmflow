@@ -5,11 +5,11 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Practice Management for Consulting Firms',
   description: 'All-in-one platform for consulting firms. Proposals, e-signatures, project time tracking, invoicing, and client portal. Flat £29/month — no per-user fees.',
-  alternates: { canonical: 'https://www.firmflow.io/for-consultants' },
+  alternates: { canonical: 'https://firmflow.io/for-consultants' },
   openGraph: {
     title: 'Practice Management for Consulting Firms',
     description: 'All-in-one platform for consulting firms. Proposals, e-signatures, project time tracking, invoicing, and client portal. Flat £29/month — no per-user fees.',
-    url: 'https://www.firmflow.io/for-consultants',
+    url: 'https://firmflow.io/for-consultants',
     type: 'website',
   },
 }

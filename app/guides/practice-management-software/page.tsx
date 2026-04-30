@@ -7,19 +7,19 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Practice Management Software: The Complete 2026 Guide',
   description: 'A complete guide to practice management software for accountants, lawyers, and consultants. Features, pricing, top platforms compared, and how to choose.',
-  alternates: { canonical: 'https://www.firmflow.io/guides/practice-management-software' },
+  alternates: { canonical: 'https://firmflow.io/guides/practice-management-software' },
   openGraph: {
     title: 'Practice Management Software: The Complete 2026 Guide',
     description: 'Features, pricing, top platforms compared, and how to choose practice management software for your firm.',
-    url: 'https://www.firmflow.io/guides/practice-management-software',
+    url: 'https://firmflow.io/guides/practice-management-software',
     type: 'article',
-    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Practice Management Software: The Complete 2026 Guide',
     description: 'Features, pricing, top platforms compared, and how to choose practice management software for your firm.',
-    images: ['https://www.firmflow.io/og-default.png'],
+    images: ['https://firmflow.io/og-default.png'],
   },
 }
 
@@ -33,14 +33,14 @@ const articleSchema = {
   '@type': 'Article',
   headline: 'Practice Management Software: The Complete 2026 Guide',
   description: 'A complete guide to practice management software for accountants, lawyers, and consultants. Features, pricing, top platforms compared, and how to choose.',
-  url: 'https://www.firmflow.io/guides/practice-management-software',
-  image: 'https://www.firmflow.io/og-default.png',
-  author: { '@type': 'Organization', name: 'FirmFlow', url: 'https://www.firmflow.io' },
+  url: 'https://firmflow.io/guides/practice-management-software',
+  image: 'https://firmflow.io/og-default.png',
+  author: { '@type': 'Organization', name: 'FirmFlow', url: 'https://firmflow.io' },
   publisher: {
     '@type': 'Organization', name: 'FirmFlow',
-    logo: { '@type': 'ImageObject', url: 'https://www.firmflow.io/logo/firmflow-icon.svg' },
+    logo: { '@type': 'ImageObject', url: 'https://firmflow.io/logo/firmflow-icon.svg' },
   },
-  mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://www.firmflow.io/guides/practice-management-software' },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://firmflow.io/guides/practice-management-software' },
 }
 
 const tocItems = [

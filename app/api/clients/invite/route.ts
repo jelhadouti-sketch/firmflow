@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: profileError.message }, { status: 400 })
   }
 
-  const portalUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://www.firmflow.io') + '/portal'
+  const portalUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://firmflow.io') + '/portal'
   try {
     const firmLang = (firm as any)?.language || 'en'
     const { subject, html } = buildClientInviteEmail({

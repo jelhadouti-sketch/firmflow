@@ -7,7 +7,7 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Best Karbon Alternative — FirmFlow | 80% Cheaper',
   description: 'Looking for a Karbon alternative? FirmFlow offers documents, e-signatures, invoicing, and a client portal for €29/month flat. Save 80%+ vs Karbon.',
-  alternates: { canonical: 'https://www.firmflow.io/karbon-alternative' },
+  alternates: { canonical: 'https://firmflow.io/karbon-alternative' },
 }
 
 export default function KarbonAlternative() {

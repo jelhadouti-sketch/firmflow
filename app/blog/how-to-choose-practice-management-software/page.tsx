@@ -10,17 +10,17 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'How to Choose Practice Management Software (2026)',
     description: 'A practical guide to choosing practice management software for your accounting, law, or consulting firm. What to look for, pricing traps to avoid, and honest recommendations.',
-    url: 'https://www.firmflow.io/blog/how-to-choose-practice-management-software',
+    url: 'https://firmflow.io/blog/how-to-choose-practice-management-software',
     type: 'article',
-    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'How to Choose Practice Management Software (2026)',
     description: 'A practical guide to choosing practice management software for your accounting, law, or consulting firm. What to look for, pricing traps to avoid, and honest recommendations.',
-    images: ['https://www.firmflow.io/og-default.png'],
+    images: ['https://firmflow.io/og-default.png'],
   },
-  alternates: { canonical: 'https://www.firmflow.io/blog/how-to-choose-practice-management-software' },
+  alternates: { canonical: 'https://firmflow.io/blog/how-to-choose-practice-management-software' },
 }
 
 export default function HowToChoose() {
@@ -34,7 +34,7 @@ export default function HowToChoose() {
           "headline": "How to Choose Practice Management Software in 2026",
           "datePublished": "2026-04-02",
           "author": { "@type": "Organization", "name": "FirmFlow" },
-          "publisher": { "@type": "Organization", "name": "FirmFlow", "logo": { "@type": "ImageObject", "url": "https://www.firmflow.io/icons/icon-192.png" } },
+          "publisher": { "@type": "Organization", "name": "FirmFlow", "logo": { "@type": "ImageObject", "url": "https://firmflow.io/icons/icon-192.png" } },
         })}} />
 
         <div style={{marginBottom:'40px'}}>

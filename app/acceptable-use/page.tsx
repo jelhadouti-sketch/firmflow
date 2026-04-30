@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Acceptable Use Policy',
   description: 'FirmFlow Acceptable Use Policy. Rules and responsibilities when using our practice management platform.',
-  alternates: { canonical: 'https://www.firmflow.io/acceptable-use' },
+  alternates: { canonical: 'https://firmflow.io/acceptable-use' },
 }
 
 export default function AcceptableUse() {
@@ -40,7 +40,7 @@ export default function AcceptableUse() {
         <p>FirmFlow reserves the right to: (a) Remove any content that violates this AUP; (b) Suspend or terminate accounts that violate this AUP; (c) Report illegal activity to law enforcement; (d) Cooperate with law enforcement investigations. Violations may result in immediate account termination without refund.</p>
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>8. Contact</h2>
-        <p>FirmFlow Ltd<br/>Email: hello@firmflow.io<br/>Website: www.firmflow.io</p>
+        <p>FirmFlow Ltd<br/>Email: hello@firmflow.io<br/>Website: firmflow.io</p>
 
         </div>
       </div>

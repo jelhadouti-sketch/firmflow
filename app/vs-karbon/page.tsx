@@ -6,7 +6,7 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'FirmFlow vs Karbon — Comparison for Professional Firms',
   description: 'Compare FirmFlow and Karbon side by side. Flat pricing vs per-user fees. See why firms choose FirmFlow over Karbon.',
-  alternates: { canonical: 'https://www.firmflow.io/vs-karbon' },
+  alternates: { canonical: 'https://firmflow.io/vs-karbon' },
 }
 
 export default function VsKarbon() {

@@ -10,7 +10,7 @@ import { BarChart3, ClipboardList, Clock, CreditCard, FileText, MessageSquare, P
 export const metadata: Metadata = {
   title: 'How FirmFlow Works — Complete Guide to All Features',
   description: 'Learn how FirmFlow helps your firm manage e-signatures, invoicing, documents, client portal, time tracking, messaging, and AI — all in one platform for $29/month.',
-  alternates: { canonical: 'https://www.firmflow.io/how-it-works' },
+  alternates: { canonical: 'https://firmflow.io/how-it-works' },
 }
 
 export default async function HowItWorks() {

@@ -6,7 +6,7 @@ import SiteFooter from '@/components/SiteFooter'
 export const metadata: Metadata = {
   title: 'Customer Stories — FirmFlow',
   description: 'FirmFlow launched in 2026. We are looking for our first founding member firms. Join and help shape the product.',
-  alternates: { canonical: 'https://www.firmflow.io/testimonials' },
+  alternates: { canonical: 'https://firmflow.io/testimonials' },
 }
 
 export default function Testimonials() {

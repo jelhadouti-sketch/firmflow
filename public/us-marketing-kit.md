@@ -12,7 +12,7 @@ Generated: April 2026
 **Headline 3:** E-Signatures, Invoicing, Client Portal & AI
 **Description 1:** Stop paying for DocuSign + QuickBooks + ShareFile separately. FirmFlow does it all from $29/month. 14-day free trial.
 **Description 2:** Used by 500+ accounting, law & consulting firms. E-signatures, invoicing, time tracking, client portal. Start free today.
-**URL:** https://www.firmflow.io/us
+**URL:** https://firmflow.io/us
 
 ### Campaign 2: QuickBooks Alternative
 **Keywords:** quickbooks alternative, quickbooks alternative for accountants, better than quickbooks for firms
@@ -20,28 +20,28 @@ Generated: April 2026
 **Headline 2:** Invoicing + E-Signatures + Portal — $29/mo
 **Headline 3:** QuickBooks Alternative — Try Free
 **Description:** QuickBooks does invoicing. FirmFlow does invoicing + e-signatures + document management + client portal + AI. From $29/mo.
-**URL:** https://www.firmflow.io/quickbooks-alternative
+**URL:** https://firmflow.io/quickbooks-alternative
 
 ### Campaign 3: DocuSign Alternative
 **Keywords:** docusign alternative, cheap docusign alternative, esignature software for firms
 **Headline 1:** DocuSign Alternative — Save 50%+
 **Headline 2:** E-Signatures + 11 More Tools — $29/mo
 **Description:** Why pay $25/mo just for e-signatures? FirmFlow includes e-signatures plus invoicing, document management, client portal & more. From $29/mo.
-**URL:** https://www.firmflow.io/docusign-alternative
+**URL:** https://firmflow.io/docusign-alternative
 
 ### Campaign 4: Accountant-specific
 **Keywords:** accounting firm software, CPA practice management, tax firm management software
 **Headline 1:** Built for Accounting Firms — $29/mo
 **Headline 2:** CPA Practice Management Software
 **Description:** E-signatures, invoicing, time tracking, document management & client portal — built specifically for accounting firms. 14-day free trial.
-**URL:** https://www.firmflow.io/for-accountants
+**URL:** https://firmflow.io/for-accountants
 
 ### Campaign 5: Law firm-specific
 **Keywords:** law firm management software, legal practice management, small law firm software
 **Headline 1:** Law Firm Management — All-in-One
 **Headline 2:** Cheaper Than Clio or PracticePanther
 **Description:** E-signatures, document management, invoicing, client portal & time tracking for law firms. From $29/mo. Replace Clio & save.
-**URL:** https://www.firmflow.io/for-lawyers
+**URL:** https://firmflow.io/for-lawyers
 
 ---
 

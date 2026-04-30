@@ -7,7 +7,7 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Best ShareFile Alternative for Professional Firms — FirmFlow',
   description: 'Stop paying €27/user/month for file sharing. FirmFlow includes document management plus e-signatures, invoicing, and a client portal — from €29/month flat.',
-  alternates: { canonical: 'https://www.firmflow.io/sharefile-alternative' },
+  alternates: { canonical: 'https://firmflow.io/sharefile-alternative' },
 }
 
 export default function ShareFileAlternative() {

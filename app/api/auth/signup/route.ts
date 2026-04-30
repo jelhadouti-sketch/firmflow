@@ -152,9 +152,9 @@ export async function POST(req: NextRequest) {
     type: 'signup',
     email,
     password,
-    options: { redirectTo: 'https://www.firmflow.io/dashboard' }
+    options: { redirectTo: 'https://firmflow.io/dashboard' }
   })
-  const confirmUrl = linkData?.properties?.action_link || 'https://www.firmflow.io/login'
+  const confirmUrl = linkData?.properties?.action_link || 'https://firmflow.io/login'
 
   // Send welcome/verify email in user's language
   try {

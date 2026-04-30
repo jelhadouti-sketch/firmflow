@@ -7,19 +7,19 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Changelog — FirmFlow Product Updates',
   description: 'Latest features, improvements, and fixes shipped in FirmFlow. Updated regularly. Built for solo accountants, lawyers, and consultants.',
-  alternates: { canonical: 'https://www.firmflow.io/changelog' },
+  alternates: { canonical: 'https://firmflow.io/changelog' },
   openGraph: {
     title: 'Changelog — FirmFlow Product Updates',
     description: 'Latest features, improvements, and fixes shipped in FirmFlow.',
-    url: 'https://www.firmflow.io/changelog',
+    url: 'https://firmflow.io/changelog',
     type: 'website',
-    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Changelog — FirmFlow Product Updates',
     description: 'Latest features, improvements, and fixes shipped in FirmFlow.',
-    images: ['https://www.firmflow.io/og-default.png'],
+    images: ['https://firmflow.io/og-default.png'],
   },
 }
 

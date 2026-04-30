@@ -7,19 +7,19 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: "Practice Management Software for Coaches and Consultants",
   description: "Contracts, scheduling notes, payment tracking, and client portal for life coaches, business coaches, and executive coaches. Flat pricing.",
-  alternates: { canonical: 'https://www.firmflow.io/for-coaches' },
+  alternates: { canonical: 'https://firmflow.io/for-coaches' },
   openGraph: {
     title: "Practice Management Software for Coaches and Consultants",
     description: "Contracts, scheduling notes, payment tracking, and client portal for life coaches, business coaches, and executive coaches. Flat pricing.",
-    url: 'https://www.firmflow.io/for-coaches',
+    url: 'https://firmflow.io/for-coaches',
     type: 'website',
-    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: "Practice Management Software for Coaches and Consultants",
     description: "Contracts, scheduling notes, payment tracking, and client portal for life coaches, business coaches, and executive coaches. Flat pricing.",
-    images: ['https://www.firmflow.io/og-default.png'],
+    images: ['https://firmflow.io/og-default.png'],
   },
 }
 

@@ -30,7 +30,7 @@ function promoEmailHtml(name: string) {
       <div style="padding:10px 0"><span style="color:#16A34A;font-weight:700;margin-right:8px">✓</span><span style="font-size:14px;color:#374151"><strong>AI assistant</strong> — ask anything about your firm data</span></div>
     </div>
     <div style="text-align:center;margin:0 0 24px">
-      <a href="https://www.firmflow.io" style="display:inline-block;background:#1C64F2;color:#fff;padding:16px 40px;border-radius:10px;text-decoration:none;font-weight:700;font-size:16px;box-shadow:0 4px 14px rgba(28,100,242,0.3)">Start your free 14-day trial</a>
+      <a href="https://firmflow.io" style="display:inline-block;background:#1C64F2;color:#fff;padding:16px 40px;border-radius:10px;text-decoration:none;font-weight:700;font-size:16px;box-shadow:0 4px 14px rgba(28,100,242,0.3)">Start your free 14-day trial</a>
       <p style="color:#94A3B8;font-size:12px;margin:12px 0 0">No credit card required. Set up in 10 minutes.</p>
     </div>
     <div style="background:#F8FAFC;border-radius:12px;padding:20px;border:1px solid #E2E8F0">
@@ -42,8 +42,8 @@ function promoEmailHtml(name: string) {
     <p style="color:#94A3B8;font-size:13px;margin:0"><strong style="color:#fff">Starter 29/mo</strong> · <strong style="color:#fff">Pro 89/mo</strong> · No per-user fees · Entire team included</p>
   </div>
   <div style="text-align:center;padding:24px 0">
-    <p style="color:#94A3B8;font-size:11px;margin:0 0 4px">FirmFlow · <a href="https://www.firmflow.io" style="color:#94A3B8">firmflow.io</a></p>
-    <p style="color:#CBD5E1;font-size:11px;margin:0"><a href="https://www.firmflow.io/unsubscribe" style="color:#CBD5E1">Unsubscribe</a></p>
+    <p style="color:#94A3B8;font-size:11px;margin:0 0 4px">FirmFlow · <a href="https://firmflow.io" style="color:#94A3B8">firmflow.io</a></p>
+    <p style="color:#CBD5E1;font-size:11px;margin:0"><a href="https://firmflow.io/unsubscribe" style="color:#CBD5E1">Unsubscribe</a></p>
   </div>
 </div></body></html>`
 }
@@ -63,19 +63,19 @@ function feedbackEmailHtml(name: string) {
     <p style="font-size:15px;color:#475569;line-height:1.7;margin:0 0 16px">Thank you for trying FirmFlow! We are a small team and your feedback means everything to us.</p>
     <p style="font-size:15px;color:#475569;line-height:1.7;margin:0 0 24px">It only takes 2 minutes and your answers go directly to our product team.</p>
     <div style="text-align:center;margin:0 0 24px">
-      <a href="https://www.firmflow.io/feedback" style="display:inline-block;background:#1C64F2;color:#fff;padding:16px 40px;border-radius:10px;text-decoration:none;font-weight:700;font-size:16px;box-shadow:0 4px 14px rgba(28,100,242,0.3)">Share your feedback</a>
+      <a href="https://firmflow.io/feedback" style="display:inline-block;background:#1C64F2;color:#fff;padding:16px 40px;border-radius:10px;text-decoration:none;font-weight:700;font-size:16px;box-shadow:0 4px 14px rgba(28,100,242,0.3)">Share your feedback</a>
     </div>
     <div style="background:#F8FAFC;border-radius:12px;padding:20px;border:1px solid #E2E8F0;text-align:center">
       <p style="font-size:14px;color:#475569;margin:0 0 4px;font-weight:600">Not ready to subscribe yet?</p>
-      <p style="font-size:13px;color:#64748B;margin:0">No problem! Your trial data is saved. Come back anytime at <a href="https://www.firmflow.io/login" style="color:#1C64F2;font-weight:600">firmflow.io/login</a></p>
+      <p style="font-size:13px;color:#64748B;margin:0">No problem! Your trial data is saved. Come back anytime at <a href="https://firmflow.io/login" style="color:#1C64F2;font-weight:600">firmflow.io/login</a></p>
     </div>
   </div>
   <div style="background:#0F172A;padding:20px 32px;text-align:center;border-radius:0 0 16px 16px">
     <p style="color:#94A3B8;font-size:13px;margin:0">Thank you for helping us improve FirmFlow</p>
   </div>
   <div style="text-align:center;padding:24px 0">
-    <p style="color:#94A3B8;font-size:11px;margin:0 0 4px">FirmFlow · <a href="https://www.firmflow.io" style="color:#94A3B8">firmflow.io</a></p>
-    <p style="color:#CBD5E1;font-size:11px;margin:0"><a href="https://www.firmflow.io/unsubscribe" style="color:#CBD5E1">Unsubscribe</a></p>
+    <p style="color:#94A3B8;font-size:11px;margin:0 0 4px">FirmFlow · <a href="https://firmflow.io" style="color:#94A3B8">firmflow.io</a></p>
+    <p style="color:#CBD5E1;font-size:11px;margin:0"><a href="https://firmflow.io/unsubscribe" style="color:#CBD5E1">Unsubscribe</a></p>
   </div>
 </div></body></html>`
 }

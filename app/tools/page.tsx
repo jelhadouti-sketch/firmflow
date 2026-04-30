@@ -6,7 +6,7 @@ import SiteFooter from '@/components/SiteFooter'
 export const metadata: Metadata = {
   title: 'Free Tools for Professional Firms — FirmFlow',
   description: 'Free tools for accountants, lawyers, and consultants. Invoice generator, engagement letter template, and more.',
-  alternates: { canonical: 'https://www.firmflow.io/tools' },
+  alternates: { canonical: 'https://firmflow.io/tools' },
 }
 
 export default function Tools() {

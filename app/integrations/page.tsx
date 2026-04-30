@@ -7,19 +7,19 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Integrations — FirmFlow',
   description: 'Native integrations and compatible tools for FirmFlow practice management. Stripe, email, accounting software, and more.',
-  alternates: { canonical: 'https://www.firmflow.io/integrations' },
+  alternates: { canonical: 'https://firmflow.io/integrations' },
   openGraph: {
     title: 'Integrations — FirmFlow',
     description: 'Native integrations and compatible tools for FirmFlow practice management.',
-    url: 'https://www.firmflow.io/integrations',
+    url: 'https://firmflow.io/integrations',
     type: 'website',
-    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Integrations — FirmFlow',
     description: 'Native integrations and compatible tools for FirmFlow.',
-    images: ['https://www.firmflow.io/og-default.png'],
+    images: ['https://firmflow.io/og-default.png'],
   },
 }
 

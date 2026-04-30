@@ -6,7 +6,7 @@ import SiteFooter from '@/components/SiteFooter'
 export const metadata: Metadata = {
   title: 'Why FirmFlow? — 7 Reasons Firms Switch',
   description: '7 reasons professional firms choose FirmFlow over TaxDome, Karbon, and Clio. Flat pricing, 20-minute setup, and everything in one platform.',
-  alternates: { canonical: 'https://www.firmflow.io/why-firmflow' },
+  alternates: { canonical: 'https://firmflow.io/why-firmflow' },
 }
 
 export default function WhyFirmFlow() {

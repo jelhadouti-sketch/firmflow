@@ -7,7 +7,7 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Best TaxDome Alternative for UK & EU Firms — FirmFlow',
   description: 'Looking for a TaxDome alternative? FirmFlow offers documents, e-signatures, invoicing, and a client portal for €29/month flat. No per-user fees.',
-  alternates: { canonical: 'https://www.firmflow.io/taxdome-alternative' },
+  alternates: { canonical: 'https://firmflow.io/taxdome-alternative' },
 }
 
 export default function TaxDomeAlternative() {

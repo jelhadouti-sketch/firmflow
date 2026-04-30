@@ -7,7 +7,7 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Best FreshBooks Alternative for Professional Firms — FirmFlow',
   description: 'Looking for a FreshBooks alternative? FirmFlow gives you invoicing plus e-signatures, document management, client portal & AI assistant — from $29/month.',
-  alternates: { canonical: 'https://www.firmflow.io/freshbooks-alternative' },
+  alternates: { canonical: 'https://firmflow.io/freshbooks-alternative' },
 }
 
 export default function FreshBooksAlternative() {

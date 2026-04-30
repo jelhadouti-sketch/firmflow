@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 const INDEXNOW_KEY = '988d8bae64a305c0d5587e9f5a85ef0e3c2bc0cb73ae7e17'
-const HOST = 'www.firmflow.io'
+const HOST = 'firmflow.io'
 const KEY_LOCATION = `https://${HOST}/${INDEXNOW_KEY}.txt`
 
 // Search engines that accept IndexNow submissions
@@ -91,7 +91,7 @@ export async function POST(req: Request) {
 // GET shows usage info
 export async function GET() {
   return NextResponse.json({
-    info: 'POST { "urls": ["https://www.firmflow.io/..."] } to ping search engines',
+    info: 'POST { "urls": ["https://firmflow.io/..."] } to ping search engines',
     keyLocation: KEY_LOCATION,
     endpoints: ENDPOINTS,
   })

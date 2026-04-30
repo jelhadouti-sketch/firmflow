@@ -7,19 +7,19 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Clio vs Karbon (2026): Different Tools for Different Firms',
   description: 'Clio is for law firms. Karbon is for accounting firms. A neutral comparison of when each platform makes sense and what to use if neither fits.',
-  alternates: { canonical: 'https://www.firmflow.io/clio-vs-karbon' },
+  alternates: { canonical: 'https://firmflow.io/clio-vs-karbon' },
   openGraph: {
     title: 'Clio vs Karbon (2026): Different Tools for Different Firms',
     description: 'Clio is for law firms. Karbon is for accounting firms. A neutral comparison.',
-    url: 'https://www.firmflow.io/clio-vs-karbon',
+    url: 'https://firmflow.io/clio-vs-karbon',
     type: 'article',
-    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Clio vs Karbon (2026)',
     description: 'Clio is for law firms. Karbon is for accounting firms.',
-    images: ['https://www.firmflow.io/og-default.png'],
+    images: ['https://firmflow.io/og-default.png'],
   },
 }
 
@@ -35,12 +35,12 @@ const articleSchema = {
   dateModified: '2026-04-28T09:00:00Z',
   headline: 'Clio vs Karbon (2026): Different Tools for Different Firms',
   description: 'Clio is for law firms. Karbon is for accounting firms. A neutral comparison of when each platform makes sense.',
-  url: 'https://www.firmflow.io/clio-vs-karbon',
-  image: 'https://www.firmflow.io/og-default.png',
-  author: { '@type': 'Organization', name: 'FirmFlow', url: 'https://www.firmflow.io' },
+  url: 'https://firmflow.io/clio-vs-karbon',
+  image: 'https://firmflow.io/og-default.png',
+  author: { '@type': 'Organization', name: 'FirmFlow', url: 'https://firmflow.io' },
   publisher: {
     '@type': 'Organization', name: 'FirmFlow',
-    logo: { '@type': 'ImageObject', url: 'https://www.firmflow.io/logo/firmflow-icon.svg' },
+    logo: { '@type': 'ImageObject', url: 'https://firmflow.io/logo/firmflow-icon.svg' },
   },
 }
 

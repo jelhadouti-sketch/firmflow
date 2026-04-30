@@ -6,18 +6,18 @@ export const metadata: Metadata = {
   title: 'FirmFlow — Alles-in-één platform voor accountantskantoren',
   description: 'E-handtekeningen, documenten, facturatie, klantenportaal en AI in één platform. Vervang 5 tools voor €29/maand. 14 dagen gratis.',
   alternates: {
-    canonical: 'https://www.firmflow.io/nl/accountants',
+    canonical: 'https://firmflow.io/nl/accountants',
     languages: {
-      'en-GB': 'https://www.firmflow.io/for-accountants',
-      'nl-NL': 'https://www.firmflow.io/nl/accountants',
-      'de-DE': 'https://www.firmflow.io/de/accountants',
-      'x-default': 'https://www.firmflow.io/for-accountants',
+      'en-GB': 'https://firmflow.io/for-accountants',
+      'nl-NL': 'https://firmflow.io/nl/accountants',
+      'de-DE': 'https://firmflow.io/de/accountants',
+      'x-default': 'https://firmflow.io/for-accountants',
     },
   },
   openGraph: {
     title: 'FirmFlow — Alles-in-één voor accountantskantoren',
     description: 'Vervang DocuSign, ShareFile en Clio met één platform. Vanaf €29/maand.',
-    url: 'https://www.firmflow.io/nl/accountants',
+    url: 'https://firmflow.io/nl/accountants',
     locale: 'nl_NL',
   },
 }

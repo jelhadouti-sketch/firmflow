@@ -117,7 +117,7 @@ export function buildClientInviteEmail(opts: {
     '</table></td></tr>',
     '<tr><td style="padding:0 40px 24px;" align="center"><a href="', opts.portalUrl, '" style="display:inline-block;background:#0F172A;color:#fff;padding:14px 32px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;">', t.cta, ' &rarr;</a></td></tr>',
     '<tr><td style="padding:0 40px 40px;"><div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:10px;padding:14px 16px;"><p style="margin:0;font-size:12px;color:#92400E;line-height:1.5;">', t.warning, '</p></div></td></tr>',
-    '<tr><td style="padding:24px 40px;background:#F8FAFC;border-top:1px solid #E2E8F0;" align="center"><p style="margin:0;font-size:12px;color:#94A3B8;">', t.footer, '</p><p style="margin:6px 0 0;font-size:12px;color:#94A3B8;"><a href="https://www.firmflow.io" style="color:#1C64F2;text-decoration:none;">firmflow.io</a></p></td></tr>',
+    '<tr><td style="padding:24px 40px;background:#F8FAFC;border-top:1px solid #E2E8F0;" align="center"><p style="margin:0;font-size:12px;color:#94A3B8;">', t.footer, '</p><p style="margin:6px 0 0;font-size:12px;color:#94A3B8;"><a href="https://firmflow.io" style="color:#1C64F2;text-decoration:none;">firmflow.io</a></p></td></tr>',
     '</table></td></tr></table></body></html>',
   ].join('')
 

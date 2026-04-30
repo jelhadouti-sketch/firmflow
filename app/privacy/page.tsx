@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'FirmFlow\'s privacy policy. How we collect, use, and protect your data. GDPR-compliant, EU-hosted, AES-256 encrypted.',
-  alternates: { canonical: 'https://www.firmflow.io/privacy' },
+  alternates: { canonical: 'https://firmflow.io/privacy' },
 }
 
 export default function Privacy() {
@@ -19,7 +19,7 @@ export default function Privacy() {
         <div style={{fontSize:'14px',color:'#374151',lineHeight:'1.8'}}>
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>1. Introduction</h2>
-        <p>FirmFlow Ltd ("FirmFlow", "we", "us", "our") is committed to protecting the privacy of our users. This Privacy Policy explains how we collect, use, store, and protect your personal data when you use our platform at www.firmflow.io ("Platform").</p>
+        <p>FirmFlow Ltd ("FirmFlow", "we", "us", "our") is committed to protecting the privacy of our users. This Privacy Policy explains how we collect, use, store, and protect your personal data when you use our platform at firmflow.io ("Platform").</p>
         <p>We comply with the UK General Data Protection Regulation (UK GDPR), the EU General Data Protection Regulation (EU GDPR), the Data Protection Act 2018, and other applicable data protection laws.</p>
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>2. Data Controller</h2>
@@ -90,7 +90,7 @@ export default function Privacy() {
         <p>If you are unhappy with how we handle your data, you have the right to lodge a complaint with the Information Commissioner's Office (ICO) in the UK at ico.org.uk, or your local data protection authority.</p>
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>14. Contact</h2>
-        <p>FirmFlow Ltd<br/>Email: hello@firmflow.io<br/>Website: www.firmflow.io</p>
+        <p>FirmFlow Ltd<br/>Email: hello@firmflow.io<br/>Website: firmflow.io</p>
 
         </div>
       </div>

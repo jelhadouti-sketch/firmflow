@@ -6,7 +6,7 @@ import SiteFooter from '@/components/SiteFooter'
 export const metadata: Metadata = {
   title: 'Switch to FirmFlow in 20 Minutes — Migration Guide',
   description: 'Switching to FirmFlow is fast and painless. Import your clients, upload your documents, and you are live in 20 minutes. No data migration headaches.',
-  alternates: { canonical: 'https://www.firmflow.io/switch' },
+  alternates: { canonical: 'https://firmflow.io/switch' },
 }
 
 export default function Switch() {

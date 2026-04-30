@@ -7,7 +7,7 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Best DocuSign Alternative for Professional Firms — FirmFlow',
   description: 'Stop paying per envelope. FirmFlow includes unlimited e-signatures plus documents, time tracking, invoicing, and a client portal — from €29/month flat.',
-  alternates: { canonical: 'https://www.firmflow.io/docusign-alternative' },
+  alternates: { canonical: 'https://firmflow.io/docusign-alternative' },
 }
 
 export default function DocuSignAlternative() {

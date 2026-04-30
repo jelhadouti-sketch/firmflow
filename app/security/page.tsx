@@ -6,7 +6,7 @@ import SiteFooter from '@/components/SiteFooter'
 export const metadata: Metadata = {
   title: 'Security — FirmFlow | Enterprise-Grade Protection',
   description: 'FirmFlow security: AES-256 encryption, row-level data isolation, 2FA, GDPR compliance, full audit logging. Enterprise security at SMB pricing.',
-  alternates: { canonical: 'https://www.firmflow.io/security' },
+  alternates: { canonical: 'https://firmflow.io/security' },
 }
 
 export default function Security() {

@@ -7,19 +7,19 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: "Practice Management Software for Tax Advisors",
   description: "Document collection, e-signed engagement letters, time tracking, and client portal for solo and small tax practices. EUR 29/month flat.",
-  alternates: { canonical: 'https://www.firmflow.io/for-tax-advisors' },
+  alternates: { canonical: 'https://firmflow.io/for-tax-advisors' },
   openGraph: {
     title: "Practice Management Software for Tax Advisors",
     description: "Document collection, e-signed engagement letters, time tracking, and client portal for solo and small tax practices. EUR 29/month flat.",
-    url: 'https://www.firmflow.io/for-tax-advisors',
+    url: 'https://firmflow.io/for-tax-advisors',
     type: 'website',
-    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: "Practice Management Software for Tax Advisors",
     description: "Document collection, e-signed engagement letters, time tracking, and client portal for solo and small tax practices. EUR 29/month flat.",
-    images: ['https://www.firmflow.io/og-default.png'],
+    images: ['https://firmflow.io/og-default.png'],
   },
 }
 

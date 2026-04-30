@@ -10,17 +10,17 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'FirmFlow vs TaxDome vs Karbon vs Clio — 2026 Comparison',
     description: 'An honest comparison of FirmFlow against TaxDome, Karbon, and Clio. Features, pricing, pros and cons for accounting and law firms.',
-    url: 'https://www.firmflow.io/blog/firmflow-vs-competitors',
+    url: 'https://firmflow.io/blog/firmflow-vs-competitors',
     type: 'article',
-    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'FirmFlow vs TaxDome vs Karbon vs Clio — 2026 Comparison',
     description: 'An honest comparison of FirmFlow against TaxDome, Karbon, and Clio. Features, pricing, pros and cons for accounting and law firms.',
-    images: ['https://www.firmflow.io/og-default.png'],
+    images: ['https://firmflow.io/og-default.png'],
   },
-  alternates: { canonical: 'https://www.firmflow.io/blog/firmflow-vs-competitors' },
+  alternates: { canonical: 'https://firmflow.io/blog/firmflow-vs-competitors' },
 }
 
 export default function ComparisonPost() {
@@ -39,7 +39,7 @@ export default function ComparisonPost() {
         "headline": "FirmFlow vs TaxDome vs Karbon vs Clio — 2026 Comparison",
         "datePublished": "2026-04-02",
         "author": { "@type": "Organization", "name": "FirmFlow" },
-        "publisher": { "@type": "Organization", "name": "FirmFlow", "logo": { "@type": "ImageObject", "url": "https://www.firmflow.io/icons/icon-192.png" } },
+        "publisher": { "@type": "Organization", "name": "FirmFlow", "logo": { "@type": "ImageObject", "url": "https://firmflow.io/icons/icon-192.png" } },
         "description": "An honest comparison of FirmFlow against TaxDome, Karbon, and Clio for professional firms."
       })}} />
       <article style={{maxWidth:'720px',margin:'0 auto',padding:'60px 24px'}}>

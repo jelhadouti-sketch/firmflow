@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/dashboard/', '/portal/', '/admin/', '/api/', '/auth/'],
       },
     ],
-    sitemap: 'https://www.firmflow.io/sitemap.xml',
+    sitemap: 'https://firmflow.io/sitemap.xml',
   }
 }

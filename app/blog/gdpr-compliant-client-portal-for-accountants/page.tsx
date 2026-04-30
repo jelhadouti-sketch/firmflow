@@ -4,22 +4,22 @@ import SiteFooter from '@/components/SiteFooter'
 import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://www.firmflow.io/blog/gdpr-compliant-client-portal-for-accountants' },
+  alternates: { canonical: 'https://firmflow.io/blog/gdpr-compliant-client-portal-for-accountants' },
   title: 'GDPR-Compliant Client Portal for Accountants (2026 Guide)',
   description: 'What makes a client portal truly GDPR-compliant: data residency, encryption, access logs, and consent management. Practical guide for EU accounting firms.',
   keywords: ['gdpr client portal', 'gdpr compliant accountant software', 'eu client portal', 'gdpr practice management'],
   openGraph: {
     title: 'GDPR-Compliant Client Portal for Accountants (2026 Guide)',
     description: 'What makes a client portal truly GDPR-compliant: data residency, encryption, access logs, and consent management.',
-    url: 'https://www.firmflow.io/blog/gdpr-compliant-client-portal-for-accountants',
+    url: 'https://firmflow.io/blog/gdpr-compliant-client-portal-for-accountants',
     type: 'article',
-    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'GDPR-Compliant Client Portal for Accountants (2026 Guide)',
     description: 'What makes a client portal truly GDPR-compliant: data residency, encryption, access logs, and consent management.',
-    images: ['https://www.firmflow.io/og-default.png'],
+    images: ['https://firmflow.io/og-default.png'],
   },
 }
 
@@ -27,7 +27,7 @@ export default function Post() {
   return (
     <>
       <Breadcrumbs schemaOnly items={JSON.parse('[{"name": "Blog", "href": "/blog"}, {"name": "GDPR-Compliant Client Portal for Accountants", "href": "/blog/gdpr-compliant-client-portal-for-accountants"}]')} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify({"@context":"https://schema.org","@type":"Article","datePublished":"2026-04-27T09:00:00Z","dateModified":"2026-04-28T09:00:00Z","headline":"GDPR-Compliant Client Portal for Accountants (2026 Guide)","description":"What makes a client portal truly GDPR-compliant: data residency, encryption, access logs, and consent management.","url":"https://www.firmflow.io/blog/gdpr-compliant-client-portal-for-accountants","image":"https://www.firmflow.io/og-default.png","author":{"@type":"Organization","name":"FirmFlow","url":"https://www.firmflow.io"},"publisher":{"@type":"Organization","name":"FirmFlow","logo":{"@type":"ImageObject","url":"https://www.firmflow.io/logo/firmflow-icon.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.firmflow.io/blog/gdpr-compliant-client-portal-for-accountants"}})}} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify({"@context":"https://schema.org","@type":"Article","datePublished":"2026-04-27T09:00:00Z","dateModified":"2026-04-28T09:00:00Z","headline":"GDPR-Compliant Client Portal for Accountants (2026 Guide)","description":"What makes a client portal truly GDPR-compliant: data residency, encryption, access logs, and consent management.","url":"https://firmflow.io/blog/gdpr-compliant-client-portal-for-accountants","image":"https://firmflow.io/og-default.png","author":{"@type":"Organization","name":"FirmFlow","url":"https://firmflow.io"},"publisher":{"@type":"Organization","name":"FirmFlow","logo":{"@type":"ImageObject","url":"https://firmflow.io/logo/firmflow-icon.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://firmflow.io/blog/gdpr-compliant-client-portal-for-accountants"}})}} />
       <div style={{fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif',background:'#fff',minHeight:'100vh'}}>
       <header style={{padding:'0 20px',height:'64px',display:'flex',alignItems:'center',justifyContent:'space-between',borderBottom:'1px solid #E2E8F0',position:'sticky',top:0,background:'rgba(255,255,255,0.97)',backdropFilter:'blur(12px)',zIndex:100,maxWidth:'100%',margin:'0 auto',width:'100%'}}>
         <Link href="/" style={{fontSize:'22px',fontWeight:'800',color:'#1C64F2',letterSpacing:'-0.04em',textDecoration:'none'}}>⬡ FirmFlow</Link>

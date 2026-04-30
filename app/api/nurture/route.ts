@@ -25,7 +25,7 @@ const SEQUENCES = [
             <p style="margin:4px 0;font-size:14px;color:#475569">4️⃣ Send a document for e-signature</p>
           </div>
 
-          <a href="https://www.firmflow.io/dashboard" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:12px 0">Go to your dashboard →</a>
+          <a href="https://firmflow.io/dashboard" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:12px 0">Go to your dashboard →</a>
           
           <p style="font-size:14px;color:#64748B;margin-top:20px">Questions? Just reply to this email — I read every message.</p>
           <p style="font-size:14px;color:#64748B">— The FirmFlow Team</p>
@@ -53,7 +53,7 @@ const SEQUENCES = [
           
           <p style="font-size:15px;color:#475569;line-height:1.7">Compare that to DocuSign at $25-40/month JUST for signatures.</p>
 
-          <a href="https://www.firmflow.io/dashboard/signatures" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:12px 0">Try e-signatures now →</a>
+          <a href="https://firmflow.io/dashboard/signatures" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:12px 0">Try e-signatures now →</a>
           
           <p style="font-size:14px;color:#64748B;margin-top:20px">— The FirmFlow Team</p>
         </div>
@@ -79,7 +79,7 @@ const SEQUENCES = [
             <p style="margin:4px 0;font-size:14px;color:#475569">📊 <strong>Analytics</strong> — See revenue trends, team performance, and client insights</p>
           </div>
 
-          <a href="https://www.firmflow.io/dashboard" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:12px 0">Explore your dashboard →</a>
+          <a href="https://firmflow.io/dashboard" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:12px 0">Explore your dashboard →</a>
           
           <p style="font-size:14px;color:#64748B;margin-top:20px">Need help? Reply to this email or use the live chat in your dashboard.</p>
           <p style="font-size:14px;color:#64748B">— The FirmFlow Team</p>
@@ -109,7 +109,7 @@ const SEQUENCES = [
 
           <p style="font-size:15px;color:#475569;line-height:1.7"><strong>Subscribe now to keep everything.</strong> Plans start at just $29/month — less than what you'd pay for DocuSign alone.</p>
 
-          <a href="https://www.firmflow.io/dashboard/subscription" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:12px 0">Choose a plan →</a>
+          <a href="https://firmflow.io/dashboard/subscription" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:12px 0">Choose a plan →</a>
           
           <p style="font-size:14px;color:#64748B;margin-top:20px">Questions about pricing? Reply to this email.</p>
           <p style="font-size:14px;color:#64748B">— The FirmFlow Team</p>
@@ -137,7 +137,7 @@ const SEQUENCES = [
             <p style="margin:4px 0;font-size:14px;color:#475569">✅ Cancel anytime — no contracts</p>
           </div>
 
-          <a href="https://www.firmflow.io/dashboard/subscription" style="display:inline-block;background:#DC2626;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:12px 0">Subscribe now — keep your data →</a>
+          <a href="https://firmflow.io/dashboard/subscription" style="display:inline-block;background:#DC2626;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:12px 0">Subscribe now — keep your data →</a>
           
           <p style="font-size:14px;color:#64748B;margin-top:20px">— The FirmFlow Team</p>
         </div>

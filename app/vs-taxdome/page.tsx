@@ -6,7 +6,7 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'FirmFlow vs TaxDome — Comparison for Accounting Firms',
   description: 'Compare FirmFlow and TaxDome side by side. See pricing, features, and why firms switch from TaxDome to FirmFlow.',
-  alternates: { canonical: 'https://www.firmflow.io/vs-taxdome' },
+  alternates: { canonical: 'https://firmflow.io/vs-taxdome' },
 }
 
 export default function VsTaxDome() {

@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Terms of Service',
   description: 'FirmFlow\'s terms of service. The contract between you and FirmFlow when using our practice management platform.',
-  alternates: { canonical: 'https://www.firmflow.io/terms' },
+  alternates: { canonical: 'https://firmflow.io/terms' },
 }
 
 export default function Terms() {
@@ -93,7 +93,7 @@ export default function Terms() {
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>15. Contact</h2>
         <p>For questions about these Terms, contact us at:</p>
-        <p>FirmFlow Ltd<br/>Email: hello@firmflow.io<br/>Website: www.firmflow.io</p>
+        <p>FirmFlow Ltd<br/>Email: hello@firmflow.io<br/>Website: firmflow.io</p>
 
         </div>
       </div>

@@ -4,7 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'Get Started with FirmFlow — Free 14-Day Trial',
   description: 'Start your free trial of FirmFlow. Documents, e-signatures, invoicing, and a client portal — from €29/month flat. No credit card needed.',
-  alternates: { canonical: 'https://www.firmflow.io/get-started' },
+  alternates: { canonical: 'https://firmflow.io/get-started' },
   robots: { index: false },
 }
 

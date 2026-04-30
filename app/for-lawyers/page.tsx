@@ -5,11 +5,11 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Law Firm Practice Management Software',
   description: 'Practice management for small law firms. Contracts, e-signatures, time tracking per case, billing, secure client portal. eIDAS compliant. From £29/month.',
-  alternates: { canonical: 'https://www.firmflow.io/for-lawyers' },
+  alternates: { canonical: 'https://firmflow.io/for-lawyers' },
   openGraph: {
     title: 'Law Firm Practice Management Software',
     description: 'Practice management for small law firms. Contracts, e-signatures, time tracking per case, billing, secure client portal. eIDAS compliant. From £29/month.',
-    url: 'https://www.firmflow.io/for-lawyers',
+    url: 'https://firmflow.io/for-lawyers',
     type: 'website',
   },
 }

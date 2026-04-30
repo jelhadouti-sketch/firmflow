@@ -10,17 +10,17 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'What Is a Client Portal? Guide for Firms',
     description: 'A client portal is a secure, branded space where your clients access documents, sign contracts, pay invoices, and message your firm. Here is why every firm needs one.',
-    url: 'https://www.firmflow.io/blog/what-is-a-client-portal',
+    url: 'https://firmflow.io/blog/what-is-a-client-portal',
     type: 'article',
-    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'What Is a Client Portal? Guide for Firms',
     description: 'A client portal is a secure, branded space where your clients access documents, sign contracts, pay invoices, and message your firm. Here is why every firm needs one.',
-    images: ['https://www.firmflow.io/og-default.png'],
+    images: ['https://firmflow.io/og-default.png'],
   },
-  alternates: { canonical: 'https://www.firmflow.io/blog/what-is-a-client-portal' },
+  alternates: { canonical: 'https://firmflow.io/blog/what-is-a-client-portal' },
 }
 
 export default function WhatIsClientPortal() {

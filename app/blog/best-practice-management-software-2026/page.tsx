@@ -10,24 +10,24 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Best Practice Management Software in 2026 — Complete Guide',
     description: 'Compare the top 10 practice management tools for accounting, law & consulting firms. Features, pricing, pros & cons. Updated April 2026.',
-    url: 'https://www.firmflow.io/blog/best-practice-management-software-2026',
+    url: 'https://firmflow.io/blog/best-practice-management-software-2026',
     type: 'article',
-    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Best Practice Management Software in 2026 — Complete Guide',
     description: 'Compare the top 10 practice management tools for accounting, law & consulting firms. Features, pricing, pros & cons. Updated April 2026.',
-    images: ['https://www.firmflow.io/og-default.png'],
+    images: ['https://firmflow.io/og-default.png'],
   },
-  alternates: { canonical: 'https://www.firmflow.io/blog/best-practice-management-software-2026' },
+  alternates: { canonical: 'https://firmflow.io/blog/best-practice-management-software-2026' },
 }
 
 export default function BlogPost() {
   return (
     <>
       <Breadcrumbs schemaOnly items={JSON.parse('[{"name": "Blog", "href": "/blog"}, {"name": "Best Practice Management Software 2026", "href": "/blog/best-practice-management-software-2026"}]')} />
-<script type="application/ld+json" dangerouslySetInnerHTML={{__html: '{"@context":"https://schema.org","@type":"Article","datePublished":"2026-03-15T09:00:00Z","dateModified":"2026-04-28T09:00:00Z","headline":"Best Practice Management Software in 2026 \\u2014 Complete Guide","description":"Compare the top 10 practice management tools for accounting, law & consulting firms. Features, pricing, pros & cons. Updated April 2026.","url":"https://www.firmflow.io/blog/best-practice-management-software-2026","image":"https://www.firmflow.io/og-default.png","author":{"@type":"Organization","name":"FirmFlow","url":"https://www.firmflow.io"},"publisher":{"@type":"Organization","name":"FirmFlow","logo":{"@type":"ImageObject","url":"https://www.firmflow.io/logo/firmflow-icon.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.firmflow.io/blog/best-practice-management-software-2026"}}'}} /><style>{`
+<script type="application/ld+json" dangerouslySetInnerHTML={{__html: '{"@context":"https://schema.org","@type":"Article","datePublished":"2026-03-15T09:00:00Z","dateModified":"2026-04-28T09:00:00Z","headline":"Best Practice Management Software in 2026 \\u2014 Complete Guide","description":"Compare the top 10 practice management tools for accounting, law & consulting firms. Features, pricing, pros & cons. Updated April 2026.","url":"https://firmflow.io/blog/best-practice-management-software-2026","image":"https://firmflow.io/og-default.png","author":{"@type":"Organization","name":"FirmFlow","url":"https://firmflow.io"},"publisher":{"@type":"Organization","name":"FirmFlow","logo":{"@type":"ImageObject","url":"https://firmflow.io/logo/firmflow-icon.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://firmflow.io/blog/best-practice-management-software-2026"}}'}} /><style>{`
   @media (max-width: 768px) {
     .mobile-grid { grid-template-columns: 1fr !important; }
     .mobile-wrap { flex-wrap: wrap !important; }

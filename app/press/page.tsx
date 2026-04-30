@@ -7,19 +7,19 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Press Kit & Brand Assets — FirmFlow',
   description: 'Press resources for journalists, partners, and content creators. Logos, screenshots, company facts, and media contact for FirmFlow.',
-  alternates: { canonical: 'https://www.firmflow.io/press' },
+  alternates: { canonical: 'https://firmflow.io/press' },
   openGraph: {
     title: 'Press Kit & Brand Assets — FirmFlow',
     description: 'Press resources for journalists, partners, and content creators.',
-    url: 'https://www.firmflow.io/press',
+    url: 'https://firmflow.io/press',
     type: 'website',
-    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Press Kit & Brand Assets — FirmFlow',
     description: 'Press resources for journalists, partners, and content creators.',
-    images: ['https://www.firmflow.io/og-default.png'],
+    images: ['https://firmflow.io/og-default.png'],
   },
 }
 

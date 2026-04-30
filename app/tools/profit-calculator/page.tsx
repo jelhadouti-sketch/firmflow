@@ -6,7 +6,7 @@ import ProfitCalculator from './calculator'
 export const metadata: Metadata = {
   title: 'Free Firm Profitability Calculator — How Much Could You Save?',
   description: 'Calculate how much your accounting, law, or consulting firm spends on software tools. See exactly how much you could save by switching to FirmFlow.',
-  alternates: { canonical: 'https://www.firmflow.io/tools/profit-calculator' },
+  alternates: { canonical: 'https://firmflow.io/tools/profit-calculator' },
   openGraph: {
     title: 'Free Firm Software Cost Calculator',
     description: 'Find out how much your firm wastes on separate tools. Takes 60 seconds.',
