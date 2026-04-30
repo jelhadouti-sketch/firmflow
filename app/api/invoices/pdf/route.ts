@@ -103,7 +103,7 @@ export async function GET(req: NextRequest) {
       })
     }
 
-    page.drawText('Powered by FirmFlow · firmflow.org', {
+    page.drawText('Powered by FirmFlow · firmflow.io', {
       x: 40,
       y: height - 112,
       size: 9,
@@ -505,7 +505,7 @@ export async function GET(req: NextRequest) {
       color: rgb(0.94, 0.97, 1),
     })
 
-    page.drawText('Pay online: https://firmflow.org/portal/invoices', {
+    page.drawText('Pay online: https://firmflow.io/portal/invoices', {
       x: 52,
       y: height - 572,
       size: 10,
@@ -546,7 +546,7 @@ export async function GET(req: NextRequest) {
       color: rgb(0.39, 0.45, 0.55),
     })
 
-    page.drawText('Powered by FirmFlow · firmflow.org', {
+    page.drawText('Powered by FirmFlow · firmflow.io', {
       x: width - 200,
       y: 28,
       size: 9,

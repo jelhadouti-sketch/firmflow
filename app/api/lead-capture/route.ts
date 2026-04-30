@@ -38,7 +38,7 @@ export async function POST(req: Request) {
         'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'FirmFlow <hello@firmflow.org>',
+        from: 'FirmFlow <hello@firmflow.io>',
         to: email,
         subject: emailContent.subject,
         html: emailContent.html,
@@ -90,11 +90,11 @@ function getEmailForSource(source: string, data: any, email: string) {
               ✅ No per-user fees — your whole team included
             </p>
 
-            <a href="https://www.firmflow.org/signup" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:16px 0">Start your free 14-day trial →</a>
+            <a href="https://www.firmflow.io/signup" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:16px 0">Start your free 14-day trial →</a>
             
             <p style="font-size:13px;color:#94A3B8;margin-top:20px">No credit card required. Cancel anytime.</p>
             <hr style="border:none;border-top:1px solid #E2E8F0;margin:24px 0"/>
-            <p style="font-size:13px;color:#94A3B8">You received this because you used our savings calculator at firmflow.org. <a href="https://www.firmflow.org" style="color:#94A3B8">Unsubscribe</a></p>
+            <p style="font-size:13px;color:#94A3B8">You received this because you used our savings calculator at firmflow.io. <a href="https://www.firmflow.io" style="color:#94A3B8">Unsubscribe</a></p>
           </div>
         </div>
       `,
@@ -122,7 +122,7 @@ function getEmailForSource(source: string, data: any, email: string) {
 
             <p style="font-size:15px;color:#475569;line-height:1.7"><strong>Spoiler:</strong> The platform that scores highest across all criteria is FirmFlow — because it's the only one that includes everything for a flat $29/month with no per-user fees.</p>
 
-            <a href="https://www.firmflow.org/signup" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:16px 0">Try FirmFlow free for 14 days →</a>
+            <a href="https://www.firmflow.io/signup" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:16px 0">Try FirmFlow free for 14 days →</a>
             
             <p style="font-size:13px;color:#94A3B8;margin-top:20px">— The FirmFlow Team</p>
           </div>
@@ -142,7 +142,7 @@ function getEmailForSource(source: string, data: any, email: string) {
         <div style="background:#fff;padding:28px;border:1px solid #E2E8F0;border-radius:0 0 12px 12px">
           <p style="font-size:15px;color:#0F172A">Hi there,</p>
           <p style="font-size:15px;color:#475569;line-height:1.7">FirmFlow is the all-in-one platform for professional firms. E-signatures, invoicing, documents, client portal, time tracking, messaging & AI — from $29/month.</p>
-          <a href="https://www.firmflow.org/signup" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:16px 0">Start free trial →</a>
+          <a href="https://www.firmflow.io/signup" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:16px 0">Start free trial →</a>
         </div>
       </div>
     `,

@@ -23,7 +23,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://www.firmflow.org'),
+  metadataBase: new URL('https://www.firmflow.io'),
   manifest: '/manifest.json',
   themeColor: '#1C64F2',
   appleWebApp: {
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_GB',
     alternateLocale: ['nl_NL', 'fr_FR', 'de_DE', 'es_ES'],
-    url: 'https://www.firmflow.org',
+    url: 'https://www.firmflow.io',
     siteName: 'FirmFlow',
     title: 'FirmFlow — All-in-One Practice Management Platform',
     description: 'Replace DocuSign, ShareFile, and Clio with one platform. E-signatures, documents, invoicing, client portal, messaging, and AI — from EUR 29/month.',

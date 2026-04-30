@@ -104,7 +104,7 @@ export async function GET(req: NextRequest) {
       color: rgb(0.39, 0.45, 0.55),
     })
 
-    lastPage.drawText('Verified by FirmFlow · firmflow.org', {
+    lastPage.drawText('Verified by FirmFlow · firmflow.io', {
       x: 40,
       y: 112,
       size: 7,
@@ -120,7 +120,7 @@ export async function GET(req: NextRequest) {
       color: rgb(0.11, 0.39, 0.95),
     })
 
-    lastPage.drawText('Electronically signed via FirmFlow · firmflow.org · ' + signedDate, {
+    lastPage.drawText('Electronically signed via FirmFlow · firmflow.io · ' + signedDate, {
       x: 10,
       y: 7,
       size: 7,

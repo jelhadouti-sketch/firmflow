@@ -16,8 +16,8 @@ export async function POST(req: NextRequest) {
 
     // Send feedback to admin
     await resend.emails.send({
-      from: process.env.RESEND_FROM || 'hello@firmflow.org',
-      to: 'hello@firmflow.org',
+      from: process.env.RESEND_FROM || 'hello@firmflow.io',
+      to: 'hello@firmflow.io',
       replyTo: email,
       subject: `New feedback from ${name || email} — ${stars}`,
       html: `
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
 
     // Send thank you to the user
     await resend.emails.send({
-      from: process.env.RESEND_FROM || 'hello@firmflow.org',
+      from: process.env.RESEND_FROM || 'hello@firmflow.io',
       to: email,
       subject: 'Thank you for your feedback — FirmFlow',
       html: `
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
             <p style="font-size:15px;color:#1E293B;line-height:1.7;font-weight:600">— The FirmFlow Team</p>
           </div>
           <div style="background:#0F172A;padding:16px;text-align:center;border-radius:0 0 12px 12px">
-            <p style="color:#94A3B8;font-size:12px;margin:0">FirmFlow · <a href="https://www.firmflow.org" style="color:#94A3B8">firmflow.org</a></p>
+            <p style="color:#94A3B8;font-size:12px;margin:0">FirmFlow · <a href="https://www.firmflow.io" style="color:#94A3B8">firmflow.io</a></p>
           </div>
         </div>
       `,

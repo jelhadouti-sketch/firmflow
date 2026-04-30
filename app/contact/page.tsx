@@ -7,7 +7,7 @@ import ContactForm from './contact-form'
 export const metadata: Metadata = {
   title: 'Contact Us — FirmFlow',
   description: 'Get in touch with the FirmFlow team. We typically respond within 4 hours.',
-  alternates: { canonical: 'https://www.firmflow.org/contact' },
+  alternates: { canonical: 'https://www.firmflow.io/contact' },
 }
 
 export default async function Contact() {
@@ -28,7 +28,7 @@ export default async function Contact() {
 
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(250px,1fr))',gap:'16px',marginBottom:'48px'}}>
         {[
-          {icon:'📧',title:t('contact.emailTitle'),desc:'hello@firmflow.org'},
+          {icon:'📧',title:t('contact.emailTitle'),desc:'hello@firmflow.io'},
           {icon:'⏱',title:t('contact.responseTime'),desc:t('contact.responseDesc')},
           {icon:'💬',title:t('contact.liveChat'),desc:t('contact.liveChatDesc')},
         ].map((item, i) => (

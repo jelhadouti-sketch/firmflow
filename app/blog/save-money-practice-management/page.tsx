@@ -4,21 +4,21 @@ import SiteFooter from '@/components/SiteFooter'
 import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://www.firmflow.org/blog/save-money-practice-management' },
+  alternates: { canonical: 'https://www.firmflow.io/blog/save-money-practice-management' },
   title: 'How Professional Firms Save €200+/Month on Practice Management',
   description: 'A breakdown of what firms spend on separate tools and how consolidating into one platform cuts costs. Real numbers and comparisons.',
   openGraph: {
     title: 'How Professional Firms Save €200+/Month on Practice Management',
     description: 'A breakdown of what firms spend on separate tools and how consolidating into one platform cuts costs. Real numbers and comparisons.',
-    url: 'https://www.firmflow.org/blog/save-money-practice-management',
+    url: 'https://www.firmflow.io/blog/save-money-practice-management',
     type: 'article',
-    images: [{ url: 'https://www.firmflow.org/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'How Professional Firms Save €200+/Month on Practice Management',
     description: 'A breakdown of what firms spend on separate tools and how consolidating into one platform cuts costs. Real numbers and comparisons.',
-    images: ['https://www.firmflow.org/og-default.png'],
+    images: ['https://www.firmflow.io/og-default.png'],
   },
   keywords: ['save money practice management', 'reduce firm software costs', 'cheap practice management', 'affordable firm software'],
 }
@@ -27,7 +27,7 @@ export default function Post() {
   return (
     <>
       <Breadcrumbs schemaOnly items={JSON.parse('[{"name": "Blog", "href": "/blog"}, {"name": "Save 200+ Per Month on Practice Management", "href": "/blog/save-money-practice-management"}]')} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{__html: '{"@context":"https://schema.org","@type":"Article","datePublished":"2026-01-15T09:00:00Z","dateModified":"2026-04-28T09:00:00Z","headline":"How Professional Firms Save \\u20ac200+/Month on Practice Management","description":"A breakdown of what firms spend on separate tools and how consolidating into one platform cuts costs. Real numbers and comparisons.","url":"https://www.firmflow.org/blog/save-money-practice-management","image":"https://www.firmflow.org/og-default.png","author":{"@type":"Organization","name":"FirmFlow","url":"https://www.firmflow.org"},"publisher":{"@type":"Organization","name":"FirmFlow","logo":{"@type":"ImageObject","url":"https://www.firmflow.org/logo/firmflow-icon.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.firmflow.org/blog/save-money-practice-management"}}'}} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{__html: '{"@context":"https://schema.org","@type":"Article","datePublished":"2026-01-15T09:00:00Z","dateModified":"2026-04-28T09:00:00Z","headline":"How Professional Firms Save \\u20ac200+/Month on Practice Management","description":"A breakdown of what firms spend on separate tools and how consolidating into one platform cuts costs. Real numbers and comparisons.","url":"https://www.firmflow.io/blog/save-money-practice-management","image":"https://www.firmflow.io/og-default.png","author":{"@type":"Organization","name":"FirmFlow","url":"https://www.firmflow.io"},"publisher":{"@type":"Organization","name":"FirmFlow","logo":{"@type":"ImageObject","url":"https://www.firmflow.io/logo/firmflow-icon.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.firmflow.io/blog/save-money-practice-management"}}'}} />
       <div style={{fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif',background:'#fff',minHeight:'100vh'}}>
       <header style={{padding:'0 20px',height:'64px',display:'flex',alignItems:'center',justifyContent:'space-between',borderBottom:'1px solid #E2E8F0',position:'sticky',top:0,background:'rgba(255,255,255,0.97)',backdropFilter:'blur(12px)',zIndex:100,maxWidth:'100%',margin:'0 auto',width:'100%'}}>
         <Link href="/" style={{fontSize:'22px',fontWeight:'800',color:'#1C64F2',letterSpacing:'-0.04em',textDecoration:'none'}}>⬡ FirmFlow</Link>

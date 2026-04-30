@@ -20,7 +20,7 @@ export default function Breadcrumbs({ items, schemaOnly = false }: BreadcrumbsPr
       '@type': 'ListItem',
       position: i + 1,
       name: item.name,
-      item: `https://www.firmflow.org${item.href}`,
+      item: `https://www.firmflow.io${item.href}`,
     })),
   }
 

@@ -12,7 +12,7 @@ Generated: April 2026
 **Headline 3:** E-Signatures, Invoicing, Client Portal & AI
 **Description 1:** Stop paying for DocuSign + QuickBooks + ShareFile separately. FirmFlow does it all from $29/month. 14-day free trial.
 **Description 2:** Used by 500+ accounting, law & consulting firms. E-signatures, invoicing, time tracking, client portal. Start free today.
-**URL:** https://www.firmflow.org/us
+**URL:** https://www.firmflow.io/us
 
 ### Campaign 2: QuickBooks Alternative
 **Keywords:** quickbooks alternative, quickbooks alternative for accountants, better than quickbooks for firms
@@ -20,28 +20,28 @@ Generated: April 2026
 **Headline 2:** Invoicing + E-Signatures + Portal — $29/mo
 **Headline 3:** QuickBooks Alternative — Try Free
 **Description:** QuickBooks does invoicing. FirmFlow does invoicing + e-signatures + document management + client portal + AI. From $29/mo.
-**URL:** https://www.firmflow.org/quickbooks-alternative
+**URL:** https://www.firmflow.io/quickbooks-alternative
 
 ### Campaign 3: DocuSign Alternative
 **Keywords:** docusign alternative, cheap docusign alternative, esignature software for firms
 **Headline 1:** DocuSign Alternative — Save 50%+
 **Headline 2:** E-Signatures + 11 More Tools — $29/mo
 **Description:** Why pay $25/mo just for e-signatures? FirmFlow includes e-signatures plus invoicing, document management, client portal & more. From $29/mo.
-**URL:** https://www.firmflow.org/docusign-alternative
+**URL:** https://www.firmflow.io/docusign-alternative
 
 ### Campaign 4: Accountant-specific
 **Keywords:** accounting firm software, CPA practice management, tax firm management software
 **Headline 1:** Built for Accounting Firms — $29/mo
 **Headline 2:** CPA Practice Management Software
 **Description:** E-signatures, invoicing, time tracking, document management & client portal — built specifically for accounting firms. 14-day free trial.
-**URL:** https://www.firmflow.org/for-accountants
+**URL:** https://www.firmflow.io/for-accountants
 
 ### Campaign 5: Law firm-specific
 **Keywords:** law firm management software, legal practice management, small law firm software
 **Headline 1:** Law Firm Management — All-in-One
 **Headline 2:** Cheaper Than Clio or PracticePanther
 **Description:** E-signatures, document management, invoicing, client portal & time tracking for law firms. From $29/mo. Replace Clio & save.
-**URL:** https://www.firmflow.org/for-lawyers
+**URL:** https://www.firmflow.io/for-lawyers
 
 ---
 
@@ -71,7 +71,7 @@ AI assistant 🤖
 And 6 more tools.
 
 14-day free trial. No credit card.
-→ firmflow.org
+→ firmflow.io
 
 **Post 2 — Social Proof:**
 "We replaced 4 separate tools with FirmFlow. Saving over $300/month and everything is in one place."
@@ -81,7 +81,7 @@ If you're still juggling DocuSign, QuickBooks, ShareFile, and a practice managem
 
 There's a better way. One platform. $29/month. Everything included.
 
-Try it free → firmflow.org
+Try it free → firmflow.io
 
 **Post 3 — Comparison:**
 DocuSign: $25/mo (just e-signatures)
@@ -93,7 +93,7 @@ Total: $129/month for 4 tools
 
 FirmFlow: $29/mo for ALL of the above + time tracking + client portal + AI assistant + messaging + analytics
 
-The math is simple. → firmflow.org
+The math is simple. → firmflow.io
 
 **Post 4 — For Accountants:**
 Attention CPAs and accounting firms:
@@ -112,7 +112,7 @@ Your current setup requires:
 FirmFlow gives your clients ONE portal with everything.
 $29/month. 14-day free trial.
 
-→ firmflow.org/for-accountants
+→ firmflow.io/for-accountants
 
 **Post 5 — For Law Firms:**
 Small law firms: stop overpaying for Clio.
@@ -131,17 +131,17 @@ Clio charges $49-89 per user. For a 3-person firm, that's $150-270/month.
 
 FirmFlow: $29/month total. Same features.
 
-→ firmflow.org/for-lawyers
+→ firmflow.io/for-lawyers
 
 ### Twitter/X Posts
 
-**Tweet 1:** Most firms pay $300+/mo for DocuSign + QuickBooks + ShareFile + PracticePanther. FirmFlow replaces all of them for $29/mo. 14-day free trial → firmflow.org
+**Tweet 1:** Most firms pay $300+/mo for DocuSign + QuickBooks + ShareFile + PracticePanther. FirmFlow replaces all of them for $29/mo. 14-day free trial → firmflow.io
 
-**Tweet 2:** Launched FirmFlow 🚀 All-in-one practice management for accounting, law & consulting firms. E-signatures, invoicing, client portal, AI assistant — $29/mo. Try free → firmflow.org
+**Tweet 2:** Launched FirmFlow 🚀 All-in-one practice management for accounting, law & consulting firms. E-signatures, invoicing, client portal, AI assistant — $29/mo. Try free → firmflow.io
 
-**Tweet 3:** Your clients don't want to juggle 5 different logins. Give them ONE portal: documents, invoices, signatures, messaging. FirmFlow → firmflow.org
+**Tweet 3:** Your clients don't want to juggle 5 different logins. Give them ONE portal: documents, invoices, signatures, messaging. FirmFlow → firmflow.io
 
-**Tweet 4:** "Why are we paying for DocuSign AND ShareFile AND QuickBooks?" — Every firm owner before switching to FirmFlow. $29/mo for everything → firmflow.org
+**Tweet 4:** "Why are we paying for DocuSign AND ShareFile AND QuickBooks?" — Every firm owner before switching to FirmFlow. $29/mo for everything → firmflow.io
 
 ---
 
@@ -166,7 +166,7 @@ It includes:
 
 500+ firms have already switched. Would you be open to a quick 15-minute demo?
 
-Try it free: firmflow.org/signup
+Try it free: firmflow.io/signup
 
 Best,
 [Your name]
@@ -183,7 +183,7 @@ FirmFlow does everything Clio does, plus e-signatures and document management, f
 
 Would you be open to a quick demo? I can show you how [Firm Name] could save $100+/month.
 
-Try it free: firmflow.org/signup
+Try it free: firmflow.io/signup
 
 Best,
 [Your name]

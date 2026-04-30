@@ -6,7 +6,7 @@ import SiteFooter from '@/components/SiteFooter'
 export const metadata: Metadata = {
   title: 'Practice Management for Solo Accountants & Small Firms',
   description: 'Replace DocuSign, ShareFile, and Clio with one platform. €29/month flat — not per user. Built for firms of 1-5 people. 14-day free trial.',
-  alternates: { canonical: 'https://www.firmflow.org/new' },
+  alternates: { canonical: 'https://www.firmflow.io/new' },
   robots: { index: false, follow: true },
 }
 

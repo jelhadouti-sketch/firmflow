@@ -6,7 +6,7 @@ import SiteFooter from '@/components/SiteFooter'
 export const metadata: Metadata = {
   title: 'Blog — FirmFlow',
   description: 'Guides, comparisons, and insights for accounting, law, and consulting firms. Practice management tips from the FirmFlow team.',
-  alternates: { canonical: 'https://www.firmflow.org/blog' },
+  alternates: { canonical: 'https://www.firmflow.io/blog' },
 }
 
 const posts = [

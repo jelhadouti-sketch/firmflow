@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Firm Cost Calculator — See How Much You Can Save | FirmFlow',
   description: 'Calculate how much your firm spends on DocuSign, ShareFile, Clio, and other tools. See your potential savings with FirmFlow.',
-  alternates: { canonical: 'https://www.firmflow.org/calculator' },
+  alternates: { canonical: 'https://www.firmflow.io/calculator' },
 }
 
 export default function CalculatorPage() {

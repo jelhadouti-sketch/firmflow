@@ -7,11 +7,11 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'FirmFlow — Practice Management for US Accounting, Law & Consulting Firms',
   description: 'Replace QuickBooks, FreshBooks, PracticePanther & DocuSign with one platform. E-signatures, invoicing, time tracking, client portal, AI assistant — from $29/month. 14-day free trial.',
-  alternates: { canonical: 'https://www.firmflow.org/us' },
+  alternates: { canonical: 'https://www.firmflow.io/us' },
   openGraph: {
     title: 'FirmFlow — All-in-One Practice Management for US Firms',
     description: 'E-signatures, invoicing, time tracking, client portal & AI — from $29/month. Built for small US accounting, law, and consulting firms.',
-    url: 'https://www.firmflow.org/us',
+    url: 'https://www.firmflow.io/us',
   },
 }
 

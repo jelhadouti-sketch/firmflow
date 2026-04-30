@@ -4,18 +4,18 @@ export const metadata: Metadata = {
   title: 'FirmFlow — All-in-One Plattform für Steuerkanzleien',
   description: 'E-Signaturen, Dokumente, Rechnungen, Mandantenportal und KI in einer Plattform. Ersetze 5 Tools für €29/Monat. 14 Tage kostenlos.',
   alternates: {
-    canonical: 'https://www.firmflow.org/de/accountants',
+    canonical: 'https://www.firmflow.io/de/accountants',
     languages: {
-      'en-GB': 'https://www.firmflow.org/for-accountants',
-      'nl-NL': 'https://www.firmflow.org/nl/accountants',
-      'de-DE': 'https://www.firmflow.org/de/accountants',
-      'x-default': 'https://www.firmflow.org/for-accountants',
+      'en-GB': 'https://www.firmflow.io/for-accountants',
+      'nl-NL': 'https://www.firmflow.io/nl/accountants',
+      'de-DE': 'https://www.firmflow.io/de/accountants',
+      'x-default': 'https://www.firmflow.io/for-accountants',
     },
   },
   openGraph: {
     title: 'FirmFlow — All-in-One für Steuerkanzleien',
     description: 'Ersetze DocuSign, ShareFile und Clio mit einer Plattform. Ab €29/Monat.',
-    url: 'https://www.firmflow.org/de/accountants',
+    url: 'https://www.firmflow.io/de/accountants',
     locale: 'de_DE',
   },
 }

@@ -10,17 +10,17 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Are E-Signatures Legally Binding? UK & EU Guide 2026',
     description: 'A clear guide on e-signature legality under eIDAS (UK/EU), ESIGN Act (US), and what makes a digital signature legally binding for professional firms.',
-    url: 'https://www.firmflow.org/blog/are-electronic-signatures-legally-binding',
+    url: 'https://www.firmflow.io/blog/are-electronic-signatures-legally-binding',
     type: 'article',
-    images: [{ url: 'https://www.firmflow.org/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Are E-Signatures Legally Binding? UK & EU Guide 2026',
     description: 'A clear guide on e-signature legality under eIDAS (UK/EU), ESIGN Act (US), and what makes a digital signature legally binding for professional firms.',
-    images: ['https://www.firmflow.org/og-default.png'],
+    images: ['https://www.firmflow.io/og-default.png'],
   },
-  alternates: { canonical: 'https://www.firmflow.org/blog/are-electronic-signatures-legally-binding' },
+  alternates: { canonical: 'https://www.firmflow.io/blog/are-electronic-signatures-legally-binding' },
 }
 
 export default function ESignaturesGuide() {

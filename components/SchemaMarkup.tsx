@@ -18,11 +18,11 @@ type SchemaVariant = 'full' | 'minimal'
 const organizationSchema = {
   '@type': 'Organization',
   name: 'FirmFlow',
-  url: 'https://www.firmflow.org',
-  logo: 'https://www.firmflow.org/icons/icon-192.png',
+  url: 'https://www.firmflow.io',
+  logo: 'https://www.firmflow.io/icons/icon-192.png',
   contactPoint: {
     '@type': 'ContactPoint',
-    email: 'hello@firmflow.org',
+    email: 'hello@firmflow.io',
     contactType: 'customer support',
   },
   sameAs: ['https://www.linkedin.com/company/firmflown/'],
@@ -33,7 +33,7 @@ const softwareApplicationSchema = {
   name: 'FirmFlow',
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web',
-  url: 'https://www.firmflow.org',
+  url: 'https://www.firmflow.io',
   description:
     'All-in-one practice management platform for accountants, lawyers and consultants. E-signatures, document management, time tracking, invoicing, client portal, and AI assistant.',
   offers: [

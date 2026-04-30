@@ -7,19 +7,19 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Integrations — FirmFlow',
   description: 'Native integrations and compatible tools for FirmFlow practice management. Stripe, email, accounting software, and more.',
-  alternates: { canonical: 'https://www.firmflow.org/integrations' },
+  alternates: { canonical: 'https://www.firmflow.io/integrations' },
   openGraph: {
     title: 'Integrations — FirmFlow',
     description: 'Native integrations and compatible tools for FirmFlow practice management.',
-    url: 'https://www.firmflow.org/integrations',
+    url: 'https://www.firmflow.io/integrations',
     type: 'website',
-    images: [{ url: 'https://www.firmflow.org/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Integrations — FirmFlow',
     description: 'Native integrations and compatible tools for FirmFlow.',
-    images: ['https://www.firmflow.org/og-default.png'],
+    images: ['https://www.firmflow.io/og-default.png'],
   },
 }
 
@@ -222,7 +222,7 @@ export default function IntegrationsPage() {
         }}>
           <h3 style={{ fontSize: 20, fontWeight: 800, color: NAVY, margin: '0 0 12px' }}>Need an integration we don&apos;t have?</h3>
           <p style={{ fontSize: 15, color: MUTED, margin: '0 0 20px', maxWidth: 480, marginLeft: 'auto', marginRight: 'auto' }}>
-            Email us at <a href="mailto:hello@firmflow.org" style={{ color: BLUE, fontWeight: 600 }}>hello@firmflow.org</a>. We prioritize integrations based on customer demand.
+            Email us at <a href="mailto:hello@firmflow.io" style={{ color: BLUE, fontWeight: 600 }}>hello@firmflow.io</a>. We prioritize integrations based on customer demand.
           </p>
         </section>
 

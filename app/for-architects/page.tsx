@@ -7,19 +7,19 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: "Practice Management Software for Architecture Firms",
   description: "Project agreements, document management, time tracking, and invoicing for solo architects and small architecture practices. EUR 29/month flat.",
-  alternates: { canonical: 'https://www.firmflow.org/for-architects' },
+  alternates: { canonical: 'https://www.firmflow.io/for-architects' },
   openGraph: {
     title: "Practice Management Software for Architecture Firms",
     description: "Project agreements, document management, time tracking, and invoicing for solo architects and small architecture practices. EUR 29/month flat.",
-    url: 'https://www.firmflow.org/for-architects',
+    url: 'https://www.firmflow.io/for-architects',
     type: 'website',
-    images: [{ url: 'https://www.firmflow.org/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: "Practice Management Software for Architecture Firms",
     description: "Project agreements, document management, time tracking, and invoicing for solo architects and small architecture practices. EUR 29/month flat.",
-    images: ['https://www.firmflow.org/og-default.png'],
+    images: ['https://www.firmflow.io/og-default.png'],
   },
 }
 

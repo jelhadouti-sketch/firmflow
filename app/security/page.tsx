@@ -6,7 +6,7 @@ import SiteFooter from '@/components/SiteFooter'
 export const metadata: Metadata = {
   title: 'Security — FirmFlow | Enterprise-Grade Protection',
   description: 'FirmFlow security: AES-256 encryption, row-level data isolation, 2FA, GDPR compliance, full audit logging. Enterprise security at SMB pricing.',
-  alternates: { canonical: 'https://www.firmflow.org/security' },
+  alternates: { canonical: 'https://www.firmflow.io/security' },
 }
 
 export default function Security() {
@@ -66,7 +66,7 @@ export default function Security() {
           <p style={{color:'#94A3B8',textAlign:'center',marginBottom:'24px',fontSize:'15px'}}>We&apos;re happy to answer any questions about our security practices, provide our DPA, or discuss specific compliance requirements.</p>
           <div style={{display:'flex',gap:'12px',justifyContent:'center',flexWrap:'wrap'}}>
             <Link href="/dpa" style={{padding:'12px 24px',color:'#60A5FA',borderRadius:'8px',textDecoration:'none',fontWeight:600,fontSize:'14px',border:'1px solid rgba(255,255,255,0.15)'}}>View our DPA →</Link>
-            <a href="mailto:hello@firmflow.org?subject=Security%20inquiry" style={{padding:'12px 24px',background:'#1C64F2',color:'#fff',borderRadius:'8px',textDecoration:'none',fontWeight:600,fontSize:'14px'}}>Email our team</a>
+            <a href="mailto:hello@firmflow.io?subject=Security%20inquiry" style={{padding:'12px 24px',background:'#1C64F2',color:'#fff',borderRadius:'8px',textDecoration:'none',fontWeight:600,fontSize:'14px'}}>Email our team</a>
           </div>
         </div>
       </div>

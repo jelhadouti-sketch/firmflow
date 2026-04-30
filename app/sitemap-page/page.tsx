@@ -6,7 +6,7 @@ import SiteFooter from '@/components/SiteFooter'
 export const metadata: Metadata = {
   title: 'Sitemap — FirmFlow',
   description: 'Browse all pages on the FirmFlow website.',
-  alternates: { canonical: 'https://www.firmflow.org/sitemap-page' },
+  alternates: { canonical: 'https://www.firmflow.io/sitemap-page' },
 }
 
 const sections = [

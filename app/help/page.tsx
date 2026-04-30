@@ -6,12 +6,12 @@ import SiteFooter from '@/components/SiteFooter'
 export const metadata: Metadata = {
   title: 'Help Center — FirmFlow',
   description: 'Get help with FirmFlow. Quick answers to common questions about documents, e-signatures, invoicing, client portal, and more.',
-  alternates: { canonical: 'https://www.firmflow.org/help' },
+  alternates: { canonical: 'https://www.firmflow.io/help' },
 }
 
 const categories = [
   { icon:'🚀', title:'Getting Started', items:[
-    {q:'How do I create my firm?',a:'Sign up at firmflow.org/signup, enter your firm name, upload your logo, and choose your currency. Your workspace is ready in under 2 minutes.'},
+    {q:'How do I create my firm?',a:'Sign up at firmflow.io/signup, enter your firm name, upload your logo, and choose your currency. Your workspace is ready in under 2 minutes.'},
     {q:'How do I invite team members?',a:'Go to Dashboard → Settings → Team. Click "Invite" and enter their email address. They receive login credentials instantly.'},
     {q:'How do I invite clients?',a:'Go to Dashboard → Clients → Add Client. Enter their name and email. They receive an invitation to their branded portal.'},
     {q:'How long is the free trial?',a:'14 days with full access to all features. No credit card required. Choose a plan at the end or your account is paused.'},
@@ -33,7 +33,7 @@ const categories = [
   ]},
   { icon:'🔒', title:'Security & Privacy', items:[
     {q:'How is my data protected?',a:'AES-256 encryption at rest, TLS 1.3 in transit, row-level data isolation, 2FA, and full audit logging.'},
-    {q:'Is FirmFlow GDPR compliant?',a:'Yes. Built with privacy by design. DPA available at firmflow.org/dpa.'},
+    {q:'Is FirmFlow GDPR compliant?',a:'Yes. Built with privacy by design. DPA available at firmflow.io/dpa.'},
     {q:'Can one client see another client\'s data?',a:'Never. Each firm has complete row-level data isolation. Clients can only see their own documents and invoices.'},
   ]},
   { icon:'💰', title:'Billing & Plans', items:[
@@ -72,7 +72,7 @@ export default function Help() {
         <div style={{background:'#F8FAFC',borderRadius:'16px',padding:'32px',border:'1px solid #E2E8F0',textAlign:'center'}}>
           <h3 style={{fontSize:'20px',fontWeight:800,marginBottom:'8px'}}>Still need help?</h3>
           <p style={{color:'#64748B',marginBottom:'20px',fontSize:'15px'}}>Pro customers get priority support within 4 hours.</p>
-          <a href="mailto:hello@firmflow.org" style={{display:'inline-block',padding:'14px 28px',background:'#0F172A',color:'#fff',borderRadius:'10px',textDecoration:'none',fontWeight:700,fontSize:'15px'}}>Email hello@firmflow.org</a>
+          <a href="mailto:hello@firmflow.io" style={{display:'inline-block',padding:'14px 28px',background:'#0F172A',color:'#fff',borderRadius:'10px',textDecoration:'none',fontWeight:700,fontSize:'15px'}}>Email hello@firmflow.io</a>
         </div>
       </div>
       <SiteFooter />

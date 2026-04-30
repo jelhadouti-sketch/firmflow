@@ -111,7 +111,7 @@ export default async function SignPage({ params }: { params: Promise<{ id: strin
 
         {/* Footer */}
         <p style={{textAlign:'center',fontSize:'12px',color:'#94A3B8',marginTop:'24px'}}>
-          🔒 Powered by <strong>FirmFlow</strong> · Secure electronic signatures · firmflow.org
+          🔒 Powered by <strong>FirmFlow</strong> · Secure electronic signatures · firmflow.io
         </p>
 
       </div>

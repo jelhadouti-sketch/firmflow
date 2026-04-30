@@ -7,19 +7,19 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Karbon vs TaxDome (2026 Comparison): Which Is Better?',
   description: 'A neutral comparison of Karbon and TaxDome for accounting firms. Pricing, features, ideal customers, and when to choose each platform.',
-  alternates: { canonical: 'https://www.firmflow.org/karbon-vs-taxdome' },
+  alternates: { canonical: 'https://www.firmflow.io/karbon-vs-taxdome' },
   openGraph: {
     title: 'Karbon vs TaxDome (2026 Comparison)',
     description: 'A neutral comparison for accounting firms. Pricing, features, and ideal customers.',
-    url: 'https://www.firmflow.org/karbon-vs-taxdome',
+    url: 'https://www.firmflow.io/karbon-vs-taxdome',
     type: 'article',
-    images: [{ url: 'https://www.firmflow.org/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Karbon vs TaxDome (2026 Comparison)',
     description: 'A neutral comparison for accounting firms.',
-    images: ['https://www.firmflow.org/og-default.png'],
+    images: ['https://www.firmflow.io/og-default.png'],
   },
 }
 
@@ -35,12 +35,12 @@ const articleSchema = {
   dateModified: '2026-04-28T09:00:00Z',
   headline: 'Karbon vs TaxDome (2026 Comparison): Which Is Better?',
   description: 'A neutral comparison of Karbon and TaxDome for accounting firms.',
-  url: 'https://www.firmflow.org/karbon-vs-taxdome',
-  image: 'https://www.firmflow.org/og-default.png',
-  author: { '@type': 'Organization', name: 'FirmFlow', url: 'https://www.firmflow.org' },
+  url: 'https://www.firmflow.io/karbon-vs-taxdome',
+  image: 'https://www.firmflow.io/og-default.png',
+  author: { '@type': 'Organization', name: 'FirmFlow', url: 'https://www.firmflow.io' },
   publisher: {
     '@type': 'Organization', name: 'FirmFlow',
-    logo: { '@type': 'ImageObject', url: 'https://www.firmflow.org/logo/firmflow-icon.svg' },
+    logo: { '@type': 'ImageObject', url: 'https://www.firmflow.io/logo/firmflow-icon.svg' },
   },
 }
 

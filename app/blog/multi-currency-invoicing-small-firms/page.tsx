@@ -4,22 +4,22 @@ import SiteFooter from '@/components/SiteFooter'
 import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://www.firmflow.org/blog/multi-currency-invoicing-small-firms' },
+  alternates: { canonical: 'https://www.firmflow.io/blog/multi-currency-invoicing-small-firms' },
   title: 'How to Invoice Clients in Multiple Currencies (2026 Guide)',
   description: 'A practical guide to multi-currency invoicing for small firms. VAT handling, exchange rates, payment processing, and the tools that make it simple.',
   keywords: ['multi currency invoicing', 'invoice in different currencies', 'foreign currency invoice', 'multi currency invoice software'],
   openGraph: {
     title: 'How to Invoice Clients in Multiple Currencies (2026 Guide)',
     description: 'A practical guide to multi-currency invoicing for small firms.',
-    url: 'https://www.firmflow.org/blog/multi-currency-invoicing-small-firms',
+    url: 'https://www.firmflow.io/blog/multi-currency-invoicing-small-firms',
     type: 'article',
-    images: [{ url: 'https://www.firmflow.org/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'How to Invoice Clients in Multiple Currencies',
     description: 'VAT handling, exchange rates, payment processing.',
-    images: ['https://www.firmflow.org/og-default.png'],
+    images: ['https://www.firmflow.io/og-default.png'],
   },
 }
 
@@ -27,7 +27,7 @@ export default function Post() {
   return (
     <>
       <Breadcrumbs schemaOnly items={JSON.parse('[{"name": "Blog", "href": "/blog"}, {"name": "Multi-Currency Invoicing", "href": "/blog/multi-currency-invoicing-small-firms"}]')} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify({"@context":"https://schema.org","@type":"Article","datePublished":"2026-04-28T09:00:00Z","dateModified":"2026-04-28T09:00:00Z","headline":"How to Invoice Clients in Multiple Currencies (2026 Guide)","description":"A practical guide to multi-currency invoicing for small firms.","url":"https://www.firmflow.org/blog/multi-currency-invoicing-small-firms","image":"https://www.firmflow.org/og-default.png","author":{"@type":"Organization","name":"FirmFlow","url":"https://www.firmflow.org"},"publisher":{"@type":"Organization","name":"FirmFlow","logo":{"@type":"ImageObject","url":"https://www.firmflow.org/logo/firmflow-icon.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.firmflow.org/blog/multi-currency-invoicing-small-firms"}})}} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify({"@context":"https://schema.org","@type":"Article","datePublished":"2026-04-28T09:00:00Z","dateModified":"2026-04-28T09:00:00Z","headline":"How to Invoice Clients in Multiple Currencies (2026 Guide)","description":"A practical guide to multi-currency invoicing for small firms.","url":"https://www.firmflow.io/blog/multi-currency-invoicing-small-firms","image":"https://www.firmflow.io/og-default.png","author":{"@type":"Organization","name":"FirmFlow","url":"https://www.firmflow.io"},"publisher":{"@type":"Organization","name":"FirmFlow","logo":{"@type":"ImageObject","url":"https://www.firmflow.io/logo/firmflow-icon.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.firmflow.io/blog/multi-currency-invoicing-small-firms"}})}} />
       <div style={{fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif',background:'#fff',minHeight:'100vh'}}>
       <header style={{padding:'0 20px',height:'64px',display:'flex',alignItems:'center',justifyContent:'space-between',borderBottom:'1px solid #E2E8F0',position:'sticky',top:0,background:'rgba(255,255,255,0.97)',backdropFilter:'blur(12px)',zIndex:100,maxWidth:'100%',margin:'0 auto',width:'100%'}}>
         <Link href="/" style={{fontSize:'22px',fontWeight:'800',color:'#1C64F2',letterSpacing:'-0.04em',textDecoration:'none'}}>⬡ FirmFlow</Link>

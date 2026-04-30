@@ -1,4 +1,4 @@
-# robots.txt for firmflow.org
+# robots.txt for firmflow.io
 # Last updated: April 2026
 
 # ============================================================
@@ -60,4 +60,4 @@ Allow: /
 # ============================================================
 # Sitemap
 # ============================================================
-Sitemap: https://www.firmflow.org/sitemap.xml
+Sitemap: https://www.firmflow.io/sitemap.xml

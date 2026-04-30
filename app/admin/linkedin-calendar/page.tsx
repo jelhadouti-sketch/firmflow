@@ -24,7 +24,7 @@ Documents. E-signatures. Invoicing. Client portal. Time tracking. AI assistant.
 
 One login. One price. Zero per-user fees.
 
-firmflow.org
+firmflow.io
 
 #accountingfirm #practicemanagement #saas #fintech #firmflow` },
 
@@ -49,7 +49,7 @@ FirmFlow: documents, e-signatures, invoicing, client portal, time tracking, and 
 
 We're live. We're growing. And we're just getting started.
 
-firmflow.org
+firmflow.io
 
 #startup #founder #accounting #buildingInPublic #entrepreneurship` },
 
@@ -70,7 +70,7 @@ FirmFlow gives you:
 
 All for €29/month. Your entire team included.
 
-firmflow.org
+firmflow.io
 
 #testimonial #accountant #clientportal #esignatures #firmflow` },
 
@@ -91,7 +91,7 @@ It's replacing them all with one.
 
 FirmFlow: Documents, e-signatures, invoicing, client portal, time tracking — €29/month.
 
-firmflow.org
+firmflow.io
 
 #accounting #lawfirm #productivity #software #practicemanagement` },
 
@@ -116,7 +116,7 @@ Total: €29/month. Entire team.
 
 The math is simple.
 
-firmflow.org
+firmflow.io
 
 #costcutting #accounting #lawfirm #saas #firmflow` },
 
@@ -135,7 +135,7 @@ Included. Not extra. Not per-envelope.
 
 €29/month for everything.
 
-firmflow.org
+firmflow.io
 
 #esignatures #docusign #accounting #digital #firmflow` },
 
@@ -170,7 +170,7 @@ The beauty of being a small team: we ship what matters, fast.
 
 If you run a professional firm and want a platform that actually listens to feedback:
 
-firmflow.org
+firmflow.io
 
 14-day free trial. No credit card.
 
@@ -191,7 +191,7 @@ Give it to them.
 
 FirmFlow includes a branded client portal in every plan.
 
-firmflow.org
+firmflow.io
 
 #clientportal #accounting #digitaltransformation #clientexperience` },
 
@@ -212,30 +212,30 @@ Same features. Fraction of the price.
 
 We believe professional firms shouldn't need enterprise budgets for basic tools.
 
-firmflow.org
+firmflow.io
 
 #pricing #accounting #lawfirm #saas #affordable` },
 
-  { day: 11, type: 'PAIN POINT', title: 'The email signature chase', time: 'Tuesday 9:00 AM', content: `The typical engagement letter process:\n\n1. Draft letter in Word\n2. Email as PDF attachment\n3. Client prints it\n4. Client signs with pen\n5. Client scans it (badly)\n6. Client emails it back\n7. You save it somewhere\n8. You forget where you saved it\n\nThe FirmFlow process:\n\n1. Send engagement letter\n2. Client signs on their phone\n3. Done. Audit trail attached.\n\n2 steps vs 8.\n\nfirmflow.org\n\n#esignatures #workflow #accounting #efficiency #firmflow` },
-  { day: 12, type: 'STORY', title: 'The €400/month problem', time: 'Wednesday 8:30 AM', content: `A small accounting firm told me:\n\n"We spend €400/month on software and half of it doesn't work together."\n\nThey switched to FirmFlow.\n\nNew cost: €29/month.\nSavings: €353/month. €4,236/year.\n\nAnd everything is in one place now.\n\nfirmflow.org\n\n#casestudy #accounting #costsaving #firmflow` },
-  { day: 13, type: 'FEATURE', title: 'Time tracking built in', time: 'Thursday 10:00 AM', content: `Still tracking billable hours in Excel?\n\nFirmFlow's built-in time tracker:\n\n⏱ One-click timer per engagement\n📊 Track by team member, client, project\n💰 Generate invoices directly from tracked time\n📱 Works on mobile\n\nIncluded in every FirmFlow plan.\n\nfirmflow.org\n\n#timetracking #billablehours #accounting #invoicing` },
-  { day: 14, type: 'WEEKEND TIP', title: 'Firm efficiency checklist', time: 'Saturday 10:00 AM', content: `5-minute efficiency audit:\n\n□ Can clients access documents without emailing you?\n□ Can clients sign without printing?\n□ Can clients pay invoices with one click?\n□ Can your team track time without spreadsheets?\n□ Do you have a complete audit trail?\n\nIf you answered "no" to 2+, FirmFlow fixes all 5.\n\nfirmflow.org\n\n#firmmanagement #efficiency #accounting` },
-  { day: 15, type: 'MILESTONE', title: '500+ firms trust FirmFlow', time: 'Monday 9:00 AM', content: `FirmFlow update:\n\n500+ firms now trust FirmFlow to run their practice.\n\nFrom solo bookkeepers to 20-person firms.\nFrom London to New York to Amsterdam.\n\n14-day free trial. No credit card.\n\nfirmflow.org\n\nThank you to every firm that believed in us early.\n\n#milestone #startup #growth #firmflow` },
-  { day: 16, type: 'FEATURE', title: 'AI assistant', time: 'Tuesday 8:30 AM', content: `"How much revenue did we bill last quarter?"\n"Which clients have overdue invoices?"\n"What's our collection rate?"\n\nFirmFlow's AI assistant answers in seconds.\n\nPowered by Claude AI. Ask anything in plain English.\n\nfirmflow.org\n\n#AI #claudeai #accounting #firmflow` },
-  { day: 17, type: 'COMPARISON', title: 'vs TaxDome', time: 'Wednesday 9:00 AM', content: `FirmFlow vs TaxDome:\n\nTaxDome wins: 15+ languages, mobile app\nFirmFlow wins: €29/mo vs €650/user/year, 10 min setup, AI included, no per-user fees\n\nDetailed comparison: firmflow.org/vs-taxdome\n\n#taxdome #comparison #accounting #firmflow` },
-  { day: 18, type: 'EDUCATIONAL', title: 'GDPR for accountants', time: 'Thursday 10:00 AM', content: `Accountants: are you GDPR compliant?\n\nIf you email client tax returns, store docs on personal drives, use WhatsApp for clients — you might not be.\n\nFirmFlow: encrypted storage, data isolation, audit trail, 2FA.\n\nfirmflow.org/security\n\n#GDPR #datasecurity #accounting #compliance` },
-  { day: 19, type: 'TIP', title: 'Get paid faster', time: 'Friday 8:30 AM', content: `3 ways to get paid faster:\n\n1. Send invoices the day work is done\n2. Include a "Pay Now" button\n3. Set up automatic reminders\n\nFirmFlow does all three.\n\nfirmflow.org\n\n#invoicing #getpaidfaster #accounting #cashflow` },
+  { day: 11, type: 'PAIN POINT', title: 'The email signature chase', time: 'Tuesday 9:00 AM', content: `The typical engagement letter process:\n\n1. Draft letter in Word\n2. Email as PDF attachment\n3. Client prints it\n4. Client signs with pen\n5. Client scans it (badly)\n6. Client emails it back\n7. You save it somewhere\n8. You forget where you saved it\n\nThe FirmFlow process:\n\n1. Send engagement letter\n2. Client signs on their phone\n3. Done. Audit trail attached.\n\n2 steps vs 8.\n\nfirmflow.io\n\n#esignatures #workflow #accounting #efficiency #firmflow` },
+  { day: 12, type: 'STORY', title: 'The €400/month problem', time: 'Wednesday 8:30 AM', content: `A small accounting firm told me:\n\n"We spend €400/month on software and half of it doesn't work together."\n\nThey switched to FirmFlow.\n\nNew cost: €29/month.\nSavings: €353/month. €4,236/year.\n\nAnd everything is in one place now.\n\nfirmflow.io\n\n#casestudy #accounting #costsaving #firmflow` },
+  { day: 13, type: 'FEATURE', title: 'Time tracking built in', time: 'Thursday 10:00 AM', content: `Still tracking billable hours in Excel?\n\nFirmFlow's built-in time tracker:\n\n⏱ One-click timer per engagement\n📊 Track by team member, client, project\n💰 Generate invoices directly from tracked time\n📱 Works on mobile\n\nIncluded in every FirmFlow plan.\n\nfirmflow.io\n\n#timetracking #billablehours #accounting #invoicing` },
+  { day: 14, type: 'WEEKEND TIP', title: 'Firm efficiency checklist', time: 'Saturday 10:00 AM', content: `5-minute efficiency audit:\n\n□ Can clients access documents without emailing you?\n□ Can clients sign without printing?\n□ Can clients pay invoices with one click?\n□ Can your team track time without spreadsheets?\n□ Do you have a complete audit trail?\n\nIf you answered "no" to 2+, FirmFlow fixes all 5.\n\nfirmflow.io\n\n#firmmanagement #efficiency #accounting` },
+  { day: 15, type: 'MILESTONE', title: '500+ firms trust FirmFlow', time: 'Monday 9:00 AM', content: `FirmFlow update:\n\n500+ firms now trust FirmFlow to run their practice.\n\nFrom solo bookkeepers to 20-person firms.\nFrom London to New York to Amsterdam.\n\n14-day free trial. No credit card.\n\nfirmflow.io\n\nThank you to every firm that believed in us early.\n\n#milestone #startup #growth #firmflow` },
+  { day: 16, type: 'FEATURE', title: 'AI assistant', time: 'Tuesday 8:30 AM', content: `"How much revenue did we bill last quarter?"\n"Which clients have overdue invoices?"\n"What's our collection rate?"\n\nFirmFlow's AI assistant answers in seconds.\n\nPowered by Claude AI. Ask anything in plain English.\n\nfirmflow.io\n\n#AI #claudeai #accounting #firmflow` },
+  { day: 17, type: 'COMPARISON', title: 'vs TaxDome', time: 'Wednesday 9:00 AM', content: `FirmFlow vs TaxDome:\n\nTaxDome wins: 15+ languages, mobile app\nFirmFlow wins: €29/mo vs €650/user/year, 10 min setup, AI included, no per-user fees\n\nDetailed comparison: firmflow.io/vs-taxdome\n\n#taxdome #comparison #accounting #firmflow` },
+  { day: 18, type: 'EDUCATIONAL', title: 'GDPR for accountants', time: 'Thursday 10:00 AM', content: `Accountants: are you GDPR compliant?\n\nIf you email client tax returns, store docs on personal drives, use WhatsApp for clients — you might not be.\n\nFirmFlow: encrypted storage, data isolation, audit trail, 2FA.\n\nfirmflow.io/security\n\n#GDPR #datasecurity #accounting #compliance` },
+  { day: 19, type: 'TIP', title: 'Get paid faster', time: 'Friday 8:30 AM', content: `3 ways to get paid faster:\n\n1. Send invoices the day work is done\n2. Include a "Pay Now" button\n3. Set up automatic reminders\n\nFirmFlow does all three.\n\nfirmflow.io\n\n#invoicing #getpaidfaster #accounting #cashflow` },
   { day: 20, type: 'QUESTION', title: 'What wastes the most time?', time: 'Monday 12:00 PM', content: `What wastes the most time in your practice?\n\n🅰️ Chasing signatures\n🅱️ Client communication\n🅲️ Manual invoicing\n🅳️ Document management\n🅴️ Time tracking\n\nComment below.\n\n#accounting #lawfirm #poll #productivity` },
-  { day: 21, type: 'FEATURE', title: 'Client messaging', time: 'Tuesday 9:00 AM', content: `Your clients message you on email, WhatsApp, text, phone.\n\nNothing is tracked. No audit trail.\n\nFirmFlow messaging: all in one place, push notifications, full history, GDPR compliant.\n\nfirmflow.org\n\n#clientcommunication #messaging #accounting #firmflow` },
-  { day: 22, type: 'STORY', title: 'Setup in 10 minutes', time: 'Wednesday 8:30 AM', content: `I timed it. 10 minutes:\n\nMin 0-1: Sign up\nMin 1-3: Firm details\nMin 3-5: Invite clients\nMin 5-7: Upload documents\nMin 7-9: Send invoice\nMin 9-10: Request signature\n\nDone. No onboarding call needed.\n\nfirmflow.org\n\n#easysetup #startup #accounting #firmflow` },
-  { day: 23, type: 'COMPARISON', title: 'vs Karbon', time: 'Thursday 9:00 AM', content: `FirmFlow vs Karbon:\n\nKarbon wins: workflow automation, email integration\nFirmFlow wins: €29/mo vs €295-€445/mo, e-signatures included, client portal, 10 min setup\n\nfirmflow.org/vs-karbon\n\n#karbon #comparison #accounting #firmflow` },
-  { day: 24, type: 'EDUCATIONAL', title: 'Multi-currency invoicing', time: 'Friday 10:00 AM', content: `International clients?\n\nFirmFlow supports 10 currencies: GBP, EUR, USD, CHF, CAD, AUD, SEK, NOK, DKK, PLN.\n\nInvoice each client in their currency. Get paid in yours.\n\nfirmflow.org\n\n#multicurrency #international #invoicing #accounting` },
-  { day: 25, type: 'WEEKEND', title: 'Firm growth lessons', time: 'Saturday 10:00 AM', content: `3 things from talking to 500+ firm owners:\n\n1. Firms that grow fastest automate admin first\n2. Clients stay longer with a portal\n3. Per-user pricing kills growth\n\nFirmFlow: automate, portal for every client, flat pricing.\n\nfirmflow.org\n\n#firmgrowth #accounting #scalability` },
-  { day: 26, type: 'FEATURE', title: 'Analytics dashboard', time: 'Monday 8:30 AM', content: `Do you know your firm's numbers?\n\nTotal revenue? Collection rate? Billable hours per client? Overdue invoices?\n\nFirmFlow shows all of this in real-time.\n\nfirmflow.org\n\n#analytics #data #accounting #dashboard` },
-  { day: 27, type: 'COMPARISON', title: 'vs Clio', time: 'Tuesday 9:00 AM', content: `FirmFlow vs Clio:\n\nClio wins: legal-specific features, 250+ integrations\nFirmFlow wins: €29/mo vs €220-€670/mo, e-signatures included, works for ALL firms\n\nfirmflow.org/vs-clio\n\n#clio #legal #lawfirm #firmflow` },
-  { day: 28, type: 'BUILD IN PUBLIC', title: 'What\'s on our roadmap', time: 'Wednesday 8:30 AM', content: `Coming to FirmFlow:\n\n🔜 Xero & QuickBooks integration\n🔜 Mobile app\n🔜 Email integration\n🔜 Workflow automation\n🔜 Custom domains\n\nEvery feature from user feedback.\n\nfirmflow.org\n\n#roadmap #buildinginpublic #startup #firmflow` },
-  { day: 29, type: 'SOCIAL PROOF', title: 'Top 5 reasons firms switch', time: 'Thursday 10:00 AM', content: `Why firms switch to FirmFlow:\n\n1. "Paying €400/mo for 5 tools" → Now €29/mo\n2. "Clients hated printing to sign" → Sign on phone\n3. "No audit trail" → Every action logged\n4. "TaxDome took weeks" → FirmFlow: 10 minutes\n5. "Per-user pricing killed growth" → Flat rate\n\nfirmflow.org/switch\n\n#switching #accounting #firmflow` },
-  { day: 30, type: 'CTA', title: 'Final push — try it free', time: 'Friday 9:00 AM', content: `If you've been following along:\n\n🎁 14-day free trial\n🎁 No credit card\n🎁 Full access to every feature\n🎁 Set up in 10 minutes\n🎁 Data saved if you pause\n\nZero risk.\n\n500+ firms made the switch.\n\nWill yours be next?\n\nfirmflow.org\n\nDM me if you have questions.\n\n#freetrial #accounting #lawfirm #firmflow` },
+  { day: 21, type: 'FEATURE', title: 'Client messaging', time: 'Tuesday 9:00 AM', content: `Your clients message you on email, WhatsApp, text, phone.\n\nNothing is tracked. No audit trail.\n\nFirmFlow messaging: all in one place, push notifications, full history, GDPR compliant.\n\nfirmflow.io\n\n#clientcommunication #messaging #accounting #firmflow` },
+  { day: 22, type: 'STORY', title: 'Setup in 10 minutes', time: 'Wednesday 8:30 AM', content: `I timed it. 10 minutes:\n\nMin 0-1: Sign up\nMin 1-3: Firm details\nMin 3-5: Invite clients\nMin 5-7: Upload documents\nMin 7-9: Send invoice\nMin 9-10: Request signature\n\nDone. No onboarding call needed.\n\nfirmflow.io\n\n#easysetup #startup #accounting #firmflow` },
+  { day: 23, type: 'COMPARISON', title: 'vs Karbon', time: 'Thursday 9:00 AM', content: `FirmFlow vs Karbon:\n\nKarbon wins: workflow automation, email integration\nFirmFlow wins: €29/mo vs €295-€445/mo, e-signatures included, client portal, 10 min setup\n\nfirmflow.io/vs-karbon\n\n#karbon #comparison #accounting #firmflow` },
+  { day: 24, type: 'EDUCATIONAL', title: 'Multi-currency invoicing', time: 'Friday 10:00 AM', content: `International clients?\n\nFirmFlow supports 10 currencies: GBP, EUR, USD, CHF, CAD, AUD, SEK, NOK, DKK, PLN.\n\nInvoice each client in their currency. Get paid in yours.\n\nfirmflow.io\n\n#multicurrency #international #invoicing #accounting` },
+  { day: 25, type: 'WEEKEND', title: 'Firm growth lessons', time: 'Saturday 10:00 AM', content: `3 things from talking to 500+ firm owners:\n\n1. Firms that grow fastest automate admin first\n2. Clients stay longer with a portal\n3. Per-user pricing kills growth\n\nFirmFlow: automate, portal for every client, flat pricing.\n\nfirmflow.io\n\n#firmgrowth #accounting #scalability` },
+  { day: 26, type: 'FEATURE', title: 'Analytics dashboard', time: 'Monday 8:30 AM', content: `Do you know your firm's numbers?\n\nTotal revenue? Collection rate? Billable hours per client? Overdue invoices?\n\nFirmFlow shows all of this in real-time.\n\nfirmflow.io\n\n#analytics #data #accounting #dashboard` },
+  { day: 27, type: 'COMPARISON', title: 'vs Clio', time: 'Tuesday 9:00 AM', content: `FirmFlow vs Clio:\n\nClio wins: legal-specific features, 250+ integrations\nFirmFlow wins: €29/mo vs €220-€670/mo, e-signatures included, works for ALL firms\n\nfirmflow.io/vs-clio\n\n#clio #legal #lawfirm #firmflow` },
+  { day: 28, type: 'BUILD IN PUBLIC', title: 'What\'s on our roadmap', time: 'Wednesday 8:30 AM', content: `Coming to FirmFlow:\n\n🔜 Xero & QuickBooks integration\n🔜 Mobile app\n🔜 Email integration\n🔜 Workflow automation\n🔜 Custom domains\n\nEvery feature from user feedback.\n\nfirmflow.io\n\n#roadmap #buildinginpublic #startup #firmflow` },
+  { day: 29, type: 'SOCIAL PROOF', title: 'Top 5 reasons firms switch', time: 'Thursday 10:00 AM', content: `Why firms switch to FirmFlow:\n\n1. "Paying €400/mo for 5 tools" → Now €29/mo\n2. "Clients hated printing to sign" → Sign on phone\n3. "No audit trail" → Every action logged\n4. "TaxDome took weeks" → FirmFlow: 10 minutes\n5. "Per-user pricing killed growth" → Flat rate\n\nfirmflow.io/switch\n\n#switching #accounting #firmflow` },
+  { day: 30, type: 'CTA', title: 'Final push — try it free', time: 'Friday 9:00 AM', content: `If you've been following along:\n\n🎁 14-day free trial\n🎁 No credit card\n🎁 Full access to every feature\n🎁 Set up in 10 minutes\n🎁 Data saved if you pause\n\nZero risk.\n\n500+ firms made the switch.\n\nWill yours be next?\n\nfirmflow.io\n\nDM me if you have questions.\n\n#freetrial #accounting #lawfirm #firmflow` },
 ];
 
 const CONNECTION_TEMPLATES = [
@@ -243,8 +243,8 @@ const CONNECTION_TEMPLATES = [
   { target: 'Law Firm Partners', emoji: '⚖️', msg: `Hi [Name],\n\nI see you lead a legal practice in [City]. I'm working on FirmFlow — documents, e-signatures, invoicing, client portal — at a flat monthly price.\n\nWould love to connect.\n\nBest, Jamal` },
   { target: 'Bookkeepers', emoji: '📒', msg: `Hi [Name],\n\nGreat to see another professional in the bookkeeping space. I'm building FirmFlow — documents, e-signatures, and invoicing in one place for professional firms.\n\nWould love to connect.\n\nBest, Jamal` },
   { target: 'Consultants', emoji: '💼', msg: `Hi [Name],\n\nImpressive consulting work in [specialty]. I'm building FirmFlow — a client management platform for professional service firms.\n\nAlways keen to connect with firm owners.\n\nBest, Jamal` },
-  { target: 'Follow-up (after accept)', emoji: '🤝', msg: `Thanks for connecting, [Name]!\n\nQuick question — what's the biggest pain point in managing client documents and getting things signed at your firm?\n\nWe built FirmFlow to solve exactly that: unlimited e-signatures, documents, invoicing, client portal — €29/month flat.\n\nfirmflow.org\n\nNo pressure — just thought it might be relevant.\n\nBest, Jamal` },
-  { target: 'Gentle nudge (no response)', emoji: '👋', msg: `Hi [Name],\n\nHope you're having a great week! Just wanted to share — we wrote a guide on how firms can cut software costs by 60%.\n\nfirmflow.org/blog\n\nThought of you. Feel free to ignore!\n\nBest, Jamal` },
+  { target: 'Follow-up (after accept)', emoji: '🤝', msg: `Thanks for connecting, [Name]!\n\nQuick question — what's the biggest pain point in managing client documents and getting things signed at your firm?\n\nWe built FirmFlow to solve exactly that: unlimited e-signatures, documents, invoicing, client portal — €29/month flat.\n\nfirmflow.io\n\nNo pressure — just thought it might be relevant.\n\nBest, Jamal` },
+  { target: 'Gentle nudge (no response)', emoji: '👋', msg: `Hi [Name],\n\nHope you're having a great week! Just wanted to share — we wrote a guide on how firms can cut software costs by 60%.\n\nfirmflow.io/blog\n\nThought of you. Feel free to ignore!\n\nBest, Jamal` },
 ];
 
 export default function LinkedInCalendar() {

@@ -6,7 +6,7 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'FirmFlow vs Clio — Comparison for Law Firms',
   description: 'Compare FirmFlow and Clio side by side. Flat pricing vs per-user fees. See why law firms choose FirmFlow over Clio.',
-  alternates: { canonical: 'https://www.firmflow.org/vs-clio' },
+  alternates: { canonical: 'https://www.firmflow.io/vs-clio' },
 }
 
 export default function VsClio() {

@@ -226,7 +226,7 @@ export default function Verify2FA() {
         </div>
 
         <p style={{textAlign:'center',color:'#94A3B8',fontSize:'12px',marginTop:'24px'}}>
-          Powered by <strong>FirmFlow</strong> · firmflow.org
+          Powered by <strong>FirmFlow</strong> · firmflow.io
         </p>
       </div>
     </div>

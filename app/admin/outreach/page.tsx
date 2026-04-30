@@ -13,7 +13,7 @@ Wij vroegen ons af hoeveel kantoren dit herkennen. En of het ook anders kan.
 
 Daarom hebben we iets gebouwd. We weten niet of het bij u past, maar als u 2 minuten heeft, kunt u zelf zien wat we bedoelen:
 
-firmflow.org/nl/accountants
+firmflow.io/nl/accountants
 
 Groet,
 Het FirmFlow team`
@@ -28,7 +28,7 @@ Nous nous sommes demande combien de cabinets reconnaissent cela. Et si cela pouv
 
 Alors nous avons construit quelque chose. Nous ne savons pas si cela vous correspond, mais si vous avez 2 minutes, vous pouvez voir par vous-meme :
 
-firmflow.org
+firmflow.io
 
 Cordialement,
 L'equipe FirmFlow`
@@ -43,7 +43,7 @@ We started wondering how many firms recognize this. And whether it could work di
 
 So we built something. We do not know if it fits your firm, but if you have 2 minutes, you can see for yourself what we mean:
 
-firmflow.org
+firmflow.io
 
 Best,
 The FirmFlow team`
@@ -58,7 +58,7 @@ Wir fragten uns, wie viele Kanzleien das wiedererkennen. Und ob es auch anders g
 
 Also haben wir etwas gebaut. Wir wissen nicht, ob es zu Ihrer Kanzlei passt, aber wenn Sie 2 Minuten haben, koennen Sie selbst sehen, was wir meinen:
 
-firmflow.org
+firmflow.io
 
 Viele Gruesse,
 Das FirmFlow Team`
@@ -157,13 +157,13 @@ export default function OutreachPage() {
                 style={{flex:1,padding:'10px 14px',borderRadius:8,border: fromDomain==='uk' ? '2px solid #1C64F2' : '1px solid #E2E8F0',
                 background: fromDomain==='uk' ? '#EFF6FF' : '#fff',fontWeight:600,fontSize:13,cursor:'pointer',
                 color: fromDomain==='uk' ? '#1C64F2' : '#64748B',textAlign:'left'}}>
-                hello@firmflow.org
+                hello@firmflow.io
               </button>
               <button onClick={() => setFromDomain('org')}
                 style={{flex:1,padding:'10px 14px',borderRadius:8,border: fromDomain==='org' ? '2px solid #1C64F2' : '1px solid #E2E8F0',
                 background: fromDomain==='org' ? '#EFF6FF' : '#fff',fontWeight:600,fontSize:13,cursor:'pointer',
                 color: fromDomain==='org' ? '#1C64F2' : '#64748B',textAlign:'left'}}>
-                hello@firmflow.org
+                hello@firmflow.io
               </button>
             </div>
           </div>

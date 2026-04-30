@@ -32,11 +32,11 @@ export async function POST(req: NextRequest) {
     }
 
     const { data, error } = await resend.emails.send({
-      from: 'FirmFlow <hello@firmflow.org>',
+      from: 'FirmFlow <hello@firmflow.io>',
       to: [to],
       subject,
       text: body.replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/\n\n\n+/g, '\n\n').trim(),
-      replyTo: 'hello@firmflow.org',
+      replyTo: 'hello@firmflow.io',
     })
 
     if (error) {

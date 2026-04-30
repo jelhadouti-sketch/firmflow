@@ -81,8 +81,8 @@ export async function POST(req: NextRequest) {
         currency,
         launch_coupon: applyLaunchCoupon ? 'yes' : 'no',
       },
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.firmflow.org'}/dashboard/subscription?upgraded=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.firmflow.org'}/dashboard/subscription`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.firmflow.io'}/dashboard/subscription?upgraded=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.firmflow.io'}/dashboard/subscription`,
       subscription_data: {
         trial_period_days: 14,
         metadata: {

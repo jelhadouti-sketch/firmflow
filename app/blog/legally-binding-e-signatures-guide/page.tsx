@@ -4,21 +4,21 @@ import SiteFooter from '@/components/SiteFooter'
 import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const metadata: Metadata = {
-  alternates: { canonical: 'https://www.firmflow.org/blog/legally-binding-e-signatures-guide' },
+  alternates: { canonical: 'https://www.firmflow.io/blog/legally-binding-e-signatures-guide' },
   title: 'Are E-Signatures Legally Binding? A Complete Guide for 2026',
   description: 'Everything about eIDAS, ESIGN Act, and when electronic signatures are legally valid. A practical guide for professional firms.',
   openGraph: {
     title: 'Are E-Signatures Legally Binding? A Complete Guide for 2026',
     description: 'Everything about eIDAS, ESIGN Act, and when electronic signatures are legally valid. A practical guide for professional firms.',
-    url: 'https://www.firmflow.org/blog/legally-binding-e-signatures-guide',
+    url: 'https://www.firmflow.io/blog/legally-binding-e-signatures-guide',
     type: 'article',
-    images: [{ url: 'https://www.firmflow.org/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Are E-Signatures Legally Binding? A Complete Guide for 2026',
     description: 'Everything about eIDAS, ESIGN Act, and when electronic signatures are legally valid. A practical guide for professional firms.',
-    images: ['https://www.firmflow.org/og-default.png'],
+    images: ['https://www.firmflow.io/og-default.png'],
   },
   keywords: ['e-signatures legally binding', 'eIDAS', 'ESIGN Act', 'electronic signature legal', 'digital signature law'],
 }
@@ -27,7 +27,7 @@ export default function Post() {
   return (
     <>
       <Breadcrumbs schemaOnly items={JSON.parse('[{"name": "Blog", "href": "/blog"}, {"name": "Legally Binding E-Signatures Guide", "href": "/blog/legally-binding-e-signatures-guide"}]')} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{__html: '{"@context":"https://schema.org","@type":"Article","datePublished":"2026-02-15T09:00:00Z","dateModified":"2026-04-28T09:00:00Z","headline":"Are E-Signatures Legally Binding? A Complete Guide for 2026","description":"Everything about eIDAS, ESIGN Act, and when electronic signatures are legally valid. A practical guide for professional firms.","url":"https://www.firmflow.org/blog/legally-binding-e-signatures-guide","image":"https://www.firmflow.org/og-default.png","author":{"@type":"Organization","name":"FirmFlow","url":"https://www.firmflow.org"},"publisher":{"@type":"Organization","name":"FirmFlow","logo":{"@type":"ImageObject","url":"https://www.firmflow.org/logo/firmflow-icon.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.firmflow.org/blog/legally-binding-e-signatures-guide"}}'}} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{__html: '{"@context":"https://schema.org","@type":"Article","datePublished":"2026-02-15T09:00:00Z","dateModified":"2026-04-28T09:00:00Z","headline":"Are E-Signatures Legally Binding? A Complete Guide for 2026","description":"Everything about eIDAS, ESIGN Act, and when electronic signatures are legally valid. A practical guide for professional firms.","url":"https://www.firmflow.io/blog/legally-binding-e-signatures-guide","image":"https://www.firmflow.io/og-default.png","author":{"@type":"Organization","name":"FirmFlow","url":"https://www.firmflow.io"},"publisher":{"@type":"Organization","name":"FirmFlow","logo":{"@type":"ImageObject","url":"https://www.firmflow.io/logo/firmflow-icon.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.firmflow.io/blog/legally-binding-e-signatures-guide"}}'}} />
       <div style={{fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif',background:'#fff',minHeight:'100vh'}}>
       <header style={{padding:'0 20px',height:'64px',display:'flex',alignItems:'center',justifyContent:'space-between',borderBottom:'1px solid #E2E8F0',position:'sticky',top:0,background:'rgba(255,255,255,0.97)',backdropFilter:'blur(12px)',zIndex:100,maxWidth:'100%',margin:'0 auto',width:'100%'}}>
         <Link href="/" style={{fontSize:'22px',fontWeight:'800',color:'#1C64F2',letterSpacing:'-0.04em',textDecoration:'none'}}>⬡ FirmFlow</Link>

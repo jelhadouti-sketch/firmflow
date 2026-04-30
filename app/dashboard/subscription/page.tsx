@@ -94,7 +94,7 @@ export default async function Subscription() {
     </div>
 
     <p style={{textAlign:'center',color:'#94A3B8',fontSize:'13px'}}>
-      Questions? Email us at <a href="mailto:hello@firmflow.org" style={{color:'#1C64F2'}}>hello@firmflow.org</a>
+      Questions? Email us at <a href="mailto:hello@firmflow.io" style={{color:'#1C64F2'}}>hello@firmflow.io</a>
     </p>
     </>
   )

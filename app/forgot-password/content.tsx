@@ -16,7 +16,7 @@ export default function ForgotPasswordContent() {
 
     const supabase = createClient()
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://firmflow.org/auth/callback?next=/reset-password',
+      redirectTo: 'https://firmflow.io/auth/callback?next=/reset-password',
     })
 
     if (error) {
@@ -105,7 +105,7 @@ export default function ForgotPasswordContent() {
         </div>
 
         <p style={{textAlign:'center',color:'#94A3B8',fontSize:'12px',marginTop:'24px'}}>
-          Powered by <strong>FirmFlow</strong> · firmflow.org
+          Powered by <strong>FirmFlow</strong> · firmflow.io
         </p>
       </div>
     </div>

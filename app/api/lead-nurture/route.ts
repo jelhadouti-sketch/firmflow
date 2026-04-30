@@ -17,11 +17,11 @@ const LEAD_SEQUENCES = [
           <p style="font-size:15px;color:#475569;line-height:1.7">Most firms I talk to have this problem: they're paying for 4-5 separate tools that don't talk to each other. Their clients have multiple logins, documents get lost in email, and invoices go unpaid for weeks.</p>
           <p style="font-size:15px;color:#475569;line-height:1.7">FirmFlow solves this by putting everything in one place — for $29/month flat.</p>
           <p style="font-size:15px;color:#475569;line-height:1.7">Would a 15-minute demo be helpful? I can show you exactly how it works for your type of firm.</p>
-          <a href="https://www.firmflow.org/demo" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:16px 0">Book a free demo →</a>
+          <a href="https://www.firmflow.io/demo" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:16px 0">Book a free demo →</a>
           <p style="font-size:14px;color:#64748B;margin-top:20px">Or just reply to this email — I read every response.</p>
           <p style="font-size:14px;color:#64748B">— The FirmFlow Team</p>
           <hr style="border:none;border-top:1px solid #E2E8F0;margin:20px 0"/>
-          <p style="font-size:12px;color:#94A3B8"><a href="https://www.firmflow.org" style="color:#94A3B8">Unsubscribe</a></p>
+          <p style="font-size:12px;color:#94A3B8"><a href="https://www.firmflow.io" style="color:#94A3B8">Unsubscribe</a></p>
         </div>
       </div>
     `,
@@ -51,11 +51,11 @@ const LEAD_SEQUENCES = [
           <p style="font-size:15px;color:#475569;line-height:1.7"><strong>What's included for $29/month:</strong></p>
           <p style="font-size:14px;color:#475569;line-height:1.8">✍ E-signatures · 💳 Invoicing · 📄 Documents · 👥 Client portal · ⏱ Time tracking · 💬 Messaging · 🤖 AI assistant · 📊 Analytics</p>
 
-          <a href="https://www.firmflow.org/signup" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:16px 0">Start your free 14-day trial →</a>
+          <a href="https://www.firmflow.io/signup" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:16px 0">Start your free 14-day trial →</a>
           
           <p style="font-size:13px;color:#94A3B8;margin-top:20px">No credit card required. Cancel anytime.</p>
           <hr style="border:none;border-top:1px solid #E2E8F0;margin:20px 0"/>
-          <p style="font-size:12px;color:#94A3B8"><a href="https://www.firmflow.org" style="color:#94A3B8">Unsubscribe</a></p>
+          <p style="font-size:12px;color:#94A3B8"><a href="https://www.firmflow.io" style="color:#94A3B8">Unsubscribe</a></p>
         </div>
       </div>
     `,
@@ -82,12 +82,12 @@ const LEAD_SEQUENCES = [
 
           <p style="font-size:15px;color:#475569;line-height:1.7">...then FirmFlow could genuinely help. $29/month, 14-day free trial, set up in 10 minutes.</p>
 
-          <a href="https://www.firmflow.org/signup" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:16px 0">Give it a try →</a>
+          <a href="https://www.firmflow.io/signup" style="display:inline-block;background:#1C64F2;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;margin:16px 0">Give it a try →</a>
           
           <p style="font-size:14px;color:#64748B;margin-top:20px">Either way, I wish you and your firm all the best.</p>
           <p style="font-size:14px;color:#64748B">— The FirmFlow Team</p>
           <hr style="border:none;border-top:1px solid #E2E8F0;margin:20px 0"/>
-          <p style="font-size:12px;color:#94A3B8">You won't hear from us again. <a href="https://www.firmflow.org" style="color:#94A3B8">Visit FirmFlow</a></p>
+          <p style="font-size:12px;color:#94A3B8">You won't hear from us again. <a href="https://www.firmflow.io" style="color:#94A3B8">Visit FirmFlow</a></p>
         </div>
       </div>
     `,
@@ -135,7 +135,7 @@ export async function GET(req: Request) {
             'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
           },
           body: JSON.stringify({
-            from: 'FirmFlow <hello@firmflow.org>',
+            from: 'FirmFlow <hello@firmflow.io>',
             to: lead.email,
             subject: seq.subject,
             html: seq.html(lead.email),

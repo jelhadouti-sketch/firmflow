@@ -40,7 +40,7 @@ Ad:
 - Headline 3: E-Signatures, Invoicing, Portal & AI
 - Description 1: Stop paying for DocuSign + QuickBooks + ShareFile separately. FirmFlow does it all from $29/month. 14-day free trial.
 - Description 2: Used by 500+ accounting, law & consulting firms. E-signatures, invoicing, time tracking, client portal. Start free.
-- URL: firmflow.org/us
+- URL: firmflow.io/us
 
 ### Ad Group 2: QuickBooks Alternative
 Keywords:
@@ -54,7 +54,7 @@ Ad:
 - Headline 2: Invoicing + E-Signs + Portal — $29/mo
 - Headline 3: 14-Day Free Trial — No Credit Card
 - Description: QuickBooks does invoicing. FirmFlow does invoicing + e-signatures + documents + portal + AI. All for $29/mo.
-- URL: firmflow.org/quickbooks-alternative
+- URL: firmflow.io/quickbooks-alternative
 
 ### Ad Group 3: DocuSign Alternative
 Keywords:
@@ -68,7 +68,7 @@ Ad:
 - Headline 2: E-Signatures + 11 More Tools — $29/mo
 - Headline 3: Unlimited Signatures Included
 - Description: Why pay $25/mo just for e-signatures? FirmFlow includes e-signatures plus invoicing, documents, portal & more. $29/mo.
-- URL: firmflow.org/docusign-alternative
+- URL: firmflow.io/docusign-alternative
 
 ### Ad Group 4: Accounting Firm Software
 Keywords:
@@ -83,7 +83,7 @@ Ad:
 - Headline 2: E-Signs + Invoicing + Client Portal
 - Headline 3: No Per-User Fees — Free Trial
 - Description: E-signatures, invoicing, time tracking, document management & client portal — built for accounting firms. 14-day free trial.
-- URL: firmflow.org/for-accountants
+- URL: firmflow.io/for-accountants
 
 ### Ad Group 5: Law Firm Software
 Keywords:
@@ -98,13 +98,13 @@ Ad:
 - Headline 2: Cheaper Than Clio or PracticePanther
 - Headline 3: E-Signatures, Billing & Client Portal
 - Description: Everything your law firm needs: e-signatures, billing, documents, client portal, time tracking. $29/mo flat. Not per user.
-- URL: firmflow.org/for-lawyers
+- URL: firmflow.io/for-lawyers
 
 ## Step 5: Set Up Conversion Tracking
 1. In Google Ads, go to Tools > Conversions
 2. Click "+ New conversion action"
 3. Choose "Website"
-4. Enter: firmflow.org
+4. Enter: firmflow.io
 5. Set up conversion for: Sign up page (/verify-email)
 6. Your conversion tag is already installed (AW-18056174231)
 

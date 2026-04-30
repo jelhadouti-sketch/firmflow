@@ -19,11 +19,11 @@ One platform: e-signatures, invoicing, document management, client portal, time 
 
 500+ firms have already switched. Average savings: $200+/month.
 
-→ Try free for 14 days: firmflow.org
+→ Try free for 14 days: firmflow.io
 
 **Banner image:** Create at canva.com — "FirmFlow | All-in-One Practice Management | $29/month"
 
-**Featured section:** Add link to firmflow.org
+**Featured section:** Add link to firmflow.io
 
 ---
 
@@ -82,17 +82,17 @@ Quick question — how many software tools does your firm currently use for invo
 
 Most firms I talk to are using 4-5 separate tools and spending $300+/month. We built FirmFlow to replace all of them for $29/month.
 
-No pressure at all — but if you're curious, here's a free tool to calculate your exact savings: firmflow.org/tools/profit-calculator
+No pressure at all — but if you're curious, here's a free tool to calculate your exact savings: firmflow.io/tools/profit-calculator
 
 **Follow-up 2 — If they respond positively (Day 3-5):**
 That's great to hear! Would a quick 15-minute demo be helpful? I can show you exactly how FirmFlow would work for [their firm type].
 
-Here's my calendar: firmflow.org/demo
+Here's my calendar: firmflow.io/demo
 
-Or if you prefer to explore on your own, there's a 14-day free trial: firmflow.org/signup
+Or if you prefer to explore on your own, there's a 14-day free trial: firmflow.io/signup
 
 **Follow-up 3 — If no response (Day 7):**
-Hi [Name], just wanted to share this in case it's useful — we wrote a guide on choosing practice management software in 2026: firmflow.org/blog/best-practice-management-software-2026
+Hi [Name], just wanted to share this in case it's useful — we wrote a guide on choosing practice management software in 2026: firmflow.io/blog/best-practice-management-software-2026
 
 No sales pitch, just an honest comparison of the top platforms. Hope it helps!
 
@@ -123,7 +123,7 @@ That's FirmFlow.
 ⏱ Time tracking
 🤖 AI assistant
 
-14-day free trial: firmflow.org
+14-day free trial: firmflow.io
 
 **Tuesday — Question post:**
 Accounting firm owners — how many software tools are you currently paying for?
@@ -147,7 +147,7 @@ If 3+ apply to you, it's time for a practice management platform.
 
 The good news: you don't need to spend $300+/month. FirmFlow does it all for $29/month.
 
-→ firmflow.org
+→ firmflow.io
 
 **Thursday — Social proof post:**
 "We replaced 4 separate tools with FirmFlow. Saving over $300/month and everything is in one place."
@@ -157,7 +157,7 @@ If you're still juggling DocuSign + QuickBooks + ShareFile...
 
 There's a better way. One platform. $29/month. Everything included.
 
-→ firmflow.org
+→ firmflow.io
 
 **Friday — Comparison post:**
 DocuSign: $25/mo (just e-signatures)
@@ -170,7 +170,7 @@ Total: $129+/month for 4 tools that don't talk to each other.
 FirmFlow: $29/mo for ALL of the above + time tracking + client portal + AI + messaging + analytics.
 
 The math is simple.
-→ firmflow.org
+→ firmflow.io
 
 ### WEEK 2
 
@@ -192,7 +192,7 @@ I thought: what if ONE platform did everything?
 
 That's FirmFlow. $29/month. All 12 tools included.
 
-→ firmflow.org
+→ firmflow.io
 
 **Tuesday — For lawyers post:**
 Small law firms: stop overpaying for Clio.
@@ -210,7 +210,7 @@ All for $29/month. No per-user fees.
 Clio: $49-89 per user. 3-person firm = $150-270/month.
 FirmFlow: $29/month total.
 
-→ firmflow.org/for-lawyers
+→ firmflow.io/for-lawyers
 
 **Wednesday — Client portal post:**
 5 things every client portal should have:
@@ -224,7 +224,7 @@ FirmFlow: $29/month total.
 FirmFlow's portal includes all 5. Clients get their own branded login.
 
 $29/month.
-→ firmflow.org
+→ firmflow.io
 
 **Thursday — AI post:**
 We added an AI assistant to FirmFlow (powered by Claude).
@@ -238,7 +238,7 @@ You can ask it:
 It analyzes YOUR firm data and gives real answers. Not generic advice.
 
 Included in the Pro plan ($89/mo).
-→ firmflow.org
+→ firmflow.io
 
 **Friday — Urgency post:**
 Tax season is around the corner.
@@ -251,7 +251,7 @@ Is your firm ready?
 ✅ Time tracking for billable hours
 
 FirmFlow handles all of this. $29/month. Set up in 10 minutes.
-→ firmflow.org/for-accountants
+→ firmflow.io/for-accountants
 
 ### WEEK 3
 
@@ -275,7 +275,7 @@ Average results after switching:
 ✍ Documents signed 3x faster
 
 All from switching to one platform.
-→ firmflow.org
+→ firmflow.io
 
 **Wednesday — Objection handling:**
 "But I already use QuickBooks..."
@@ -289,7 +289,7 @@ QuickBooks is great for bookkeeping. But your firm also needs:
 
 FirmFlow has ALL of these + invoicing. $29/month.
 
-You don't have to choose one or the other. But if you want ONE platform for everything → firmflow.org
+You don't have to choose one or the other. But if you want ONE platform for everything → firmflow.io
 
 **Thursday — Behind the scenes:**
 Feature we just shipped: recurring invoices 🔄
@@ -300,7 +300,7 @@ Never miss a billing cycle again.
 
 It's the #1 feature request from accounting firms, and it's included in FirmFlow for $29/month.
 
-→ firmflow.org
+→ firmflow.io
 
 **Friday — Weekend thought:**
 Hot take: No small firm should pay more than $50/month for practice management software.
@@ -322,7 +322,7 @@ Most owners guess $100-200.
 The real number? Usually $300-500.
 
 We built a free calculator that breaks it down:
-→ firmflow.org/tools/profit-calculator
+→ firmflow.io/tools/profit-calculator
 
 Takes 60 seconds. No signup. Enter what you pay for each tool and see your savings.
 
@@ -333,7 +333,7 @@ Takes 60 seconds. No signup. Enter what you pay for each tool and see your savin
 
 If a solo consultant can set it up in 10 minutes, imagine what your firm could do.
 
-→ firmflow.org
+→ firmflow.io
 
 **Wednesday — E-signature post:**
 Still printing, signing, scanning, and emailing documents? 🖨️
@@ -348,7 +348,7 @@ FirmFlow e-signatures:
 ✅ Included at no extra cost
 
 $29/month for e-signatures + 11 other tools.
-→ firmflow.org
+→ firmflow.io
 
 **Thursday — Pain point:**
 The #1 complaint I hear from firm owners:
@@ -364,7 +364,7 @@ Your clients deserve ONE place to:
 💬 Send messages
 
 That's FirmFlow's client portal. $29/month.
-→ firmflow.org
+→ firmflow.io
 
 **Friday — CTA post:**
 If your firm is:
@@ -379,7 +379,7 @@ $29/month. 14-day free trial. No credit card.
 
 12 tools in one platform. Set up in 10 minutes.
 
-→ firmflow.org/signup
+→ firmflow.io/signup
 
 ---
 
@@ -411,7 +411,7 @@ If you want faster results, set up LinkedIn Ads:
 - Industries: Accounting, Legal, Consulting
 - Budget: $20-30/day
 - Ad copy: "Replace DocuSign + QuickBooks + ShareFile with one platform. $29/month. Free trial →"
-- Landing page: firmflow.org/us
+- Landing page: firmflow.io/us
 
 **Campaign 2:**
 - Objective: Website visits

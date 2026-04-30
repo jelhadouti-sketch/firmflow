@@ -10,24 +10,24 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'How to Send E-Signatures for Free in 2026 — Step by Step Guide',
     description: 'Learn how to send legally binding e-signatures for free. Compare free e-signature tools and find the best option for your business.',
-    url: 'https://www.firmflow.org/blog/how-to-send-esignatures-for-free',
+    url: 'https://www.firmflow.io/blog/how-to-send-esignatures-for-free',
     type: 'article',
-    images: [{ url: 'https://www.firmflow.org/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'How to Send E-Signatures for Free in 2026 — Step by Step Guide',
     description: 'Learn how to send legally binding e-signatures for free. Compare free e-signature tools and find the best option for your business.',
-    images: ['https://www.firmflow.org/og-default.png'],
+    images: ['https://www.firmflow.io/og-default.png'],
   },
-  alternates: { canonical: 'https://www.firmflow.org/blog/how-to-send-esignatures-for-free' },
+  alternates: { canonical: 'https://www.firmflow.io/blog/how-to-send-esignatures-for-free' },
 }
 
 export default function BlogPost() {
   return (
     <>
       <Breadcrumbs schemaOnly items={JSON.parse('[{"name": "Blog", "href": "/blog"}, {"name": "How to Send E-Signatures for Free", "href": "/blog/how-to-send-esignatures-for-free"}]')} />
-<script type="application/ld+json" dangerouslySetInnerHTML={{__html: '{"@context":"https://schema.org","@type":"Article","datePublished":"2026-04-15T09:00:00Z","dateModified":"2026-04-28T09:00:00Z","headline":"How to Send E-Signatures for Free in 2026 \\u2014 Step by Step Guide","description":"Learn how to send legally binding e-signatures for free. Compare free e-signature tools and find the best option for your business.","url":"https://www.firmflow.org/blog/how-to-send-esignatures-for-free","image":"https://www.firmflow.org/og-default.png","author":{"@type":"Organization","name":"FirmFlow","url":"https://www.firmflow.org"},"publisher":{"@type":"Organization","name":"FirmFlow","logo":{"@type":"ImageObject","url":"https://www.firmflow.org/logo/firmflow-icon.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.firmflow.org/blog/how-to-send-esignatures-for-free"}}'}} /><style>{`
+<script type="application/ld+json" dangerouslySetInnerHTML={{__html: '{"@context":"https://schema.org","@type":"Article","datePublished":"2026-04-15T09:00:00Z","dateModified":"2026-04-28T09:00:00Z","headline":"How to Send E-Signatures for Free in 2026 \\u2014 Step by Step Guide","description":"Learn how to send legally binding e-signatures for free. Compare free e-signature tools and find the best option for your business.","url":"https://www.firmflow.io/blog/how-to-send-esignatures-for-free","image":"https://www.firmflow.io/og-default.png","author":{"@type":"Organization","name":"FirmFlow","url":"https://www.firmflow.io"},"publisher":{"@type":"Organization","name":"FirmFlow","logo":{"@type":"ImageObject","url":"https://www.firmflow.io/logo/firmflow-icon.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.firmflow.io/blog/how-to-send-esignatures-for-free"}}'}} /><style>{`
   @media (max-width: 768px) {
     .mobile-grid { grid-template-columns: 1fr !important; }
     .mobile-wrap { flex-wrap: wrap !important; }
@@ -58,7 +58,7 @@ export default function BlogPost() {
       <p style={{fontSize:'15px',color:'#374151',lineHeight:1.8,marginBottom:'16px'}}>HelloSign offers a free tier with 3 signature requests per month. Good for occasional use, but most businesses will quickly outgrow it.</p>
 
       <h2 style={{fontSize:'24px',fontWeight:800,marginTop:'40px',marginBottom:'16px'}}>How to Send Your First E-Signature with FirmFlow</h2>
-      <p style={{fontSize:'15px',color:'#374151',lineHeight:1.8,marginBottom:'16px'}}>Step 1: Sign up for a free 14-day trial at firmflow.org</p>
+      <p style={{fontSize:'15px',color:'#374151',lineHeight:1.8,marginBottom:'16px'}}>Step 1: Sign up for a free 14-day trial at firmflow.io</p>
       <p style={{fontSize:'15px',color:'#374151',lineHeight:1.8,marginBottom:'16px'}}>Step 2: Upload the document you need signed (PDF, Word, or image)</p>
       <p style={{fontSize:'15px',color:'#374151',lineHeight:1.8,marginBottom:'16px'}}>Step 3: Click "Request Signature" and select the client</p>
       <p style={{fontSize:'15px',color:'#374151',lineHeight:1.8,marginBottom:'16px'}}>Step 4: Your client receives an email, signs on any device, and you get notified instantly</p>

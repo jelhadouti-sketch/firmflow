@@ -152,9 +152,9 @@ export async function POST(req: NextRequest) {
     type: 'signup',
     email,
     password,
-    options: { redirectTo: 'https://www.firmflow.org/dashboard' }
+    options: { redirectTo: 'https://www.firmflow.io/dashboard' }
   })
-  const confirmUrl = linkData?.properties?.action_link || 'https://www.firmflow.org/login'
+  const confirmUrl = linkData?.properties?.action_link || 'https://www.firmflow.io/login'
 
   // Send welcome/verify email in user's language
   try {
@@ -167,7 +167,7 @@ export async function POST(req: NextRequest) {
       confirmUrl,
     })
     await resend.emails.send({
-      from: process.env.RESEND_FROM || 'hello@firmflow.org',
+      from: process.env.RESEND_FROM || 'hello@firmflow.io',
       to: email,
       subject,
       html,

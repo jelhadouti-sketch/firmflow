@@ -146,7 +146,7 @@ export default function LoginContent() {
         </div>
 
         <p style={{textAlign:'center',color:'#94A3B8',fontSize:'12px',marginTop:'24px'}}>
-          {t('common.powered')} <strong>FirmFlow</strong> · firmflow.org
+          {t('common.powered')} <strong>FirmFlow</strong> · firmflow.io
         </p>
       </div>
     </div>

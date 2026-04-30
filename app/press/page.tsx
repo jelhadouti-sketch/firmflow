@@ -7,19 +7,19 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Press Kit & Brand Assets — FirmFlow',
   description: 'Press resources for journalists, partners, and content creators. Logos, screenshots, company facts, and media contact for FirmFlow.',
-  alternates: { canonical: 'https://www.firmflow.org/press' },
+  alternates: { canonical: 'https://www.firmflow.io/press' },
   openGraph: {
     title: 'Press Kit & Brand Assets — FirmFlow',
     description: 'Press resources for journalists, partners, and content creators.',
-    url: 'https://www.firmflow.org/press',
+    url: 'https://www.firmflow.io/press',
     type: 'website',
-    images: [{ url: 'https://www.firmflow.org/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Press Kit & Brand Assets — FirmFlow',
     description: 'Press resources for journalists, partners, and content creators.',
-    images: ['https://www.firmflow.org/og-default.png'],
+    images: ['https://www.firmflow.io/og-default.png'],
   },
 }
 
@@ -43,7 +43,7 @@ export default function PressPage() {
             Press &amp; Brand Assets
           </h1>
           <p style={{ fontSize: 18, color: MUTED, lineHeight: 1.6, margin: 0, maxWidth: 640 }}>
-            Resources for journalists, partners, and content creators writing about FirmFlow. If you need anything you don&apos;t see here, email <a href="mailto:hello@firmflow.org" style={{ color: BLUE, fontWeight: 600 }}>hello@firmflow.org</a>.
+            Resources for journalists, partners, and content creators writing about FirmFlow. If you need anything you don&apos;t see here, email <a href="mailto:hello@firmflow.io" style={{ color: BLUE, fontWeight: 600 }}>hello@firmflow.io</a>.
           </p>
         </header>
 
@@ -102,7 +102,7 @@ export default function PressPage() {
             FirmFlow is built by a solo founder based in Tilburg, Netherlands. The team focuses on shipping fast, listening directly to small-firm operators, and avoiding the enterprise feature creep that has bloated competitor products.
           </p>
           <p style={{ fontSize: 16, color: '#374151', lineHeight: 1.8, margin: 0 }}>
-            For interviews, quotes, or product demos, contact <a href="mailto:hello@firmflow.org" style={{ color: BLUE, fontWeight: 600 }}>hello@firmflow.org</a>.
+            For interviews, quotes, or product demos, contact <a href="mailto:hello@firmflow.io" style={{ color: BLUE, fontWeight: 600 }}>hello@firmflow.io</a>.
           </p>
         </section>
 
@@ -260,7 +260,7 @@ export default function PressPage() {
         }}>
           <h2 style={{ fontSize: 22, fontWeight: 800, color: '#fff', margin: '0 0 12px' }}>Media inquiries</h2>
           <p style={{ fontSize: 15, color: '#94A3B8', margin: '0 0 20px', lineHeight: 1.6, maxWidth: 560 }}>
-            For interview requests, product demos, or quotes for upcoming articles, email <a href="mailto:hello@firmflow.org" style={{ color: '#60A5FA', fontWeight: 600 }}>hello@firmflow.org</a>. We typically respond within one business day.
+            For interview requests, product demos, or quotes for upcoming articles, email <a href="mailto:hello@firmflow.io" style={{ color: '#60A5FA', fontWeight: 600 }}>hello@firmflow.io</a>. We typically respond within one business day.
           </p>
           <p style={{ fontSize: 13, color: '#64748B', margin: 0 }}>
             Tilburg, Netherlands · <a href="https://www.linkedin.com/company/firmflown/" style={{ color: '#94A3B8' }}>LinkedIn</a>

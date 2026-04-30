@@ -94,7 +94,7 @@ export default function PortalLogin() {
       </div>
 
       <p style={{textAlign:'center',color:'#94A3B8',fontSize:'12px',padding:'20px'}}>
-        Powered by <strong>FirmFlow</strong> · firmflow.org
+        Powered by <strong>FirmFlow</strong> · firmflow.io
       </p>
     </div>
   )

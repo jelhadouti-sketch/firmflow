@@ -10,7 +10,7 @@ import { BarChart3, ClipboardList, Clock, CreditCard, FileText, MessageSquare, P
 export const metadata: Metadata = {
   title: 'How FirmFlow Works — Complete Guide to All Features',
   description: 'Learn how FirmFlow helps your firm manage e-signatures, invoicing, documents, client portal, time tracking, messaging, and AI — all in one platform for $29/month.',
-  alternates: { canonical: 'https://www.firmflow.org/how-it-works' },
+  alternates: { canonical: 'https://www.firmflow.io/how-it-works' },
 }
 
 export default async function HowItWorks() {
@@ -315,7 +315,7 @@ export default async function HowItWorks() {
                     <div style={{width:'8px',height:'8px',borderRadius:'50%',background:'#FECACA'}}></div>
                     <div style={{width:'8px',height:'8px',borderRadius:'50%',background:'#FDE68A'}}></div>
                     <div style={{width:'8px',height:'8px',borderRadius:'50%',background:'#BBF7D0'}}></div>
-                    <span style={{flex:1,fontSize:'10px',color:'#94A3B8',textAlign:'center'}}>firmflow.org/dashboard/{section.id === 'dashboard' ? '' : section.id}</span>
+                    <span style={{flex:1,fontSize:'10px',color:'#94A3B8',textAlign:'center'}}>firmflow.io/dashboard/{section.id === 'dashboard' ? '' : section.id}</span>
                   </div>
                   <img src={section.img!} alt={section.title} style={{width:'100%',height:'auto',display:'block'}} />
                 </div>

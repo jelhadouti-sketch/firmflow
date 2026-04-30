@@ -7,19 +7,19 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Resources for Solo Accountants & Small Firms',
   description: 'Free tools, guides, and comparisons for accountants, lawyers, and consultants. Engagement letter templates, invoice templates, e-signature guides, and more.',
-  alternates: { canonical: 'https://www.firmflow.org/resources' },
+  alternates: { canonical: 'https://www.firmflow.io/resources' },
   openGraph: {
     title: 'Resources for Solo Accountants & Small Firms',
     description: 'Free tools, guides, and comparisons for accountants, lawyers, and consultants.',
-    url: 'https://www.firmflow.org/resources',
+    url: 'https://www.firmflow.io/resources',
     type: 'website',
-    images: [{ url: 'https://www.firmflow.org/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Resources for Solo Accountants & Small Firms',
     description: 'Free tools, guides, and comparisons for accountants, lawyers, and consultants.',
-    images: ['https://www.firmflow.org/og-default.png'],
+    images: ['https://www.firmflow.io/og-default.png'],
   },
 }
 

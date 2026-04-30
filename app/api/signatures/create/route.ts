@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     const signUrl = process.env.NEXT_PUBLIC_APP_URL + '/sign/' + sigRequest.id
     try {
       await resend.emails.send({
-        from: process.env.RESEND_FROM || 'hello@firmflow.org',
+        from: process.env.RESEND_FROM || 'hello@firmflow.io',
         to: signerEmail,
         subject: 'Please sign: "' + (doc?.name || 'document') + '" from ' + (firm?.name || 'your firm'),
         html: `
@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
 
             <!-- Footer -->
             <p style="text-align:center;color:#94A3B8;font-size:12px;margin-top:20px">
-              Powered by <strong>FirmFlow</strong> · firmflow.org<br>
+              Powered by <strong>FirmFlow</strong> · firmflow.io<br>
               Secure electronic signatures for professional firms
             </p>
 

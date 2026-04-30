@@ -7,7 +7,7 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Best Clio Alternative for Small Law Firms — FirmFlow',
   description: 'Looking for a Clio alternative? FirmFlow offers documents, e-signatures, time tracking, invoicing, and a client portal for €29/month flat — 70% cheaper than Clio.',
-  alternates: { canonical: 'https://www.firmflow.org/clio-alternative' },
+  alternates: { canonical: 'https://www.firmflow.io/clio-alternative' },
 }
 
 export default function ClioAlternative() {

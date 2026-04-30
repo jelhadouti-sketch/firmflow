@@ -73,11 +73,11 @@ export async function claimFoundingMemberIfEligible(opts: {
       lang: firmLang,
       firstName: firstName || 'there',
       position,
-      dashboardUrl: 'https://www.firmflow.org/dashboard/subscription',
+      dashboardUrl: 'https://www.firmflow.io/dashboard/subscription',
     })
 
     await resend.emails.send({
-      from: process.env.RESEND_FROM || 'hello@firmflow.org',
+      from: process.env.RESEND_FROM || 'hello@firmflow.io',
       to: opts.userEmail,
       subject,
       html,

@@ -94,7 +94,7 @@ export default function AdminEmail() {
       <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'32px',flexWrap:'wrap',gap:'12px'}}>
         <div>
           <h1 style={{fontSize:'28px',fontWeight:900,color:'#0F172A',margin:'0 0 4px',letterSpacing:'-0.03em'}}>📧 Email Marketing</h1>
-          <p style={{color:'#64748B',fontSize:'14px',margin:0}}>Send promotional and feedback emails from hello@firmflow.org</p>
+          <p style={{color:'#64748B',fontSize:'14px',margin:0}}>Send promotional and feedback emails from hello@firmflow.io</p>
         </div>
         <Link href="/admin" style={{padding:'8px 16px',background:'#F1F5F9',color:'#475569',borderRadius:'8px',textDecoration:'none',fontSize:'13px',fontWeight:600}}>← Back</Link>
       </div>

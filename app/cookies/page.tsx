@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Cookie Policy',
   description: 'FirmFlow\'s cookie policy. What cookies we use, why we use them, and how to manage your preferences.',
-  alternates: { canonical: 'https://www.firmflow.org/cookies' },
+  alternates: { canonical: 'https://www.firmflow.io/cookies' },
 }
 
 export default function Cookies() {
@@ -43,7 +43,7 @@ export default function Cookies() {
         <p>We may update this Cookie Policy from time to time. Changes will be posted on this page with an updated "Last updated" date.</p>
 
         <h2 style={{fontSize:'18px',fontWeight:'700',margin:'32px 0 12px',color:'#0F172A'}}>8. Contact</h2>
-        <p>FirmFlow Ltd<br/>Email: hello@firmflow.org<br/>Website: www.firmflow.org</p>
+        <p>FirmFlow Ltd<br/>Email: hello@firmflow.io<br/>Website: www.firmflow.io</p>
 
         </div>
       </div>

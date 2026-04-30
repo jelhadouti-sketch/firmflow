@@ -6,7 +6,7 @@ import SiteFooter from '@/components/SiteFooter'
 export const metadata: Metadata = {
   title: 'Features — FirmFlow | All-in-One Practice Management',
   description: 'Explore all FirmFlow features: document management, e-signatures, time tracking, invoicing, client portal, messaging, AI assistant, and more.',
-  alternates: { canonical: 'https://www.firmflow.org/features' },
+  alternates: { canonical: 'https://www.firmflow.io/features' },
 }
 
 const features = [

@@ -35,8 +35,8 @@ export async function POST(req: Request) {
           'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: 'FirmFlow <noreply@firmflow.org>',
-          to: 'hello@firmflow.org',
+          from: 'FirmFlow <noreply@firmflow.io>',
+          to: 'hello@firmflow.io',
           subject: `🎯 New demo request from ${name} — ${firmName || 'Unknown firm'}`,
           html: `
             <div style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto">
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
           'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: 'FirmFlow <noreply@firmflow.org>',
+          from: 'FirmFlow <noreply@firmflow.io>',
           to: email,
           subject: 'Your FirmFlow demo request — we\'ll be in touch soon!',
           html: `
@@ -88,7 +88,7 @@ export async function POST(req: Request) {
                 <p style="font-size:15px;color:#475569;line-height:1.7">
                   In the meantime, feel free to explore FirmFlow on your own:
                 </p>
-                <a href="https://www.firmflow.org/signup" style="display:inline-block;padding:12px 24px;background:#1C64F2;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;margin:8px 0 16px">Start your free 14-day trial →</a>
+                <a href="https://www.firmflow.io/signup" style="display:inline-block;padding:12px 24px;background:#1C64F2;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;margin:8px 0 16px">Start your free 14-day trial →</a>
                 <p style="font-size:13px;color:#94A3B8;margin-top:20px">— The FirmFlow Team</p>
               </div>
             </div>

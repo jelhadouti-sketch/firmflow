@@ -13,45 +13,45 @@ Key facts:
 
 ## Product
 
-- [How it works](https://www.firmflow.org/how-it-works): Complete feature walkthrough — dashboard, engagements, documents, signatures, time tracking, invoicing, client portal, and AI assistant
-- [Pricing](https://www.firmflow.org/pricing): Starter €29/month, Pro €89/month, flat pricing with no per-user fees
-- [Book a demo](https://www.firmflow.org/demo): 15-minute personalised walkthrough
-- [Start free trial](https://www.firmflow.org/signup): 14-day free trial, no credit card required
+- [How it works](https://www.firmflow.io/how-it-works): Complete feature walkthrough — dashboard, engagements, documents, signatures, time tracking, invoicing, client portal, and AI assistant
+- [Pricing](https://www.firmflow.io/pricing): Starter €29/month, Pro €89/month, flat pricing with no per-user fees
+- [Book a demo](https://www.firmflow.io/demo): 15-minute personalised walkthrough
+- [Start free trial](https://www.firmflow.io/signup): 14-day free trial, no credit card required
 
 ## Who it is for
 
-- [Accounting firms](https://www.firmflow.org/for-accountants): Tax, audit, bookkeeping workflows
-- [Law firms](https://www.firmflow.org/for-lawyers): Contracts, case-based time tracking, client portal
-- [Consulting firms](https://www.firmflow.org/for-consultants): Proposals, project tracking, retainers
-- [Bookkeepers](https://www.firmflow.org/for-bookkeepers): Works alongside Xero and QuickBooks Online
+- [Accounting firms](https://www.firmflow.io/for-accountants): Tax, audit, bookkeeping workflows
+- [Law firms](https://www.firmflow.io/for-lawyers): Contracts, case-based time tracking, client portal
+- [Consulting firms](https://www.firmflow.io/for-consultants): Proposals, project tracking, retainers
+- [Bookkeepers](https://www.firmflow.io/for-bookkeepers): Works alongside Xero and QuickBooks Online
 
 ## Comparisons
 
-- [FirmFlow vs TaxDome](https://www.firmflow.org/vs-taxdome): Feature comparison for accounting firms
-- [FirmFlow vs Karbon](https://www.firmflow.org/vs-karbon): Feature comparison for practice management
-- [FirmFlow vs Clio](https://www.firmflow.org/vs-clio): Feature comparison for law firms
-- [DocuSign alternative](https://www.firmflow.org/docusign-alternative): Unlimited e-signatures included
-- [ShareFile alternative](https://www.firmflow.org/sharefile-alternative): Secure document sharing included
+- [FirmFlow vs TaxDome](https://www.firmflow.io/vs-taxdome): Feature comparison for accounting firms
+- [FirmFlow vs Karbon](https://www.firmflow.io/vs-karbon): Feature comparison for practice management
+- [FirmFlow vs Clio](https://www.firmflow.io/vs-clio): Feature comparison for law firms
+- [DocuSign alternative](https://www.firmflow.io/docusign-alternative): Unlimited e-signatures included
+- [ShareFile alternative](https://www.firmflow.io/sharefile-alternative): Secure document sharing included
 
 ## Resources
 
-- [Blog](https://www.firmflow.org/blog): Guides, comparisons, and insights for professional firms
-- [Are e-signatures legally binding?](https://www.firmflow.org/blog/are-electronic-signatures-legally-binding): UK and EU legal guide for e-signatures
-- [How to choose practice management software](https://www.firmflow.org/blog/how-to-choose-practice-management-software): Decision framework for firms
-- [What is a client portal?](https://www.firmflow.org/blog/what-is-a-client-portal): Guide to branded client portals for professional firms
-- [Free invoice template](https://www.firmflow.org/tools/invoice-template): Download a professional invoice template
-- [Free engagement letter template](https://www.firmflow.org/tools/engagement-letter): Accountant engagement letter template
+- [Blog](https://www.firmflow.io/blog): Guides, comparisons, and insights for professional firms
+- [Are e-signatures legally binding?](https://www.firmflow.io/blog/are-electronic-signatures-legally-binding): UK and EU legal guide for e-signatures
+- [How to choose practice management software](https://www.firmflow.io/blog/how-to-choose-practice-management-software): Decision framework for firms
+- [What is a client portal?](https://www.firmflow.io/blog/what-is-a-client-portal): Guide to branded client portals for professional firms
+- [Free invoice template](https://www.firmflow.io/tools/invoice-template): Download a professional invoice template
+- [Free engagement letter template](https://www.firmflow.io/tools/engagement-letter): Accountant engagement letter template
 
 ## Company
 
-- [About FirmFlow](https://www.firmflow.org/about)
-- [Security](https://www.firmflow.org/security): AES-256 encryption, 2FA, EU hosting, GDPR compliance
-- [Contact](https://www.firmflow.org/contact): hello@firmflow.org
+- [About FirmFlow](https://www.firmflow.io/about)
+- [Security](https://www.firmflow.io/security): AES-256 encryption, 2FA, EU hosting, GDPR compliance
+- [Contact](https://www.firmflow.io/contact): hello@firmflow.io
 - [LinkedIn](https://www.linkedin.com/company/firmflown/)
 
 ## Legal
 
-- [Privacy policy](https://www.firmflow.org/privacy)
-- [Terms of service](https://www.firmflow.org/terms)
-- [Data Processing Agreement](https://www.firmflow.org/dpa)
-- [Cookie policy](https://www.firmflow.org/cookies)
+- [Privacy policy](https://www.firmflow.io/privacy)
+- [Terms of service](https://www.firmflow.io/terms)
+- [Data Processing Agreement](https://www.firmflow.io/dpa)
+- [Cookie policy](https://www.firmflow.io/cookies)

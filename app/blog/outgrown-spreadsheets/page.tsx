@@ -10,17 +10,17 @@ export const metadata: Metadata = {
   openGraph: {
     title: '5 Signs Your Firm Has Outgrown Spreadsheets — FirmFlow Blog',
     description: 'Still tracking clients, time, and invoices in Excel? Here are 5 signs it is time to switch to practice management software.',
-    url: 'https://www.firmflow.org/blog/outgrown-spreadsheets',
+    url: 'https://www.firmflow.io/blog/outgrown-spreadsheets',
     type: 'article',
-    images: [{ url: 'https://www.firmflow.org/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://www.firmflow.io/og-default.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: '5 Signs Your Firm Has Outgrown Spreadsheets — FirmFlow Blog',
     description: 'Still tracking clients, time, and invoices in Excel? Here are 5 signs it is time to switch to practice management software.',
-    images: ['https://www.firmflow.org/og-default.png'],
+    images: ['https://www.firmflow.io/og-default.png'],
   },
-  alternates: { canonical: 'https://www.firmflow.org/blog/outgrown-spreadsheets' },
+  alternates: { canonical: 'https://www.firmflow.io/blog/outgrown-spreadsheets' },
 }
 
 export default function OutgrownSpreadsheets() {

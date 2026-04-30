@@ -35,8 +35,8 @@ export async function POST(req: Request) {
           'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: 'FirmFlow <noreply@firmflow.org>',
-          to: 'hello@firmflow.org',
+          from: 'FirmFlow <noreply@firmflow.io>',
+          to: 'hello@firmflow.io',
           subject: `📩 New contact from ${name} — ${subject || 'General enquiry'}`,
           html: `
             <div style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto">
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
           'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: 'FirmFlow <noreply@firmflow.org>',
+          from: 'FirmFlow <noreply@firmflow.io>',
           to: email,
           subject: 'We received your message — FirmFlow',
           html: `

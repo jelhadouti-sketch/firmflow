@@ -7,7 +7,7 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 export const metadata: Metadata = {
   title: 'Best QuickBooks Alternative for Professional Firms — FirmFlow',
   description: 'Looking for a QuickBooks alternative? FirmFlow gives you invoicing, e-signatures, time tracking, document management & client portal — all in one platform from $29/month.',
-  alternates: { canonical: 'https://www.firmflow.org/quickbooks-alternative' },
+  alternates: { canonical: 'https://www.firmflow.io/quickbooks-alternative' },
 }
 
 export default function QuickBooksAlternative() {
