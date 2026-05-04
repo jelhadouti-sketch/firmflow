@@ -81,6 +81,11 @@ export default function Post() {
         <p style={{fontSize:'16px',color:'#374151',lineHeight:'1.8',marginBottom:'16px'}}>For full transparency: FirmFlow stores all customer data in EU data centers (AWS Frankfurt). All data is encrypted at rest with AES-256 and in transit with TLS 1.3. We provide a standard DPA on request. Audit logs cover all document access, signature events, and data exports. Customers can export complete data archives at any time without restriction. Sub-processors are limited to a small list of EU-hosted services (Stripe for payments, Resend for email, Supabase for database) &mdash; all with their own EU compliance.</p>
         <p style={{fontSize:'16px',color:'#374151',lineHeight:'1.8',marginBottom:'16px'}}>For the broader picture, see our <Link href="/blog/client-portal-for-accountants" style={{color:'#1C64F2',fontWeight:'600'}}>guide to setting up a client portal</Link> and <Link href="/blog/what-is-a-client-portal" style={{color:'#1C64F2',fontWeight:'600'}}>what a client portal actually is</Link>.</p>
       </main>
+        <div style={{maxWidth:'900px',margin:'24px auto 0',padding:'16px 20px',background:'#F8FAFC',borderRadius:'12px',borderLeft:'3px solid #1C64F2'}}>
+          <p style={{fontSize:'14px',color:'#475569',margin:0}}>
+            <strong>Related reading:</strong>{' '}<Link href="/blog/aml-compliance-uk-accounting-firms" style={{color:'#1C64F2',textDecoration:'underline'}}>AML compliance guide for small UK accounting firms</Link>
+          </p>
+        </div>
       </div>
       <SiteFooter />
     </>

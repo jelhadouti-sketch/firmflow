@@ -83,6 +83,16 @@ export default function Post() {
         <p style={{fontSize:'16px',color:'#374151',lineHeight:'1.8',marginBottom:'16px'}}>5. Get notified when signed; the signed PDF auto-archives in your client folder</p>
         <p style={{fontSize:'16px',color:'#374151',lineHeight:'1.8',marginBottom:'16px'}}>For the legal background on e-signatures, see our <Link href="/blog/are-electronic-signatures-legally-binding" style={{color:'#1C64F2',fontWeight:'600'}}>e-signature legal guide</Link>. For broader practice management context, see the <Link href="/guides/practice-management-software" style={{color:'#1C64F2',fontWeight:'600'}}>complete practice management guide</Link>.</p>
       </main>
+        <div style={{maxWidth:'900px',margin:'24px auto 0',padding:'16px 20px',background:'#F8FAFC',borderRadius:'12px',borderLeft:'3px solid #1C64F2'}}>
+          <p style={{fontSize:'14px',color:'#475569',margin:0}}>
+            <strong>Related reading:</strong>{' '}<Link href="/blog/making-tax-digital-small-accountants" style={{color:'#1C64F2',textDecoration:'underline'}}>Making Tax Digital (MTD) compliance guide</Link>
+          </p>
+        </div>
+        <div style={{maxWidth:'900px',margin:'24px auto 0',padding:'16px 20px',background:'#F8FAFC',borderRadius:'12px',borderLeft:'3px solid #1C64F2'}}>
+          <p style={{fontSize:'14px',color:'#475569',margin:0}}>
+            <strong>Related reading:</strong>{' '}<Link href="/blog/client-onboarding-accounting-firms" style={{color:'#1C64F2',textDecoration:'underline'}}>step-by-step client onboarding workflow</Link>
+          </p>
+        </div>
       </div>
       <SiteFooter />
     </>

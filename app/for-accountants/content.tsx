@@ -90,7 +90,12 @@ export default function ForAccountantsContent() {
           ))}
         </div>
 
-      </div>
+<div style={{maxWidth:'900px',margin:'24px auto 0',padding:'16px 20px',background:'#F8FAFC',borderRadius:'12px',borderLeft:'3px solid #1C64F2'}}>
+          <p style={{fontSize:'14px',color:'#475569',margin:0}}>
+            <strong>Related reading:</strong>{' '}<Link href="/blog/making-tax-digital-small-accountants" style={{color:'#1C64F2',textDecoration:'underline'}}>Making Tax Digital (MTD) compliance guide</Link>
+          </p>
+        </div>
+</div>
       <SiteFooter />
     </>
   )

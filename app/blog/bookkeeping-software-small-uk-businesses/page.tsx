@@ -56,6 +56,11 @@ export default function Post() {
         <h2 style={{fontSize:'24px',fontWeight:'800',color:'#0F172A',marginBottom:'16px',marginTop:'32px'}}>Recommended starting points by business type</h2>
         <p style={{fontSize:'16px',color:'#374151',lineHeight:'1.8',marginBottom:'16px'}} dangerouslySetInnerHTML={{__html: "<strong>Solo contractor or freelancer (turnover under &pound;85k):</strong> FreeAgent (free with NatWest/RBS/Mettle business banking) or Coconut. Simple, mobile-first, MTD-ready.<br/><br/><strong>Small business (turnover &pound;85k-&pound;500k):</strong> Xero or QuickBooks. Industry standard. Most UK accountants are fluent in both. Allows you to scale to multi-user and add inventory or payroll later.<br/><br/><strong>Larger small business (&pound;500k+):</strong> Xero (often preferred for cleaner UI), Sage 50 (older but powerful), or QuickBooks Online Plus. At this size, the choice often follows your accountant&apos;s preference.<br/><br/>For more on choosing tools, see our <a href=\"/guides/practice-management-software\" style=\"color:#1C64F2;font-weight:600\">complete practice management software guide</a> if you&apos;re an accounting firm."}} />
       </main>
+        <div style={{maxWidth:'900px',margin:'24px auto 0',padding:'16px 20px',background:'#F8FAFC',borderRadius:'12px',borderLeft:'3px solid #1C64F2'}}>
+          <p style={{fontSize:'14px',color:'#475569',margin:0}}>
+            <strong>Related reading:</strong>{' '}<Link href="/blog/making-tax-digital-small-accountants" style={{color:'#1C64F2',textDecoration:'underline'}}>Making Tax Digital (MTD) compliance guide</Link>
+          </p>
+        </div>
       </div>
       <SiteFooter />
     </>
