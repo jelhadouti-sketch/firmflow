@@ -90,10 +90,13 @@ export default function ForAccountantsContent() {
           ))}
         </div>
 
-<div style={{maxWidth:'900px',margin:'24px auto 0',padding:'16px 20px',background:'#F8FAFC',borderRadius:'12px',borderLeft:'3px solid #1C64F2'}}>
-          <p style={{fontSize:'14px',color:'#475569',margin:0}}>
-            <strong>Related reading:</strong>{' '}<Link href="/blog/making-tax-digital-small-accountants" style={{color:'#1C64F2',textDecoration:'underline'}}>Making Tax Digital (MTD) compliance guide</Link>
-          </p>
+<div style={{maxWidth:'900px',margin:'48px auto 0',padding:'24px',background:'#F8FAFC',borderRadius:'12px',borderLeft:'3px solid #1C64F2'}}>
+          <h3 style={{fontSize:'16px',fontWeight:700,marginBottom:'12px',color:'#0F172A'}}>Related reading</h3>
+          <ul style={{margin:0,padding:'0 0 0 20px',fontSize:'14px',color:'#475569',lineHeight:1.8}}>
+            <li><Link href="/blog/aml-compliance-uk-accounting-firms" style={{color:'#1C64F2',textDecoration:'underline'}}>AML compliance guide for small UK accounting firms</Link></li>
+            <li><Link href="/blog/making-tax-digital-small-accountants" style={{color:'#1C64F2',textDecoration:'underline'}}>Making Tax Digital (MTD) compliance guide</Link></li>
+            <li><Link href="/blog/client-onboarding-accounting-firms" style={{color:'#1C64F2',textDecoration:'underline'}}>Step-by-step client onboarding workflow</Link></li>
+          </ul>
         </div>
 </div>
       <SiteFooter />
