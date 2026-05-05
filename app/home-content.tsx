@@ -124,8 +124,8 @@ export default function HomeContent() {
       </nav>
 
       <section style={{padding:'clamp(40px, 8vw, 80px) clamp(16px, 4vw, 32px) clamp(32px, 6vw, 60px)',background:'#fff',overflowX:'hidden'}}>
-        <div style={{maxWidth:1280,margin:'0 auto',display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, 400px), 1fr))',gap:'clamp(24px, 4vw, 64px)',alignItems:'center'}} className="hero-grid">
-          <div>
+        <div style={{maxWidth:1280,margin:'0 auto',display:'flex',flexWrap:'wrap',gap:'clamp(24px, 4vw, 64px)',alignItems:'center'}} className="hero-grid">
+          <div style={{flex:'1 1 320px',minWidth:0,maxWidth:'100%'}}>
             <div className="hero-badge-wrap" style={{marginBottom:24}}>
               <div className="hero-badge" style={{display:'inline-flex',alignItems:'center',gap:8,padding:'10px 18px',background:LAVENDER,border:'1px solid #DDD6FE',borderRadius:20,fontSize:13,color:'#6D28D9',fontWeight:600,lineHeight:1.4,maxWidth:'100%',textAlign:'center'}}>
                 <Sparkles size={14} style={{flexShrink:0}} />
@@ -148,7 +148,7 @@ export default function HomeContent() {
             </div>
             <p style={{fontSize:13,color:MUTED}}>{t('home.hero.trial')}</p>
           </div>
-          <div style={{position:'relative'}} className="hero-image">
+          <div style={{position:'relative',flex:'1 1 320px',minWidth:0,maxWidth:'100%'}} className="hero-image">
             <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&q=80" alt="Professional using FirmFlow practice management software on laptop" style={{width:'100%',borderRadius:16,display:'block',boxShadow:'0 30px 60px -20px rgba(15,23,42,0.3)'}} />
           </div>
         </div>
