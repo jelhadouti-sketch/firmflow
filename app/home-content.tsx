@@ -123,8 +123,8 @@ export default function HomeContent() {
         )}
       </nav>
 
-      <section style={{padding:'80px 32px 60px',background:'#fff'}}>
-        <div style={{maxWidth:1280,margin:'0 auto',display:'grid',gridTemplateColumns:'1.1fr 1fr',gap:64,alignItems:'center'}} className="hero-grid">
+      <section style={{padding:'clamp(40px, 8vw, 80px) clamp(16px, 4vw, 32px) clamp(32px, 6vw, 60px)',background:'#fff',overflowX:'hidden'}}>
+        <div style={{maxWidth:1280,margin:'0 auto',display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, 400px), 1fr))',gap:'clamp(24px, 4vw, 64px)',alignItems:'center'}} className="hero-grid">
           <div>
             <div className="hero-badge-wrap" style={{marginBottom:24}}>
               <div className="hero-badge" style={{display:'inline-flex',alignItems:'center',gap:8,padding:'10px 18px',background:LAVENDER,border:'1px solid #DDD6FE',borderRadius:20,fontSize:13,color:'#6D28D9',fontWeight:600,lineHeight:1.4,maxWidth:'100%',textAlign:'center'}}>
