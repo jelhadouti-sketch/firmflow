@@ -83,6 +83,14 @@ export default function ClioAlternative() {
         </div>
 
 </div>
+        <div style={{maxWidth:'900px',margin:'48px auto 0',padding:'24px',background:'#F8FAFC',borderRadius:'12px',borderLeft:'3px solid #1C64F2'}}>
+          <h3 style={{fontSize:'16px',fontWeight:700,marginBottom:'12px',color:'#0F172A'}}>Related reading</h3>
+          <ul style={{margin:0,padding:'0 0 0 20px',fontSize:'14px',color:'#475569',lineHeight:1.8}}>
+            <li><Link href="/blog/practice-management-software-pricing-2026" style={{color:'#1C64F2',textDecoration:'underline'}}>Detailed Clio vs FirmFlow pricing breakdown</Link></li>
+            <li><Link href="/blog/legally-binding-e-signatures-guide" style={{color:'#1C64F2',textDecoration:'underline'}}>Legally binding e-signatures guide</Link></li>
+            <li><Link href="/blog/client-portal-for-accountants" style={{color:'#1C64F2',textDecoration:'underline'}}>Client portal for professional firms</Link></li>
+          </ul>
+        </div>
       <SiteFooter />
     </>
   )

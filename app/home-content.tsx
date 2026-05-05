@@ -357,6 +357,21 @@ export default function HomeContent() {
           <p style={{fontSize:13,color:'#6B7280',marginTop:24}}>{t('home.hero.trial')}</p>
         </div>
       </section>
+      {/* Latest from the blog — SEO-driven internal linking */}
+      <section style={{maxWidth:'1100px',margin:'80px auto',padding:'0 24px'}}>
+        <div style={{background:'#F8FAFC',borderRadius:'20px',padding:'48px',borderLeft:'4px solid #1C64F2'}}>
+          <h2 style={{fontSize:'28px',fontWeight:800,marginBottom:'8px',color:'#0F172A'}}>Latest from the blog</h2>
+          <p style={{fontSize:'15px',color:'#64748B',marginBottom:'24px'}}>Practical guides for accountants, lawyers, and consultants running small firms.</p>
+          <ul style={{listStyle:'none',padding:0,margin:0}}>
+            <li style={{marginBottom:'8px'}}><Link href="/blog/practice-management-software-pricing-2026" style={{color:'#1C64F2',textDecoration:'none',fontSize:'15px'}}>Practice management software pricing comparison (2026) →</Link></li>
+            <li style={{marginBottom:'8px'}}><Link href="/blog/aml-compliance-uk-accounting-firms" style={{color:'#1C64F2',textDecoration:'none',fontSize:'15px'}}>AML compliance for small UK accounting firms →</Link></li>
+            <li style={{marginBottom:'8px'}}><Link href="/blog/making-tax-digital-small-accountants" style={{color:'#1C64F2',textDecoration:'none',fontSize:'15px'}}>Making Tax Digital (MTD) guide for small accountants →</Link></li>
+            <li style={{marginBottom:'8px'}}><Link href="/blog/client-onboarding-accounting-firms" style={{color:'#1C64F2',textDecoration:'none',fontSize:'15px'}}>How to onboard a new client (7-step workflow) →</Link></li>
+          </ul>
+          <Link href="/blog" style={{display:'inline-block',marginTop:'24px',color:'#1C64F2',fontWeight:600,fontSize:'14px',textDecoration:'none'}}>View all articles →</Link>
+        </div>
+      </section>
+
 
       <footer style={{padding:'80px 32px 32px',background:'#111827',color:'#9CA3AF'}}>
         <style>{`@media (max-width:900px){.footer-grid{grid-template-columns:1fr 1fr !important;gap:32px !important;}.footer-brand{grid-column:1 / -1 !important;margin-bottom:8px !important;}.footer-bottom{flex-direction:column !important;align-items:flex-start !important;gap:16px !important;text-align:left !important;}}@media (max-width:560px){.footer-grid{grid-template-columns:1fr !important;gap:28px !important;}}`}</style>
